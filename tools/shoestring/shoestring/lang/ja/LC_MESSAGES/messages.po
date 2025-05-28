@@ -7,820 +7,830 @@ msgstr ""
 
 #: shoestring/commands/announce_transaction.py:31
 msgid "announce-transaction-announce-successful"
-msgstr ""
+msgstr "トランザクションはネットワークに正常に送信されました"
 
 #: shoestring/commands/announce_transaction.py:24
 msgid "announce-transaction-preparing-to-announce"
-msgstr ""
+msgstr "{transaction_type}タイプのトランザクション{transaction_hash}をアナウンスする準備中"
 
 #: shoestring/commands/announce_transaction.py:36
 msgid "argument-help-announce-transaction-transaction"
-msgstr ""
+msgstr "送信するシリアライズ済みトランザクションを含むファイル"
 
 #: shoestring/commands/min_cosignatures_count.py:35
 #: shoestring/commands/renew_certificates.py:36
-#: shoestring/commands/setup.py:145 shoestring/commands/signer.py:93
+#: shoestring/commands/setup.py:146 shoestring/commands/signer.py:93
 msgid "argument-help-ca-key-path"
-msgstr ""
+msgstr "メイン秘密鍵PEMファイルへのパス"
 
 #: shoestring/commands/announce_transaction.py:35
-#: shoestring/commands/health.py:74 shoestring/commands/import_bootstrap.py:42
+#: shoestring/commands/health.py:74 shoestring/commands/import_bootstrap.py:49
 #: shoestring/commands/import_harvesters.py:97 shoestring/commands/init.py:29
 #: shoestring/commands/min_cosignatures_count.py:34
 #: shoestring/commands/renew_certificates.py:34
 #: shoestring/commands/renew_voting_keys.py:112
-#: shoestring/commands/reset_data.py:86 shoestring/commands/setup.py:137
+#: shoestring/commands/reset_data.py:86 shoestring/commands/setup.py:138
 #: shoestring/commands/signer.py:92
 msgid "argument-help-config"
-msgstr ""
+msgstr "shoestring設定ファイルへのパス"
 
 #: shoestring/commands/health.py:75
 #: shoestring/commands/renew_certificates.py:35
 #: shoestring/commands/renew_voting_keys.py:113
-#: shoestring/commands/reset_data.py:87 shoestring/commands/setup.py:139
+#: shoestring/commands/reset_data.py:87 shoestring/commands/setup.py:140
 msgid "argument-help-directory"
-msgstr ""
+msgstr "インストールディレクトリ（デフォルト: {default_path}）"
 
-#: shoestring/commands/import_bootstrap.py:43
+#: shoestring/commands/import_bootstrap.py:50
 msgid "argument-help-import-bootstrap-bootstrap"
-msgstr ""
+msgstr "bootstrapターゲットディレクトリへのパス"
 
-#: shoestring/commands/import_bootstrap.py:44
+#: shoestring/commands/import_bootstrap.py:51
 msgid "argument-help-import-bootstrap-include-node-key"
-msgstr ""
+msgstr "ノードキーを含める"
 
 #: shoestring/commands/import_harvesters.py:98
 msgid "argument-help-import-harvesters-in-harvesters"
-msgstr ""
+msgstr "in-pemで暗号化された入力harvesters.datファイル"
 
 #: shoestring/commands/import_harvesters.py:99
 msgid "argument-help-import-harvesters-in-pem"
-msgstr ""
+msgstr "in-harvestersを復号化するために使用できるPEMファイル"
 
 #: shoestring/commands/import_harvesters.py:101
 msgid "argument-help-import-harvesters-out-harvesters"
-msgstr ""
+msgstr "out-pemで暗号化される出力harvesters.datファイル"
 
 #: shoestring/commands/import_harvesters.py:102
 msgid "argument-help-import-harvesters-out-pem"
-msgstr ""
+msgstr "out-harvestersを暗号化するために使用できるPEMファイル"
 
 #: shoestring/commands/min_cosignatures_count.py:36
 msgid "argument-help-min-cosignatures-count-update"
-msgstr ""
+msgstr "shoestring設定ファイルを更新"
 
 #: shoestring/commands/pemtool.py:49
 msgid "argument-help-pemtool-ask-pass"
-msgstr ""
+msgstr "パスワードでPEMを暗号化（パスワードプロンプトが表示されます）"
 
 #: shoestring/commands/pemtool.py:50
 msgid "argument-help-pemtool-force"
-msgstr ""
+msgstr "既存の出力ファイルを上書きする"
 
 #: shoestring/commands/pemtool.py:48
 msgid "argument-help-pemtool-input"
-msgstr ""
+msgstr "入力秘密鍵ファイル（オプション）"
 
 #: shoestring/commands/pemtool.py:47
 msgid "argument-help-pemtool-output"
-msgstr ""
+msgstr "出力PEM鍵ファイル"
 
 #: shoestring/commands/renew_certificates.py:37
 msgid "argument-help-renew-certificates-renew-ca"
-msgstr ""
+msgstr "CA証明書も更新"
 
 #: shoestring/commands/renew_certificates.py:38
 msgid "argument-help-renew-certificates-retain-node-key"
-msgstr ""
+msgstr "ノードキーを保持"
 
 #: shoestring/commands/reset_data.py:88
 msgid "argument-help-reset-data-purge-harvesters"
-msgstr ""
-
-#: shoestring/commands/setup.py:140
-msgid "argument-help-setup-overrides"
-msgstr ""
-
-#: shoestring/commands/init.py:28 shoestring/commands/setup.py:138
-msgid "argument-help-setup-package"
-msgstr ""
+msgstr "harvesters.datファイルをパージ"
 
 #: shoestring/commands/setup.py:141
-msgid "argument-help-setup-rest-overrides"
-msgstr ""
+msgid "argument-help-setup-overrides"
+msgstr "カスタムユーザー設定ファイルへのパス"
 
-#: shoestring/commands/setup.py:144
-msgid "argument-help-setup-security"
+#: shoestring/commands/init.py:28 shoestring/commands/setup.py:139
+msgid "argument-help-setup-package"
 msgstr ""
+"ネットワーク構成パッケージ。可能な値：（name | file:///filename | "
+"http(s)://uri）（デフォルト：mainnet）"
+
+#: shoestring/commands/setup.py:142
+msgid "argument-help-setup-rest-overrides"
+msgstr "カスタムユーザーREST設定へのパス（これはAPIロールにのみ有効）"
+
+#: shoestring/commands/setup.py:145
+msgid "argument-help-setup-security"
+msgstr "セキュリティモード（デフォルト：default）"
 
 #: shoestring/commands/signer.py:95
 msgid "argument-help-signer-filename"
-msgstr ""
+msgstr "トランザクションバイナリペイロード"
 
 #: shoestring/commands/signer.py:94
 msgid "argument-help-signer-save"
-msgstr ""
+msgstr "署名されたペイロードを入力と同じファイルに保存"
 
 #: shoestring/internal/FileDownloader.py:40
 msgid "file-downloader-already-downloaded"
-msgstr ""
+msgstr "適切なファイルはすでにダウンロードされています ({name})"
 
 #: shoestring/internal/FileDownloader.py:54
 msgid "file-downloader-downloaded-with-invalid-hash"
-msgstr ""
+msgstr "ファイルは存在しますが、無効なハッシュがあります。再ダウンロード中"
 
 #: shoestring/internal/FileDownloader.py:43
 msgid "file-downloader-exists-with-invalid-hash"
-msgstr ""
+msgstr "ダウンロードされたファイル ({descriptor_name}) に無効なハッシュがあります"
 
 #: shoestring/commands/announce_transaction.py:15
 #: shoestring/commands/min_cosignatures_count.py:18
 #: shoestring/commands/renew_voting_keys.py:32 shoestring/commands/setup.py:62
 msgid "general-connecting-to-node"
-msgstr ""
+msgstr "接続中 {endpoint} にノード"
 
 #: shoestring/commands/init.py:17 shoestring/commands/reset_data.py:56
 #: shoestring/internal/Preparer.py:193
 #: shoestring/internal/VoterConfigurator.py:53
 msgid "general-copying-file"
-msgstr ""
+msgstr "ファイル {source_path} を {destination_path} にコピー中"
 
 #: shoestring/commands/reset_data.py:61 shoestring/internal/Preparer.py:199
 msgid "general-copying-tree"
-msgstr ""
+msgstr "ツリー {source_path} を {destination_path} にコピー中"
 
 #: shoestring/commands/renew_voting_keys.py:46
-#: shoestring/internal/Preparer.py:402
+#: shoestring/internal/Preparer.py:408
 msgid "general-created-aggregate-transaction"
-msgstr ""
+msgstr "ハッシュ {transaction_hash} の集約トランザクションを作成しました"
 
 #: shoestring/healthagents/peer_api.py:25
 msgid "health-peer-api-error"
-msgstr ""
+msgstr "ポート {port} の {host} でピアAPIにアクセスできません"
 
 #: shoestring/healthagents/peer_api.py:23
 msgid "health-peer-api-success"
-msgstr ""
+msgstr "ピアAPIにアクセス可能、ブロック高 = {height}"
 
 #: shoestring/healthagents/peer_certificate.py:83
 msgid "health-peer-certificate-corrupt-full-certificate"
-msgstr ""
+msgstr "node.full.crt.pemはノード証明書とCA証明書の組み合わせではないようです"
 
 #: shoestring/healthagents/peer_certificate.py:32
 msgid "health-peer-certificate-expired"
-msgstr ""
+msgstr "{name} 証明書の有効期限が切れています ({days_expired} 日前)"
 
 #: shoestring/healthagents/peer_certificate.py:41
 msgid "health-peer-certificate-future-start"
-msgstr ""
+msgstr "{name} 証明書の開始日は未来です ({start_date})"
 
 #: shoestring/healthagents/peer_certificate.py:72
 msgid "health-peer-certificate-missing-files"
-msgstr ""
+msgstr "証明書ディレクトリにファイルが不足しています: {missing_files}"
 
 #: shoestring/healthagents/peer_certificate.py:34
 msgid "health-peer-certificate-near-expiry"
-msgstr ""
+msgstr "{name} 証明書は有効期限が近いです ({days_remaining} 日間)"
 
 #: shoestring/healthagents/peer_certificate.py:36
 msgid "health-peer-certificate-not-near-expiry"
-msgstr ""
+msgstr "{name} 証明書は有効期限が近くありません ({days_remaining} 日間)"
 
 #: shoestring/healthagents/peer_certificate.py:63
 msgid "health-peer-certificate-not-verifiable"
-msgstr ""
+msgstr "{name} 証明書を確認できませんでした"
 
 #: shoestring/healthagents/rest_api.py:22
 msgid "health-rest-api-error"
-msgstr ""
+msgstr "エンドポイント {endpoint} でREST APIにアクセスできません"
 
 #: shoestring/healthagents/rest_api.py:20
 msgid "health-rest-api-success"
-msgstr ""
+msgstr "REST APIにアクセス可能、ブロック高 = {height}"
 
 #: shoestring/healthagents/rest_https_certificate.py:96
 msgid "health-rest-https-certificate-invalid"
-msgstr ""
+msgstr "HTTPS証明書が無効のようです: {error_message}"
 
 #: shoestring/healthagents/rest_https_certificate.py:99
 msgid "health-rest-https-certificate-valid"
-msgstr ""
+msgstr "HTTPS証明書は正常です: {start_date} から {end_date} まで有効"
 
 #: shoestring/commands/health.py:69
 msgid "health-running-health-agent"
-msgstr ""
+msgstr "モジュール {module_name} のヘルスエージェントを実行中"
 
 #: shoestring/healthagents/voting_keys.py:23
 msgid "health-voting-keys-active"
-msgstr ""
+msgstr "エポック {start_epoch} から {end_epoch} までのアクティブな投票キーが検出されました"
 
 #: shoestring/healthagents/voting_keys.py:21
 msgid "health-voting-keys-expired"
-msgstr ""
+msgstr "エポック {start_epoch} から {end_epoch} までの期限切れの投票キーが検出されました"
 
 #: shoestring/healthagents/voting_keys.py:26
 msgid "health-voting-keys-future"
-msgstr ""
+msgstr "エポック {start_epoch} から {end_epoch} までの将来の投票キーが検出されました"
 
 #: shoestring/healthagents/voting_keys.py:32
 msgid "health-voting-keys-not-registered"
-msgstr ""
+msgstr "現在のエポック {epoch} に登録された投票キーはありません"
 
 #: shoestring/healthagents/voting_keys.py:34
 msgid "health-voting-keys-registered"
-msgstr ""
+msgstr "投票キーは現在のエポック {start_epoch} から エポック {end_epoch} まで登録されています"
 
 #: shoestring/healthagents/websockets.py:21
 msgid "health-websockets-connected"
-msgstr ""
+msgstr "エンドポイント {endpoint} にWebSocket接続中、ブロックを待機して購読中"
 
 #: shoestring/healthagents/websockets.py:38
 msgid "health-websockets-received-block"
-msgstr ""
+msgstr "WebSocketがブロックを受信しました。ブロック高 {height}"
 
 #: shoestring/healthagents/websockets.py:40
 msgid "health-websockets-received-wrong-topic"
-msgstr ""
+msgstr "メッセージを受信しましたが、トピック '{topic}' が間違っています"
 
 #: shoestring/healthagents/websockets.py:42
 msgid "health-websockets-timed-out"
-msgstr ""
+msgstr "ブロックを待機中にタイムアウトしました。これは、ブローカー <-> REST の間に問題があることを示している可能性があります"
 
-#: shoestring/commands/import_bootstrap.py:19
+#: shoestring/commands/import_bootstrap.py:23
 msgid "import-bootstrap-importing-harvester"
-msgstr ""
+msgstr "bootstrapからハーベストキーをインポート中 ({path})"
 
-#: shoestring/commands/import_bootstrap.py:30
+#: shoestring/commands/import_bootstrap.py:37
 msgid "import-bootstrap-importing-node-key"
-msgstr ""
+msgstr "bootstrapからノードキーをインポート中 ({path})"
 
-#: shoestring/commands/import_bootstrap.py:33
+#: shoestring/commands/import_bootstrap.py:41
 msgid "import-bootstrap-importing-node-key-not-found"
-msgstr ""
+msgstr "bootstrapからノードキーのインポートに失敗しました。ファイルが見つかりません ({path})"
 
-#: shoestring/commands/import_bootstrap.py:24
+#: shoestring/commands/import_bootstrap.py:29
 msgid "import-bootstrap-importing-voter"
-msgstr ""
+msgstr "bootstrapから投票キーをインポート中 ({path})"
 
-#: shoestring/commands/import_bootstrap.py:14
+#: shoestring/commands/import_bootstrap.py:18
 msgid "import-bootstrap-invalid-directory"
 msgstr ""
+"提供されたbootstrapディレクトリ ({directory}) "
+"は、bootstrapのターゲットディレクトリのようには見えません。インポートするものはありません"
 
 #: shoestring/commands/import_harvesters.py:75
 msgid "import-harvesters-error-in-harvesters-is-equal-to-out-harvesters"
-msgstr ""
+msgstr "in-harvesters と out-harvesters は異なる必要があります"
 
 #: shoestring/commands/import_harvesters.py:52
 msgid "import-harvesters-list-header"
-msgstr ""
+msgstr "公開鍵 {public_key} を使用して {filepath} でハーベスターをリスト中"
 
 #: shoestring/__main__.py:20
 msgid "main-announce-transaction-help"
-msgstr ""
+msgstr "トランザクションをネットワークにアナウンスします"
 
 #: shoestring/__main__.py:21
 msgid "main-health-help"
-msgstr ""
+msgstr "ヘルスチェックを実行します"
 
 #: shoestring/__main__.py:22
 msgid "main-import-bootstrap-help"
-msgstr ""
+msgstr "bootstrapから設定をインポートします"
 
 #: shoestring/__main__.py:23
 msgid "main-import-harvesters-help"
-msgstr ""
+msgstr "既存のharvesters.datファイルからハーベスターをインポートします"
 
 #: shoestring/__main__.py:24
 msgid "main-init-help"
-msgstr ""
+msgstr "パッケージからshoestring設定ファイルのテンプレートを抽出します"
 
 #: shoestring/__main__.py:25
 msgid "main-min-cosignatures-count-help"
-msgstr ""
+msgstr "アカウントに必要な最小連署者数を検出します"
 
 #: shoestring/__main__.py:26
 msgid "main-pemtool-help"
-msgstr ""
+msgstr "PEMファイルを生成します"
 
 #: shoestring/__main__.py:27
 msgid "main-renew-certificates-help"
-msgstr ""
+msgstr "証明書を更新します"
 
 #: shoestring/__main__.py:28
 msgid "main-renew-voting-keys-help"
-msgstr ""
+msgstr "投票キーを更新します"
 
 #: shoestring/__main__.py:29
 msgid "main-reset-data-help"
-msgstr ""
+msgstr "データをリセットして最初から再同期できるようにします"
 
 #: shoestring/__main__.py:30
 msgid "main-setup-help"
-msgstr ""
+msgstr "ノードをセットアップします"
 
 #: shoestring/__main__.py:31
 msgid "main-signer-help"
-msgstr ""
+msgstr "トランザクションに署名します"
 
 #: shoestring/__main__.py:18
 msgid "main-subcommands-help"
-msgstr ""
+msgstr "有効なサブコマンド"
 
 #: shoestring/__main__.py:17
 msgid "main-title"
-msgstr ""
+msgstr "Shoestring Tool"
 
 #: shoestring/__main__.py:32
 msgid "main-upgrade-help"
-msgstr ""
+msgstr "ノードを最新のクライアントバージョンにアップグレードします"
 
 #: shoestring/commands/min_cosignatures_count.py:24
 msgid "min-cosignatures-count-cosignatures-detected"
-msgstr ""
+msgstr "アドレス {address} からのトランザクションには少なくとも {min_cosignatures_count} の連署者が必要です"
 
 #: shoestring/internal/NodewatchClient.py:37
 msgid "nodewatch-client-detected-epoch"
-msgstr ""
+msgstr "現在の最終エポックが {epoch} として検出されました"
 
 #: shoestring/internal/NodewatchClient.py:33
 msgid "nodewatch-client-detected-height"
-msgstr ""
+msgstr "最後に確定したブロック高が {height} として検出されました"
 
 #: shoestring/internal/PeerDownloader.py:64
 msgid "peer-downloader-loading-api-endpoints"
-msgstr ""
+msgstr "ファイル {filepath} からAPIエンドポイントを読み込み中"
 
 #: shoestring/internal/PeerDownloader.py:20
 msgid "peer-downloader-saved-file"
-msgstr ""
+msgstr "保存されたピアファイル {filepath}"
 
 #: shoestring/commands/pemtool.py:12
 msgid "pemtool-enter-private-key"
-msgstr ""
+msgstr "秘密鍵を入力してください（16進数で）："
 
 #: shoestring/commands/pemtool.py:27
 msgid "pemtool-error-output-file-already-exists"
-msgstr ""
+msgstr "出力ファイル ({filepath}) はすでに存在します。--force を使用して上書きしてください"
 
 #: shoestring/commands/pemtool.py:39
 msgid "pemtool-error-password-length"
-msgstr ""
+msgstr "パスワードは4文字以上1023文字以下である必要があります"
 
 #: shoestring/commands/pemtool.py:36
 msgid "pemtool-error-password-mismatch"
-msgstr ""
+msgstr "提供されたパスワードが一致しません"
 
 #: shoestring/commands/pemtool.py:43
 msgid "pemtool-saved-pem-file"
-msgstr ""
+msgstr "保存されました {filepath}"
 
 #: shoestring/commands/renew_voting_keys.py:89
 msgid "renew-voting-keys-maximum-already-registered"
-msgstr ""
+msgstr "このアカウントにはすでに最大数の投票キーが登録されています"
 
 #: shoestring/commands/renew_voting_keys.py:85
 msgid "renew-voting-keys-no-voting-keys-found"
-msgstr ""
+msgstr "投票が有効ですが、既存の投票キーファイルが見つかりません"
 
 #: shoestring/commands/renew_voting_keys.py:72
 msgid "renew-voting-keys-not-voting"
-msgstr ""
+msgstr "ノードは投票用に構成されていません。中止します"
 
 #: shoestring/commands/renew_voting_keys.py:58
 msgid "renew-voting-keys-removing-expired-voting-keys"
-msgstr ""
+msgstr "期限切れの投票キーを削除中: {filepath}"
 
 #: shoestring/commands/reset_data.py:10
 msgid "reset-data-recreating-directory"
-msgstr ""
+msgstr "ディレクトリ {directory} をパージして再作成中"
 
 #: shoestring/commands/setup.py:74
 msgid "setup-no-state-changes-required"
-msgstr ""
+msgstr "アカウントはすでに適切に構成されているため、トランザクションは生成されていません"
 
 #: shoestring/commands/setup.py:84
 msgid "setup-resources-directory-exists"
-msgstr ""
+msgstr "リソースディレクトリ {directory} はすでに存在するため、セットアップに失敗しました。アップグレードを実行するつもりでしたか？"
 
 #: shoestring/commands/signer.py:32
 msgid "signer-aggregate-transaction"
-msgstr ""
+msgstr "集約トランザクション: {transaction}"
 
 #: shoestring/commands/signer.py:33
 msgid "signer-inner-transactions"
-msgstr ""
+msgstr "内部トランザクション:"
 
 #: shoestring/commands/signer.py:46
 msgid "signer-signed-transaction"
-msgstr ""
+msgstr "ハッシュ: {transaction_hash} のトランザクション {transaction_type} に署名しました"
 
 #: shoestring/commands/signer.py:26
 msgid "signer-transaction"
-msgstr ""
+msgstr "トランザクション: {transaction}"
 
 #: shoestring/internal/TransactionSerializer.py:12
 msgid "transaction-serializer-saved-file"
-msgstr ""
+msgstr "トランザクションファイルが {filepath} に書き込まれました"
 
 #: shoestring/commands/upgrade.py:16
 msgid "upgrade-purging-directory"
-msgstr ""
+msgstr "ディレクトリ {directory} をパージ中"
 
 #: shoestring/commands/upgrade.py:21
 msgid "upgrade-recreating-directory"
-msgstr ""
+msgstr "ディレクトリ {directory} を再作成中"
 
-#: shoestring/wizard/__main__.py:99 shoestring/wizard/buttons.py:29
+#: shoestring/wizard/__main__.py:100 shoestring/wizard/buttons.py:29
 msgid "wizard-button-finish"
-msgstr ""
+msgstr "完了!"
 
-#: shoestring/wizard/buttons.py:51 shoestring/wizard/navigation.py:52
+#: shoestring/wizard/buttons.py:51 shoestring/wizard/navigation.py:54
 msgid "wizard-button-next"
-msgstr ""
+msgstr "次へ"
 
-#: shoestring/wizard/navigation.py:51
+#: shoestring/wizard/navigation.py:53
 msgid "wizard-button-prev"
-msgstr ""
+msgstr "戻る"
 
 #: shoestring/wizard/screens/root_check.py:16
 msgid "wizard-button-quit"
-msgstr ""
+msgstr "QUIT"
 
 #: shoestring/wizard/screens/certificates.py:34
 msgid "wizard-certificates-ca-cert-error-text"
-msgstr ""
+msgstr "CA名は空にできません"
 
 #: shoestring/wizard/screens/certificates.py:32
 msgid "wizard-certificates-ca-cert-label"
-msgstr ""
+msgstr "Cert CA名"
 
 #: shoestring/wizard/screens/certificates.py:38
 msgid "wizard-certificates-peer-cert-error-text"
-msgstr ""
+msgstr "ピア名は空にできません"
 
 #: shoestring/wizard/screens/certificates.py:36
 msgid "wizard-certificates-peer-cert-label"
-msgstr ""
+msgstr "Cert ピア名"
 
 #: shoestring/wizard/screens/certificates.py:50
 msgid "wizard-certificates-title"
-msgstr ""
+msgstr "CA名 + ノード証明書名"
 
-#: shoestring/wizard/screens/obligatory.py:83
+#: shoestring/wizard/screens/obligatory.py:85
 msgid "wizard-dialog-message-generation-text"
-msgstr ""
+msgstr "鍵が生成され、ファイルに保存されました。"
 
-#: shoestring/wizard/screens/obligatory.py:82
+#: shoestring/wizard/screens/obligatory.py:84
 msgid "wizard-dialog-message-generation-title"
-msgstr ""
+msgstr "鍵の生成"
 
-#: shoestring/wizard/screens/obligatory.py:99
+#: shoestring/wizard/screens/obligatory.py:101
 msgid "wizard-dialog-message-import-text"
-msgstr ""
+msgstr "秘密鍵がインポートされ、ファイルに保存されました。"
 
-#: shoestring/wizard/screens/obligatory.py:98
+#: shoestring/wizard/screens/obligatory.py:100
 msgid "wizard-dialog-message-import-title"
-msgstr ""
+msgstr "鍵のインポート"
 
 #: shoestring/wizard/screens/end_screen.py:19
 msgid "wizard-end-title"
-msgstr ""
+msgstr "設定を書き込み中"
 
 #: shoestring/wizard/screens/harvesting.py:108
 msgid "wizard-harvesting-active"
-msgstr ""
+msgstr "ハーベスティングを有効にしますか？"
 
 #: shoestring/wizard/screens/harvesting.py:112
 msgid "wizard-harvesting-auto-harvest"
-msgstr ""
+msgstr "自動ハーベストを行いますか？"
 
 #: shoestring/wizard/screens/harvesting.py:147
 msgid "wizard-harvesting-beneficiary-address-error-text"
-msgstr ""
+msgstr "受取人アドレスはアドレス（適切なネットワーク内）である必要があります"
 
 #: shoestring/wizard/screens/harvesting.py:145
 msgid "wizard-harvesting-beneficiary-address-label"
-msgstr ""
+msgstr "受取人アドレス"
 
 #: shoestring/wizard/screens/harvesting.py:129
 msgid "wizard-harvesting-delegate"
-msgstr ""
+msgstr "委任されたハーベスターの自動検出を有効にしますか？"
 
 #: shoestring/wizard/screens/harvesting.py:116
 msgid "wizard-harvesting-generate-keys"
-msgstr ""
+msgstr "新しいランダムな鍵とトランザクションを生成します"
 
 #: shoestring/wizard/screens/harvesting.py:135
 msgid "wizard-harvesting-max-unlocked-accounts-error-text"
-msgstr ""
+msgstr "最大アンロックアカウント値は数値である必要があります"
 
 #: shoestring/wizard/screens/harvesting.py:133
 msgid "wizard-harvesting-max-unlocked-accounts-label"
-msgstr ""
+msgstr "最大アンロックアカウント"
 
 #: shoestring/wizard/screens/harvesting.py:141
 msgid "wizard-harvesting-min-fee-multiplier-error-text"
-msgstr ""
+msgstr "最小手数料倍率値は数値である必要があります"
 
 #: shoestring/wizard/screens/harvesting.py:139
 msgid "wizard-harvesting-min-fee-multiplier-label"
-msgstr ""
+msgstr "最小手数料倍率"
 
 #: shoestring/wizard/screens/harvesting.py:122
 msgid "wizard-harvesting-signing-key-error-text"
-msgstr ""
+msgstr "署名用秘密鍵は有効な16進数の秘密鍵文字列である必要があります"
 
 #: shoestring/wizard/screens/harvesting.py:120
 msgid "wizard-harvesting-signing-key-label"
-msgstr ""
+msgstr "ハーベスター署名キー"
 
 #: shoestring/wizard/screens/harvesting.py:169
 msgid "wizard-harvesting-title"
-msgstr ""
+msgstr "ハーベスター設定"
 
 #: shoestring/wizard/screens/harvesting.py:79
 msgid "wizard-harvesting-token-active"
-msgstr ""
+msgstr "ハーベスター役割"
 
 #: shoestring/wizard/screens/harvesting.py:82
 msgid "wizard-harvesting-token-auto-harvest"
-msgstr ""
+msgstr "* 自動ハーベスト?"
 
 #: shoestring/wizard/screens/harvesting.py:87
 msgid "wizard-harvesting-token-beneficiary-address"
-msgstr ""
+msgstr "* 受取人アドレス"
 
 #: shoestring/wizard/screens/harvesting.py:84
 msgid "wizard-harvesting-token-delegate"
-msgstr ""
+msgstr "* 委任者を自動検出?"
 
 #: shoestring/wizard/screens/harvesting.py:83
 msgid "wizard-harvesting-token-generate-keys"
-msgstr ""
+msgstr "* キー生成?"
 
 #: shoestring/wizard/screens/harvesting.py:85
 msgid "wizard-harvesting-token-max-unlocked-accounts"
-msgstr ""
+msgstr "* 最大アンロックアカウント"
 
 #: shoestring/wizard/screens/harvesting.py:86
 msgid "wizard-harvesting-token-min-fee-multiplier"
-msgstr ""
+msgstr "* 最小手数料倍率"
 
 #: shoestring/wizard/screens/harvesting.py:126
 msgid "wizard-harvesting-vrf-key-error-text"
-msgstr ""
+msgstr "VRF秘密鍵は有効な16進数の秘密鍵文字列である必要があります"
 
 #: shoestring/wizard/screens/harvesting.py:124
 msgid "wizard-harvesting-vrf-key-label"
-msgstr ""
+msgstr "ハーベスターVRFキー"
 
-#: shoestring/wizard/__main__.py:104
+#: shoestring/wizard/__main__.py:105
 msgid "wizard-main-done"
-msgstr ""
+msgstr "完了しました 👋"
 
 #: shoestring/wizard/TitleBar.py:26
 msgid "wizard-main-initial-title"
-msgstr ""
+msgstr "<b>ようこそ、操作を選択してください</b>"
 
 #: shoestring/wizard/screens/modal.py:26
 msgid "wizard-modal-button-ok"
-msgstr ""
+msgstr "OK!"
 
 #: shoestring/wizard/screens/network_type.py:25
 msgid "wizard-network-type-mainnet"
-msgstr ""
+msgstr "メインネットワーク"
 
 #: shoestring/wizard/screens/network_type.py:26
 msgid "wizard-network-type-testnet"
-msgstr ""
+msgstr "現在のテストネットワーク (sai)"
 
 #: shoestring/wizard/screens/network_type.py:32
 msgid "wizard-network-type-title"
-msgstr ""
+msgstr "ネットワークタイプを選択"
 
 #: shoestring/wizard/screens/network_type.py:16
 msgid "wizard-network-type-token"
-msgstr ""
+msgstr "ネットワークタイプ"
 
 #: shoestring/wizard/screens/node_settings.py:90
 msgid "wizard-node-settings-friendly-name-label"
-msgstr ""
+msgstr "フレンドリーノード名"
 
 #: shoestring/wizard/screens/node_settings.py:54
 msgid "wizard-node-settings-https"
-msgstr ""
+msgstr "API用にhttpsを有効にします（https-portalを使用）、登録されたドメイン名が必要です"
 
 #: shoestring/wizard/screens/node_settings.py:67
 msgid "wizard-node-settings-ip-or-domain-name-error-text"
-msgstr ""
+msgstr "httpsが選択されている場合は有効なホスト名が必要です。そうでない場合は有効なIPアドレスまたはホスト名が必要です"
 
 #: shoestring/wizard/screens/node_settings.py:66
 msgid "wizard-node-settings-ip-or-domain-name-label"
-msgstr ""
+msgstr "IPまたはドメイン名"
 
 #: shoestring/wizard/screens/node_settings.py:73
 msgid "wizard-node-settings-metadata-info-error-text"
-msgstr ""
+msgstr "メタデータは有効なJSONとして指定する必要があります"
 
 #: shoestring/wizard/screens/node_settings.py:71
 msgid "wizard-node-settings-metadata-info-label"
-msgstr ""
+msgstr "ノードメタデータ情報（説明）"
 
 #: shoestring/wizard/screens/node_settings.py:78
 msgid "wizard-node-settings-title"
-msgstr ""
+msgstr "ノード設定"
 
 #: shoestring/wizard/screens/node_settings.py:38
 msgid "wizard-node-settings-token-domain-name"
-msgstr ""
+msgstr "ドメイン名"
 
 #: shoestring/wizard/screens/node_settings.py:39
 msgid "wizard-node-settings-token-friendly-name"
-msgstr ""
+msgstr "フレンドリーネーム"
 
 #: shoestring/wizard/screens/node_settings.py:37
 msgid "wizard-node-settings-token-https"
-msgstr ""
+msgstr "https"
 
 #: shoestring/wizard/screens/node_settings.py:40
 msgid "wizard-node-settings-token-metadata"
-msgstr ""
+msgstr "メタデータ"
 
 #: shoestring/wizard/screens/node_type.py:25
 msgid "wizard-node-type-dual"
-msgstr ""
+msgstr "デュアル（ピア + API）ノード"
 
 #: shoestring/wizard/screens/node_type.py:27
 msgid "wizard-node-type-light"
-msgstr ""
+msgstr "ライトノード"
 
 #: shoestring/wizard/screens/node_type.py:26
 msgid "wizard-node-type-peer"
-msgstr ""
+msgstr "ピアノード"
 
 #: shoestring/wizard/screens/node_type.py:34
 msgid "wizard-node-type-title"
-msgstr ""
+msgstr "ノードタイプを選択"
 
 #: shoestring/wizard/screens/node_type.py:16
 msgid "wizard-node-type-token"
-msgstr ""
+msgstr "ノードタイプ"
 
-#: shoestring/wizard/screens/obligatory.py:120
-#: shoestring/wizard/screens/obligatory.py:128
-msgid "wizard-obligatory-ca-pem-path-error-text"
-msgstr ""
-
-#: shoestring/wizard/screens/obligatory.py:121
 #: shoestring/wizard/screens/obligatory.py:122
-msgid "wizard-obligatory-ca-pem-path-error-text-not-exist"
-msgstr ""
+#: shoestring/wizard/screens/obligatory.py:130
+msgid "wizard-obligatory-ca-pem-path-error-text"
+msgstr "CA PEMファイルパスは有効なファイルである必要があります"
 
-#: shoestring/wizard/screens/obligatory.py:126
+#: shoestring/wizard/screens/obligatory.py:123
+#: shoestring/wizard/screens/obligatory.py:124
+msgid "wizard-obligatory-ca-pem-path-error-text-not-exist"
+msgstr "CA PEMパスは、既存のディレクトリ内の存在しないファイルを指す必要があります。 .pem拡張子を持っている必要があります"
+
+#: shoestring/wizard/screens/obligatory.py:128
 msgid "wizard-obligatory-ca-pem-path-label"
-msgstr ""
+msgstr "CA PEMファイルパス（メインアカウント）"
+
+#: shoestring/wizard/screens/obligatory.py:109
+msgid "wizard-obligatory-destination-directory-error-text"
+msgstr "宛先ディレクトリは有効なディレクトリである必要があります"
 
 #: shoestring/wizard/screens/obligatory.py:107
-msgid "wizard-obligatory-destination-directory-error-text"
-msgstr ""
-
-#: shoestring/wizard/screens/obligatory.py:105
 msgid "wizard-obligatory-destination-directory-label"
-msgstr ""
+msgstr "設定宛先ディレクトリ"
 
-#: shoestring/wizard/screens/obligatory.py:140
+#: shoestring/wizard/screens/obligatory.py:142
 msgid "wizard-obligatory-generate-button"
-msgstr ""
+msgstr "生成!"
 
-#: shoestring/wizard/screens/obligatory.py:139
+#: shoestring/wizard/screens/obligatory.py:141
 msgid "wizard-obligatory-import-button"
-msgstr ""
-
-#: shoestring/wizard/screens/obligatory.py:111
-msgid "wizard-obligatory-priv-ca"
-msgstr ""
+msgstr "インポート!"
 
 #: shoestring/wizard/screens/obligatory.py:113
+msgid "wizard-obligatory-priv-ca"
+msgstr "CA PEMファイル"
+
+#: shoestring/wizard/screens/obligatory.py:115
 msgid "wizard-obligatory-priv-generate-new"
-msgstr ""
+msgstr "ランダムな秘密鍵を生成"
 
-#: shoestring/wizard/screens/obligatory.py:112
+#: shoestring/wizard/screens/obligatory.py:114
 msgid "wizard-obligatory-priv-import-hex"
-msgstr ""
+msgstr "16進数でメイン秘密鍵をインポート"
 
-#: shoestring/wizard/screens/obligatory.py:144
+#: shoestring/wizard/screens/obligatory.py:146
 msgid "wizard-obligatory-private-key-ca-pem-path-description"
-msgstr ""
+msgstr "上記の秘密鍵PEMファイルの入力場所を指定してください。"
 
-#: shoestring/wizard/screens/obligatory.py:155
+#: shoestring/wizard/screens/obligatory.py:157
 msgid "wizard-obligatory-private-key-generate-description"
-msgstr ""
+msgstr "上記の秘密鍵PEMファイルの出力場所を指定してください。"
 
-#: shoestring/wizard/screens/obligatory.py:147
+#: shoestring/wizard/screens/obligatory.py:149
 msgid "wizard-obligatory-private-key-hex-description"
-msgstr ""
+msgstr "上記の秘密鍵PEMファイルの出力場所を指定してください。"
+
+#: shoestring/wizard/screens/obligatory.py:136
+msgid "wizard-obligatory-private-key-hex-error-text"
+msgstr "16進数形式の秘密鍵である必要があります"
 
 #: shoestring/wizard/screens/obligatory.py:134
-msgid "wizard-obligatory-private-key-hex-error-text"
-msgstr ""
-
-#: shoestring/wizard/screens/obligatory.py:132
 msgid "wizard-obligatory-private-key-hex-label"
-msgstr ""
+msgstr "秘密鍵を入力"
 
-#: shoestring/wizard/screens/obligatory.py:175
+#: shoestring/wizard/screens/obligatory.py:177
 msgid "wizard-obligatory-title"
-msgstr ""
+msgstr "必須設定"
+
+#: shoestring/wizard/screens/obligatory.py:43
+msgid "wizard-obligatory-token-ca-pem-path"
+msgstr "CA PEMパス"
 
 #: shoestring/wizard/screens/obligatory.py:41
-msgid "wizard-obligatory-token-ca-pem-path"
-msgstr ""
-
-#: shoestring/wizard/screens/obligatory.py:39
 msgid "wizard-obligatory-token-destination-directory"
-msgstr ""
+msgstr "宛先ディレクトリ"
 
 #: shoestring/wizard/screens/root_check.py:27
 msgid "wizard-root-check-error-text"
 msgstr ""
+"ウィザードはrootユーザーとして実行されていることを検出しました。shoestringはそのようなセットアップをサポートしていません。\n"
+"dockerへのアクセス権を持つユーザーアカウントを作成してください。"
 
 #: shoestring/wizard/screens/root_check.py:26
 msgid "wizard-root-check-title"
-msgstr ""
+msgstr "ルートチェック"
 
 #: shoestring/wizard/screen_loader.py:20
 msgid "wizard-screen-group-certificates"
-msgstr ""
+msgstr "証明書"
 
 #: shoestring/wizard/screen_loader.py:22
 msgid "wizard-screen-group-end-screen"
-msgstr ""
+msgstr "🎉"
 
 #: shoestring/wizard/screen_loader.py:16
 msgid "wizard-screen-group-harvesting"
-msgstr ""
+msgstr "ハーベスティング"
 
 #: shoestring/wizard/screen_loader.py:19
 msgid "wizard-screen-group-node-settings"
-msgstr ""
+msgstr "ノード設定"
 
 #: shoestring/wizard/screen_loader.py:14
 msgid "wizard-screen-group-obligatory"
-msgstr ""
+msgstr "基本設定"
 
 #: shoestring/wizard/screen_loader.py:17
 msgid "wizard-screen-group-voting"
-msgstr ""
+msgstr "投票"
 
 #: shoestring/wizard/screen_loader.py:13
 msgid "wizard-screen-group-welcome"
-msgstr ""
+msgstr "ようこそ"
 
 #: shoestring/wizard/styles.py:39
 msgid "wizard-toggle-disabled"
-msgstr ""
+msgstr "無効"
 
 #: shoestring/wizard/styles.py:39
 msgid "wizard-toggle-enabled"
-msgstr ""
+msgstr "有効"
+
+#: shoestring/wizard/__main__.py:56
+msgid "wizard-validation-error-text"
+msgstr "1つ以上の入力に修正が必要なエラーがあります"
 
 #: shoestring/wizard/screens/voting.py:26
 msgid "wizard-voting-active"
-msgstr ""
+msgstr "投票を有効にしますか？"
 
 #: shoestring/wizard/screens/voting.py:31
 msgid "wizard-voting-title"
-msgstr ""
+msgstr "投票者設定"
 
 #: shoestring/wizard/screens/voting.py:18
 msgid "wizard-voting-token-active"
-msgstr ""
+msgstr "投票者役割"
 
-#: shoestring/wizard/screens/welcome.py:27
+#: shoestring/wizard/screens/welcome.py:29
 msgid "wizard-welcome-command-token"
-msgstr ""
+msgstr "コマンド"
 
-#: shoestring/wizard/screens/welcome.py:38
+#: shoestring/wizard/screens/welcome.py:40
 msgid "wizard-welcome-renew-certificates"
-msgstr ""
+msgstr "証明書を更新"
+
+#: shoestring/wizard/screens/welcome.py:41
+msgid "wizard-welcome-renew-voting-keys"
+msgstr "投票キーを更新"
 
 #: shoestring/wizard/screens/welcome.py:39
-msgid "wizard-welcome-renew-voting-keys"
-msgstr ""
+msgid "wizard-welcome-reset-data"
+msgstr "データをリセット"
 
 #: shoestring/wizard/screens/welcome.py:37
-msgid "wizard-welcome-reset-data"
-msgstr ""
-
-#: shoestring/wizard/screens/welcome.py:35
 msgid "wizard-welcome-setup"
-msgstr ""
+msgstr "セットアップ"
 
-#: shoestring/wizard/screens/welcome.py:54
+#: shoestring/wizard/screens/welcome.py:56
 msgid "wizard-welcome-title"
-msgstr ""
+msgstr "ようこそ"
 
-#: shoestring/wizard/screens/welcome.py:36
+#: shoestring/wizard/screens/welcome.py:38
 msgid "wizard-welcome-upgrade"
-msgstr ""
+msgstr "アップグレード"
 
