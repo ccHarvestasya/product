@@ -423,11 +423,43 @@ msgstr ""
 msgid "upgrade-recreating-directory"
 msgstr ""
 
-#: shoestring/wizard/__main__.py:100 shoestring/wizard/buttons.py:29
+#: shoestring/wizard/screens/bootstrap.py:57
+msgid "wizard-bootstrap-active"
+msgstr ""
+
+#: shoestring/wizard/screens/bootstrap.py:61
+msgid "wizard-bootstrap-node-key"
+msgstr ""
+
+#: shoestring/wizard/screens/bootstrap.py:91
+msgid "wizard-bootstrap-path-error-text"
+msgstr ""
+
+#: shoestring/wizard/screens/bootstrap.py:89
+msgid "wizard-bootstrap-path-label"
+msgstr ""
+
+#: shoestring/wizard/screens/bootstrap.py:105
+msgid "wizard-bootstrap-title"
+msgstr ""
+
+#: shoestring/wizard/screens/bootstrap.py:38
+msgid "wizard-bootstrap-token-active"
+msgstr ""
+
+#: shoestring/wizard/screens/bootstrap.py:42
+msgid "wizard-bootstrap-token-bootstrap-path"
+msgstr ""
+
+#: shoestring/wizard/screens/bootstrap.py:41
+msgid "wizard-bootstrap-token-include-node-key"
+msgstr ""
+
+#: shoestring/wizard/__main__.py:99 shoestring/wizard/buttons.py:34
 msgid "wizard-button-finish"
 msgstr ""
 
-#: shoestring/wizard/buttons.py:51 shoestring/wizard/navigation.py:54
+#: shoestring/wizard/buttons.py:56 shoestring/wizard/navigation.py:52
 msgid "wizard-button-next"
 msgstr ""
 

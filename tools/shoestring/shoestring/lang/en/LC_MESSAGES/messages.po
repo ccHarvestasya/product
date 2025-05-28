@@ -294,7 +294,7 @@ msgstr "does health check"
 
 #: shoestring/__main__.py:22
 msgid "main-import-bootstrap-help"
-msgstr "imports settings from a bootstap installation"
+msgstr "imports settings from a bootstrap installation"
 
 #: shoestring/__main__.py:23
 msgid "main-import-harvesters-help"
@@ -446,11 +446,43 @@ msgstr "purging DIRECTORY {directory}"
 msgid "upgrade-recreating-directory"
 msgstr "recreating DIRECTORY {directory}"
 
-#: shoestring/wizard/__main__.py:100 shoestring/wizard/buttons.py:29
+#: shoestring/wizard/screens/bootstrap.py:57
+msgid "wizard-bootstrap-active"
+msgstr "would you like to import from bootstrap?"
+
+#: shoestring/wizard/screens/bootstrap.py:61
+msgid "wizard-bootstrap-node-key"
+msgstr "would you like to retain your node key?"
+
+#: shoestring/wizard/screens/bootstrap.py:91
+msgid "wizard-bootstrap-path-error-text"
+msgstr "bootstrap directory provided does not point to target folder"
+
+#: shoestring/wizard/screens/bootstrap.py:89
+msgid "wizard-bootstrap-path-label"
+msgstr "bootstrap target directory"
+
+#: shoestring/wizard/screens/bootstrap.py:105
+msgid "wizard-bootstrap-title"
+msgstr "Import Bootstrap settings"
+
+#: shoestring/wizard/screens/bootstrap.py:38
+msgid "wizard-bootstrap-token-active"
+msgstr "bootstrap import"
+
+#: shoestring/wizard/screens/bootstrap.py:42
+msgid "wizard-bootstrap-token-bootstrap-path"
+msgstr "target directory"
+
+#: shoestring/wizard/screens/bootstrap.py:41
+msgid "wizard-bootstrap-token-include-node-key"
+msgstr "include node key"
+
+#: shoestring/wizard/__main__.py:99 shoestring/wizard/buttons.py:34
 msgid "wizard-button-finish"
 msgstr "Finish!"
 
-#: shoestring/wizard/buttons.py:51 shoestring/wizard/navigation.py:54
+#: shoestring/wizard/buttons.py:56 shoestring/wizard/navigation.py:52
 msgid "wizard-button-next"
 msgstr "Next"
 
