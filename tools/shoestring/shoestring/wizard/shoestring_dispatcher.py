@@ -31,7 +31,7 @@ async def dispatch_shoestring_command(screens, executor):
 			shoestring_args = build_shoestring_command(
 				operation,
 				destination_directory,
-				temp_directory,
+				shoestring_directory,
 				obligatory_settings.ca_pem_path,
 				package,
 				has_custom_rest_overrides)
