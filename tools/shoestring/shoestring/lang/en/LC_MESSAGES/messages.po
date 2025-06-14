@@ -456,7 +456,7 @@ msgstr "would you like to retain your node key?"
 
 #: shoestring/wizard/screens/bootstrap.py:91
 msgid "wizard-bootstrap-path-error-text"
-msgstr "bootstrap directory provided does not point to target folder"
+msgstr "bootstrap directory provided does not point to target directory"
 
 #: shoestring/wizard/screens/bootstrap.py:89
 msgid "wizard-bootstrap-path-label"

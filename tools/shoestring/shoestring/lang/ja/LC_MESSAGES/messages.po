@@ -55,7 +55,7 @@ msgstr "in-pemで暗号化された入力harvesters.datファイル"
 
 #: shoestring/commands/import_harvesters.py:99
 msgid "argument-help-import-harvesters-in-pem"
-msgstr "in-harvestersを復号化するために使用できるPEMファイル"
+msgstr "in-harvestersを復号するために使用できるPEMファイル"
 
 #: shoestring/commands/import_harvesters.py:101
 msgid "argument-help-import-harvesters-out-harvesters"
@@ -360,15 +360,15 @@ msgstr "保存されたピアファイル {filepath}"
 
 #: shoestring/commands/pemtool.py:12
 msgid "pemtool-enter-private-key"
-msgstr "秘密鍵を入力してください（16進数で）："
+msgstr "秘密鍵を入力してください（16進数形式で）："
 
 #: shoestring/commands/pemtool.py:27
 msgid "pemtool-error-output-file-already-exists"
-msgstr "出力ファイル ({filepath}) はすでに存在します。--force を使用して上書きしてください"
+msgstr "ファイル {filepath} は既に存在します。上書きするには --force オプションを使用してください"
 
 #: shoestring/commands/pemtool.py:39
 msgid "pemtool-error-password-length"
-msgstr "パスワードは4文字以上1023文字以下である必要があります"
+msgstr "パスワードは4文字以上1023文字以下で入力してください"
 
 #: shoestring/commands/pemtool.py:36
 msgid "pemtool-error-password-mismatch"
@@ -376,7 +376,7 @@ msgstr "提供されたパスワードが一致しません"
 
 #: shoestring/commands/pemtool.py:43
 msgid "pemtool-saved-pem-file"
-msgstr "保存されました {filepath}"
+msgstr "ファイル {filepath} を保存しました"
 
 #: shoestring/commands/renew_voting_keys.py:89
 msgid "renew-voting-keys-maximum-already-registered"
@@ -388,19 +388,19 @@ msgstr "投票が有効ですが、既存の投票キーファイルが見つか
 
 #: shoestring/commands/renew_voting_keys.py:72
 msgid "renew-voting-keys-not-voting"
-msgstr "ノードは投票用に構成されていません。中止します"
+msgstr "ノードが投票用に設定されていないため、処理を中止します"
 
 #: shoestring/commands/renew_voting_keys.py:58
 msgid "renew-voting-keys-removing-expired-voting-keys"
-msgstr "期限切れの投票キーを削除中: {filepath}"
+msgstr "期限切れの投票キーを削除しています: {filepath}"
 
 #: shoestring/commands/reset_data.py:10
 msgid "reset-data-recreating-directory"
-msgstr "ディレクトリ {directory} をパージして再作成中"
+msgstr "ディレクトリ {directory} をパージしています"
 
 #: shoestring/commands/setup.py:74
 msgid "setup-no-state-changes-required"
-msgstr "アカウントはすでに適切に構成されているため、トランザクションは生成されていません"
+msgstr "アカウントは既に適切に設定されているため、トランザクションを生成しません"
 
 #: shoestring/commands/setup.py:84
 msgid "setup-resources-directory-exists"
@@ -424,7 +424,7 @@ msgstr "トランザクション: {transaction}"
 
 #: shoestring/internal/TransactionSerializer.py:12
 msgid "transaction-serializer-saved-file"
-msgstr "トランザクションファイルが {filepath} に書き込まれました"
+msgstr "トランザクションファイルを {filepath} に書き込みました"
 
 #: shoestring/commands/upgrade.py:16
 msgid "upgrade-purging-directory"
@@ -444,7 +444,7 @@ msgstr "ノードキーを保持しますか？"
 
 #: shoestring/wizard/screens/bootstrap.py:91
 msgid "wizard-bootstrap-path-error-text"
-msgstr "指定されたbootstrapディレクトリがターゲットフォルダを指していません"
+msgstr "指定されたbootstrapディレクトリがターゲットディレクトリを指していません"
 
 #: shoestring/wizard/screens/bootstrap.py:89
 msgid "wizard-bootstrap-path-label"
@@ -484,7 +484,7 @@ msgstr "QUIT"
 
 #: shoestring/wizard/screens/certificates.py:34
 msgid "wizard-certificates-ca-cert-error-text"
-msgstr "CA名は空にできません"
+msgstr "CA名を入力してください"
 
 #: shoestring/wizard/screens/certificates.py:32
 msgid "wizard-certificates-ca-cert-label"
@@ -492,7 +492,7 @@ msgstr "Cert CA名"
 
 #: shoestring/wizard/screens/certificates.py:38
 msgid "wizard-certificates-peer-cert-error-text"
-msgstr "ピア名は空にできません"
+msgstr "ピア名を入力してください"
 
 #: shoestring/wizard/screens/certificates.py:36
 msgid "wizard-certificates-peer-cert-label"
@@ -520,7 +520,7 @@ msgstr "鍵のインポート"
 
 #: shoestring/wizard/screens/end_screen.py:20
 msgid "wizard-end-title"
-msgstr "設定を書き込み中"
+msgstr "設定を書き込んでいます"
 
 #: shoestring/wizard/screens/harvesting.py:108
 msgid "wizard-harvesting-active"
@@ -552,7 +552,7 @@ msgstr "最大アンロックアカウント値は数値である必要があり
 
 #: shoestring/wizard/screens/harvesting.py:133
 msgid "wizard-harvesting-max-unlocked-accounts-label"
-msgstr "最大アンロックアカウント"
+msgstr "最大アンロックアカウント数"
 
 #: shoestring/wizard/screens/harvesting.py:141
 msgid "wizard-harvesting-min-fee-multiplier-error-text"
@@ -564,7 +564,7 @@ msgstr "最小手数料倍率"
 
 #: shoestring/wizard/screens/harvesting.py:122
 msgid "wizard-harvesting-signing-key-error-text"
-msgstr "署名用秘密鍵は有効な16進数の秘密鍵文字列である必要があります"
+msgstr "署名用秘密鍵は有効な16進数形式の秘密鍵文字列である必要があります"
 
 #: shoestring/wizard/screens/harvesting.py:120
 msgid "wizard-harvesting-signing-key-label"
@@ -588,7 +588,7 @@ msgstr "* 受取人アドレス"
 
 #: shoestring/wizard/screens/harvesting.py:84
 msgid "wizard-harvesting-token-delegate"
-msgstr "* 委任者を自動検出?"
+msgstr "* 委任ハーベスターを自動検出?"
 
 #: shoestring/wizard/screens/harvesting.py:83
 msgid "wizard-harvesting-token-generate-keys"
@@ -596,7 +596,7 @@ msgstr "* キー生成?"
 
 #: shoestring/wizard/screens/harvesting.py:85
 msgid "wizard-harvesting-token-max-unlocked-accounts"
-msgstr "* 最大アンロックアカウント"
+msgstr "* 最大アンロックアカウント数"
 
 #: shoestring/wizard/screens/harvesting.py:86
 msgid "wizard-harvesting-token-min-fee-multiplier"
@@ -604,7 +604,7 @@ msgstr "* 最小手数料倍率"
 
 #: shoestring/wizard/screens/harvesting.py:126
 msgid "wizard-harvesting-vrf-key-error-text"
-msgstr "VRF秘密鍵は有効な16進数の秘密鍵文字列である必要があります"
+msgstr "VRF秘密鍵は16進数形式で入力してください"
 
 #: shoestring/wizard/screens/harvesting.py:124
 msgid "wizard-harvesting-vrf-key-label"
@@ -644,7 +644,7 @@ msgstr "フレンドリーノード名"
 
 #: shoestring/wizard/screens/node_settings.py:54
 msgid "wizard-node-settings-https"
-msgstr "API用にhttpsを有効にします（https-portalを使用）、登録されたドメイン名が必要です"
+msgstr "API用にHTTPS通信を有効にします（https-portalを使用）、登録されたドメイン名が必要です"
 
 #: shoestring/wizard/screens/node_settings.py:67
 msgid "wizard-node-settings-ip-or-domain-name-error-text"
@@ -656,7 +656,7 @@ msgstr "IPまたはドメイン名"
 
 #: shoestring/wizard/screens/node_settings.py:73
 msgid "wizard-node-settings-metadata-info-error-text"
-msgstr "メタデータは有効なJSONとして指定する必要があります"
+msgstr "メタデータは有効なJSON形式で入力してください"
 
 #: shoestring/wizard/screens/node_settings.py:71
 msgid "wizard-node-settings-metadata-info-label"
@@ -718,7 +718,7 @@ msgstr "CA PEMファイルパス（メインアカウント）"
 
 #: shoestring/wizard/screens/obligatory.py:109
 msgid "wizard-obligatory-destination-directory-error-text"
-msgstr "宛先ディレクトリは有効なディレクトリである必要があります"
+msgstr "有効な宛先ディレクトリを指定してください"
 
 #: shoestring/wizard/screens/obligatory.py:107
 msgid "wizard-obligatory-destination-directory-label"
@@ -742,7 +742,7 @@ msgstr "ランダムな秘密鍵を生成"
 
 #: shoestring/wizard/screens/obligatory.py:114
 msgid "wizard-obligatory-priv-import-hex"
-msgstr "16進数でメイン秘密鍵をインポート"
+msgstr "16進数形式でメイン秘密鍵をインポート"
 
 #: shoestring/wizard/screens/obligatory.py:148
 msgid "wizard-obligatory-private-key-ca-pem-path-description"
@@ -824,7 +824,7 @@ msgstr "有効"
 
 #: shoestring/wizard/__main__.py:55
 msgid "wizard-validation-error-text"
-msgstr "1つ以上の入力に修正が必要なエラーがあります"
+msgstr "入力内容に誤りがあります。修正してください。"
 
 #: shoestring/wizard/screens/voting.py:26
 msgid "wizard-voting-active"
