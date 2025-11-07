@@ -33,5 +33,13 @@ dist/
 # other build artifacts
 _generated/
 
-*.test.yaml
-config.py
+nem.main.yaml
+nem.test.yaml
+symbol.main.yaml
+symbol.test.yaml
+nodewatch_daily.main.sh
+nodewatch_daily.test.sh
+pull.main.sh
+pull.test.sh
+config.main.py
+config.test.py
