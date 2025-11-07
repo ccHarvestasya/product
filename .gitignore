@@ -32,3 +32,6 @@ dist/
 
 # other build artifacts
 _generated/
+
+*.test.yaml
+config.py
