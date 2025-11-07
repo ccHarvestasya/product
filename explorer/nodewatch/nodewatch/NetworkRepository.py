@@ -192,6 +192,7 @@ class NetworkRepository:
 		node_protocol = json_node['endpoint']['protocol']
 		node_host = json_node['endpoint']['host']
 		node_port = json_node['endpoint']['port']
+		is_ssl = True if node_protocol == 'https' else False
 
 		json_identity = json_node['identity']
 		main_public_key = PublicKey(json_identity['public-key'])
@@ -204,6 +205,7 @@ class NetworkRepository:
 			json_identity['name'],
 			json_node['metaData']['version'],
 			*extra_data,
+			is_ssl_enabled=is_ssl,
 			geo_location=self.geo_location_map.get(node_host, None))
 
 	def _handle_symbol_node(self, json_node, extra_data):
