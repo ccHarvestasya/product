@@ -33,6 +33,10 @@ dist/
 # other build artifacts
 _generated/
 
+cert.main/
+cert.test/
+resources.main/
+resources.test/
 nem.main.yaml
 nem.test.yaml
 symbol.main.yaml
