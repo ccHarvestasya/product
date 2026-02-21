@@ -51,6 +51,29 @@ If you are setting up a new node but have existing harvesting and/or voting keys
 
 If you need to renew voting key files, it is recommended to use `renew-voting-keys`. This command will unregister all expired voting keys and register a new set of voting keys starting at first epoch without a registered voting key.
 
+## Environment Variables
+
+### `SHOESTRING_HOME`
+
+`SHOESTRING_HOME` can be used to set the default installation directory used by commands that support `--directory`.
+
+- If `--directory` is specified, it takes precedence.
+- If `--directory` is omitted and `SHOESTRING_HOME` is set, `SHOESTRING_HOME` is used.
+- If both are omitted, `$HOME` is used.
+
+Examples:
+
+```sh
+# set for current shell session
+export SHOESTRING_HOME=/opt/symbol-node
+
+# commands without --directory will use SHOESTRING_HOME
+python3 -m shoestring health --config config.ini
+
+# per-command override without exporting
+SHOESTRING_HOME=/opt/symbol-node python3 -m shoestring setup --config config.ini --ca-key-path ca.key.pem
+```
+
 # CLI Commands
 
 In commands that require `--package` switch, the list of currently supported network aliases are:
@@ -141,7 +164,7 @@ setup \
 
   --config CONFIG                       path to shoestring configuration file
   --package PACKAGE                     Network configuration package. Possible values: (name | file:///filename | http(s)://uri) (default: mainnet)
-  --directory DIRECTORY                 installation directory (default: $HOME)
+  --directory DIRECTORY                 installation directory (default: $SHOESTRING_HOME or $HOME)
   --overrides OVERRIDES                 path to custom user settings
   --rest-overrides REST_OVERRIDES       path to custom user REST settings (this is only valid for API roles)
   --security                            security mode (default: default)
@@ -187,7 +210,7 @@ Checks the health of the local Symbol node.
 health [-h] --config CONFIG [--directory DIRECTORY]
 
   --config CONFIG       path to shoestring configuration file
-  --directory DIRECTORY installation directory (default: $HOME)
+  --directory DIRECTORY installation directory (default: $SHOESTRING_HOME or $HOME)
 ```
 
 ## Upgrade Commands
@@ -206,7 +229,7 @@ upgrade \
 
   --config CONFIG                       path to shoestring configuration file
   --package PACKAGE                     Network configuration package. Possible values: (name | file:///filename | http(s)://uri) (default: mainnet)
-  --directory DIRECTORY                 installation directory (default: $HOME)
+  --directory DIRECTORY                 installation directory (default: $SHOESTRING_HOME or $HOME)
   --overrides OVERRIDES                 path to custom user settings
   --rest-overrides REST_OVERRIDES       path to custom user REST settings (this is only valid for API roles)
 ```
@@ -219,7 +242,7 @@ Renews peer certificates.
 renew-certificates --config CONFIG [--directory DIRECTORY] --ca-key-path CA_KEY_PATH [--renew-ca] [--retain-node-key]
 
   --config CONFIG           path to shoestring configuration file
-  --directory DIRECTORY     installation directory (default: $HOME)
+  --directory DIRECTORY     installation directory (default: $SHOESTRING_HOME or $HOME)
   --ca-key-path CA_KEY_PATH path to main private key PEM file
   --renew-ca                renews CA certificate too
   --retain-node-key         retain node key
@@ -235,7 +258,7 @@ Renews voting keys.
 renew-voting-keys --config CONFIG [--directory DIRECTORY]
 
   --config CONFIG           path to shoestring configuration file
-  --directory DIRECTORY     installation directory (default: $HOME)
+  --directory DIRECTORY     installation directory (default: $SHOESTRING_HOME or $HOME)
 ```
 
 This command will generate a transaction that will need to be sent to the network using `announce-transaction` to update the network state.
@@ -248,7 +271,7 @@ Resets blockchain state to allow a resync from scratch.
 reset-data --config CONFIG [--directory DIRECTORY] [--purge-harvesters]
 
   --config CONFIG           path to shoestring configuration file
-  --directory DIRECTORY     installation directory (default: $HOME)
+  --directory DIRECTORY     installation directory (default: $SHOESTRING_HOME or $HOME)
   --purge-harvesters        purge harvesters.dat file
 ```
 
