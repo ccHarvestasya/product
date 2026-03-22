@@ -21,18 +21,18 @@ msgstr "送信するシリアライズ済みトランザクションファイル
 #: shoestring/commands/renew_certificates.py:36
 #: shoestring/commands/setup.py:146 shoestring/commands/signer.py:93
 msgid "argument-help-ca-key-path"
-msgstr "メイン秘密鍵PEMファイルへのパス"
+msgstr "メイン秘密鍵PEMファイルへのパス（デフォルト: {default_path}）"
 
 #: shoestring/commands/announce_transaction.py:35
 #: shoestring/commands/health.py:74 shoestring/commands/import_bootstrap.py:49
-#: shoestring/commands/import_harvesters.py:97 shoestring/commands/init.py:29
+#: shoestring/commands/import_harvesters.py:97 shoestring/commands/init.py:48
 #: shoestring/commands/min_cosignatures_count.py:34
 #: shoestring/commands/renew_certificates.py:34
 #: shoestring/commands/renew_voting_keys.py:112
 #: shoestring/commands/reset_data.py:86 shoestring/commands/setup.py:138
 #: shoestring/commands/signer.py:92
 msgid "argument-help-config"
-msgstr "shoestring設定ファイルへのパス"
+msgstr "shoestring設定ファイルへのパス（デフォルト: {default_path}）"
 
 #: shoestring/commands/health.py:75
 #: shoestring/commands/renew_certificates.py:35
@@ -99,9 +99,9 @@ msgstr "harvesters.datファイルを削除"
 
 #: shoestring/commands/setup.py:141
 msgid "argument-help-setup-overrides"
-msgstr "カスタムユーザー設定ファイルへのパス"
+msgstr "カスタムユーザー設定ファイルへのパス (デフォルト: {default_path})"
 
-#: shoestring/commands/init.py:28 shoestring/commands/setup.py:139
+#: shoestring/commands/init.py:47 shoestring/commands/setup.py:139
 msgid "argument-help-setup-package"
 msgstr ""
 "ネットワーク構成パッケージ。可能な値：（name | file:///filename | "
@@ -141,7 +141,7 @@ msgstr "ダウンロードされたファイル ({descriptor_name}) に無効な
 msgid "general-connecting-to-node"
 msgstr "ノード {endpoint} へ接続中"
 
-#: shoestring/commands/init.py:17 shoestring/commands/reset_data.py:56
+#: shoestring/commands/init.py:23 shoestring/commands/reset_data.py:56
 #: shoestring/internal/Preparer.py:193
 #: shoestring/internal/VoterConfigurator.py:53
 msgid "general-copying-file"
@@ -278,6 +278,10 @@ msgstr "入力harvestersと出力harvestersは異なる必要があります"
 msgid "import-harvesters-list-header"
 msgstr "公開鍵 {public_key} を使用して {filepath} でハーベスターをリスト中"
 
+#: shoestring/commands/init.py:34
+msgid "init-failed-to-create-config"
+msgstr "設定ファイルの作成に失敗しました（{destination_path}）：{error}"
+
 #: shoestring/__main__.py:20
 msgid "main-announce-transaction-help"
 msgstr "トランザクションをネットワークにアナウンスします"
@@ -350,7 +354,7 @@ msgstr "現在の最終エポックが {epoch} として検出されました"
 msgid "nodewatch-client-detected-height"
 msgstr "最後に確定したブロック高が {height} として検出されました"
 
-#: shoestring/internal/PeerDownloader.py:64
+#: shoestring/internal/PeerDownloader.py:65
 msgid "peer-downloader-loading-api-endpoints"
 msgstr "ファイル {filepath} からAPIエンドポイントを読み込み中"
 

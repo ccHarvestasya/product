@@ -1,8 +1,11 @@
+from pathlib import Path
+
 from symbolchain import sc
 from symbolchain.facade.SymbolFacade import SymbolFacade
 from symbollightapi.connector.SymbolConnector import SymbolConnector
 from zenlog import log
 
+from shoestring.internal.HomeResolver import resolve_home_path
 from shoestring.internal.NodeDownloader import detect_api_endpoints
 from shoestring.internal.ShoestringConfiguration import parse_shoestring_configuration
 
@@ -32,6 +35,9 @@ async def run_main(args):
 
 
 def add_arguments(parser):
-	parser.add_argument('--config', help=_('argument-help-config'), required=True)
+	default_directory_path = resolve_home_path(Path.home() / 'shoestring')
+	default_config_path = default_directory_path / 'shoestring' / 'shoestring.ini'
+
+	parser.add_argument('--config', help=_('argument-help-config').format(default_path=default_config_path), default=str(default_config_path))
 	parser.add_argument('--transaction', help=_('argument-help-announce-transaction-transaction'), required=True)
 	parser.set_defaults(func=run_main)

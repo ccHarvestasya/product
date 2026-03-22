@@ -18,7 +18,7 @@ msgstr ""
 
 #: shoestring/commands/announce_transaction.py:35
 #: shoestring/commands/health.py:74 shoestring/commands/import_bootstrap.py:49
-#: shoestring/commands/import_harvesters.py:97 shoestring/commands/init.py:29
+#: shoestring/commands/import_harvesters.py:97 shoestring/commands/init.py:48
 #: shoestring/commands/min_cosignatures_count.py:34
 #: shoestring/commands/renew_certificates.py:34
 #: shoestring/commands/renew_voting_keys.py:112
@@ -94,7 +94,7 @@ msgstr ""
 msgid "argument-help-setup-overrides"
 msgstr ""
 
-#: shoestring/commands/init.py:28 shoestring/commands/setup.py:139
+#: shoestring/commands/init.py:47 shoestring/commands/setup.py:139
 msgid "argument-help-setup-package"
 msgstr ""
 
@@ -132,7 +132,7 @@ msgstr ""
 msgid "general-connecting-to-node"
 msgstr ""
 
-#: shoestring/commands/init.py:17 shoestring/commands/reset_data.py:56
+#: shoestring/commands/init.py:23 shoestring/commands/reset_data.py:56
 #: shoestring/internal/Preparer.py:193
 #: shoestring/internal/VoterConfigurator.py:53
 msgid "general-copying-file"
@@ -267,6 +267,10 @@ msgstr ""
 msgid "import-harvesters-list-header"
 msgstr ""
 
+#: shoestring/commands/init.py:34
+msgid "init-failed-to-create-config"
+msgstr ""
+
 #: shoestring/__main__.py:20
 msgid "main-announce-transaction-help"
 msgstr ""
@@ -339,7 +343,7 @@ msgstr ""
 msgid "nodewatch-client-detected-height"
 msgstr ""
 
-#: shoestring/internal/PeerDownloader.py:64
+#: shoestring/internal/PeerDownloader.py:65
 msgid "peer-downloader-loading-api-endpoints"
 msgstr ""
 

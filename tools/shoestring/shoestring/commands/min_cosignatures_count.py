@@ -9,6 +9,8 @@ from shoestring.internal.NodeDownloader import detect_api_endpoints
 from shoestring.internal.PemUtils import read_public_key_from_private_key_pem_file
 from shoestring.internal.ShoestringConfiguration import parse_shoestring_configuration
 
+from .ArgumentUtils import add_ca_key_path_argument, add_config_argument, resolve_default_paths
+
 
 async def run_main(args):
 	config = parse_shoestring_configuration(args.config)
@@ -31,7 +33,9 @@ async def run_main(args):
 
 
 def add_arguments(parser):
-	parser.add_argument('--config', help=_('argument-help-config'), required=True)
-	parser.add_argument('--ca-key-path', help=_('argument-help-ca-key-path'), required=True)
+	(_default_directory_path, default_config_path, default_ca_key_path) = resolve_default_paths()
+
+	add_config_argument(parser, default_config_path)
+	add_ca_key_path_argument(parser, default_ca_key_path)
 	parser.add_argument('--update', help=_('argument-help-min-cosignatures-count-update'), action='store_true')
 	parser.set_defaults(func=run_main)

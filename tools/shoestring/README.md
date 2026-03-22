@@ -89,7 +89,7 @@ As documented below, alternatively full path to package zip file can be provided
 Extracts a template shoestring configuration file from a package that the user can then customize.
 
 ```
-init [--package PACKAGE] config
+init [--package PACKAGE] [config]
 
   config             path to shoestring configuration file
   --package PACKAGE  Network configuration package. Possible values: (name | file:///filename | http(s)://uri) (default: mainnet)

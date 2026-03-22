@@ -5,6 +5,7 @@ from pathlib import Path
 from zenlog import log
 
 from shoestring.internal.ConfigurationManager import ConfigurationManager
+from shoestring.internal.HomeResolver import resolve_home_path
 
 
 async def run_main(args):
@@ -46,7 +47,10 @@ async def run_main(args):
 
 
 def add_arguments(parser):
-	parser.add_argument('--config', help=_('argument-help-config'), required=True)
+	default_directory_path = resolve_home_path(Path.home() / 'shoestring')
+	default_config_path = default_directory_path / 'shoestring' / 'shoestring.ini'
+
+	parser.add_argument('--config', help=_('argument-help-config').format(default_path=default_config_path), default=str(default_config_path))
 	parser.add_argument('--bootstrap', help=_('argument-help-import-bootstrap-bootstrap'), required=True)
 	parser.add_argument('--include-node-key', help=_('argument-help-import-bootstrap-include-node-key'), action='store_true')
 	parser.set_defaults(func=run_main)

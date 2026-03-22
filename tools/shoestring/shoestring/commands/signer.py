@@ -8,6 +8,7 @@ from zenlog import log
 from ..internal.PemUtils import read_private_key_from_private_key_pem_file
 from ..internal.ShoestringConfiguration import parse_shoestring_configuration
 from ..internal.TransactionSerializer import write_transaction_to_file
+from .ArgumentUtils import add_ca_key_path_argument, add_config_argument, resolve_default_paths
 
 
 def _is_aggregate(transaction):
@@ -89,8 +90,10 @@ def run_main(args):
 
 
 def add_arguments(parser):
-	parser.add_argument('--config', help=_('argument-help-config'), required=True)
-	parser.add_argument('--ca-key-path', help=_('argument-help-ca-key-path'), required=True)
+	(_default_directory_path, default_config_path, default_ca_key_path) = resolve_default_paths()
+
+	add_config_argument(parser, default_config_path)
+	add_ca_key_path_argument(parser, default_ca_key_path)
 	parser.add_argument('--save', help=_('argument-help-signer-save'), action='store_true')
 	parser.add_argument('filename', help=_('argument-help-signer-filename'))
 	parser.set_defaults(func=run_main)

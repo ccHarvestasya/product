@@ -3,8 +3,9 @@ from pathlib import Path
 
 from zenlog import log
 
-from shoestring.internal.HomeResolver import resolve_home_path
 from shoestring.internal.ShoestringConfiguration import parse_shoestring_configuration
+
+from .ArgumentUtils import add_config_argument, add_directory_argument, resolve_default_paths
 
 
 def _purge_and_recreate(directory):
@@ -84,9 +85,9 @@ async def run_main(args):
 
 
 def add_arguments(parser):
-	default_dir = resolve_home_path(Path.home())
+	(default_directory_path, default_config_path, _default_ca_key_path) = resolve_default_paths()
 
-	parser.add_argument('--config', help=_('argument-help-config'), required=True)
-	parser.add_argument('--directory', help=_('argument-help-directory').format(default_path=default_dir), default=str(default_dir))
+	add_config_argument(parser, default_config_path)
+	add_directory_argument(parser, default_directory_path)
 	parser.add_argument('--purge-harvesters', help=_('argument-help-reset-data-purge-harvesters'), action='store_true')
 	parser.set_defaults(func=run_main)

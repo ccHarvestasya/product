@@ -7,7 +7,6 @@ from symbollightapi.connector.SymbolConnector import SymbolConnector
 from zenlog import log
 
 from shoestring.internal.ConfigurationManager import ConfigurationManager, load_patches_from_file
-from shoestring.internal.HomeResolver import resolve_home_path
 from shoestring.internal.NodeFeatures import NodeFeatures
 from shoestring.internal.NodewatchClient import get_current_finalization_epoch
 from shoestring.internal.PackageResolver import download_and_extract_package
@@ -16,6 +15,8 @@ from shoestring.internal.PemUtils import read_public_key_from_public_key_pem_fil
 from shoestring.internal.Preparer import Preparer
 from shoestring.internal.ShoestringConfiguration import parse_shoestring_configuration
 from shoestring.internal.TransactionSerializer import write_transaction_to_file
+
+from .ArgumentUtils import add_ca_key_path_argument, add_config_argument, add_directory_argument, resolve_default_paths
 
 SECURITY_MODES = ('default', 'paranoid', 'insecure')
 
@@ -136,15 +137,19 @@ async def run_main(args):
 
 
 def add_arguments(parser, is_initial_setup=True):
-	default_dir = resolve_home_path(Path.home())
+	(default_directory_path, default_config_path, default_ca_key_path) = resolve_default_paths()
+	default_overrides_path = default_directory_path / 'shoestring' / 'overrides.ini'
 
-	parser.add_argument('--config', help=_('argument-help-config'), required=True)
+	add_config_argument(parser, default_config_path)
 	parser.add_argument('--package', help=_('argument-help-setup-package'), default='mainnet')
-	parser.add_argument('--directory', help=_('argument-help-directory').format(default_path=default_dir), default=str(default_dir))
-	parser.add_argument('--overrides', help=_('argument-help-setup-overrides'))
+	add_directory_argument(parser, default_directory_path)
+	parser.add_argument(
+		'--overrides',
+		help=_('argument-help-setup-overrides').format(default_path=default_overrides_path),
+		default=str(default_overrides_path))
 	parser.add_argument('--rest-overrides', help=_('argument-help-setup-rest-overrides'))
 
 	if is_initial_setup:
 		parser.add_argument('--security', help=_('argument-help-setup-security'), choices=SECURITY_MODES, default='default')
-		parser.add_argument('--ca-key-path', help=_('argument-help-ca-key-path'), required=True)
+		add_ca_key_path_argument(parser, default_ca_key_path)
 		parser.set_defaults(func=run_main)

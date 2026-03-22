@@ -5,7 +5,6 @@ from symbollightapi.connector.SymbolConnector import SymbolConnector
 from zenlog import log
 
 from shoestring.internal.ConfigurationManager import ConfigurationManager
-from shoestring.internal.HomeResolver import resolve_home_path
 from shoestring.internal.LinkTransactionBuilder import LinkTransactionBuilder
 from shoestring.internal.NodeFeatures import NodeFeatures
 from shoestring.internal.NodewatchClient import get_current_finalization_epoch
@@ -15,6 +14,8 @@ from shoestring.internal.Preparer import Preparer
 from shoestring.internal.ShoestringConfiguration import parse_shoestring_configuration
 from shoestring.internal.TransactionSerializer import write_transaction_to_file
 from shoestring.internal.VoterConfigurator import VoterConfigurator, inspect_voting_key_files
+
+from .ArgumentUtils import add_config_argument, add_directory_argument, resolve_default_paths
 
 
 def _load_voting_key_descriptors(directory, current_epoch):
@@ -110,8 +111,8 @@ async def run_main(args):
 
 
 def add_arguments(parser):
-	default_dir = resolve_home_path(Path.home())
+	(default_directory_path, default_config_path, _default_ca_key_path) = resolve_default_paths()
 
-	parser.add_argument('--config', help=_('argument-help-config'), required=True)
-	parser.add_argument('--directory', help=_('argument-help-directory').format(default_path=default_dir), default=str(default_dir))
+	add_config_argument(parser, default_config_path)
+	add_directory_argument(parser, default_directory_path)
 	parser.set_defaults(func=run_main)

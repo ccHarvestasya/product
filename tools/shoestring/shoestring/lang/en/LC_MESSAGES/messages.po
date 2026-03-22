@@ -23,18 +23,18 @@ msgstr "file containing serialized transaction to send"
 #: shoestring/commands/renew_certificates.py:36
 #: shoestring/commands/setup.py:146 shoestring/commands/signer.py:93
 msgid "argument-help-ca-key-path"
-msgstr "path to main private key PEM file"
+msgstr "path to main private key PEM file (default: {default_path})"
 
 #: shoestring/commands/announce_transaction.py:35
 #: shoestring/commands/health.py:74 shoestring/commands/import_bootstrap.py:49
-#: shoestring/commands/import_harvesters.py:97 shoestring/commands/init.py:29
+#: shoestring/commands/import_harvesters.py:97 shoestring/commands/init.py:48
 #: shoestring/commands/min_cosignatures_count.py:34
 #: shoestring/commands/renew_certificates.py:34
 #: shoestring/commands/renew_voting_keys.py:112
 #: shoestring/commands/reset_data.py:86 shoestring/commands/setup.py:138
 #: shoestring/commands/signer.py:92
 msgid "argument-help-config"
-msgstr "path to shoestring configuration file"
+msgstr "path to shoestring configuration file (default: {default_path})"
 
 #: shoestring/commands/health.py:75
 #: shoestring/commands/renew_certificates.py:35
@@ -101,9 +101,9 @@ msgstr "purge harvesters.dat file"
 
 #: shoestring/commands/setup.py:141
 msgid "argument-help-setup-overrides"
-msgstr "path to custom user settings"
+msgstr "path to custom user settings (default: {default_path})"
 
-#: shoestring/commands/init.py:28 shoestring/commands/setup.py:139
+#: shoestring/commands/init.py:47 shoestring/commands/setup.py:139
 msgid "argument-help-setup-package"
 msgstr ""
 "Network configuration package. Possible values: (name | file:///filename "
@@ -143,7 +143,7 @@ msgstr "downloaded file ({descriptor_name}) has invalid hash"
 msgid "general-connecting-to-node"
 msgstr "connecting to {endpoint}"
 
-#: shoestring/commands/init.py:17 shoestring/commands/reset_data.py:56
+#: shoestring/commands/init.py:23 shoestring/commands/reset_data.py:56
 #: shoestring/internal/Preparer.py:193
 #: shoestring/internal/VoterConfigurator.py:53
 msgid "general-copying-file"
@@ -284,6 +284,10 @@ msgstr "in-harvesters and out-harvesters must be different"
 msgid "import-harvesters-list-header"
 msgstr "listing harvesters in {filepath} using public key {public_key}"
 
+#: shoestring/commands/init.py:34
+msgid "init-failed-to-create-config"
+msgstr "failed to create configuration file at {destination_path}: {error}"
+
 #: shoestring/__main__.py:20
 msgid "main-announce-transaction-help"
 msgstr "announces a transaction to the network"
@@ -358,7 +362,7 @@ msgstr "detected current finalization epoch as {epoch}"
 msgid "nodewatch-client-detected-height"
 msgstr "detected last finalized height as {height}"
 
-#: shoestring/internal/PeerDownloader.py:64
+#: shoestring/internal/PeerDownloader.py:65
 msgid "peer-downloader-loading-api-endpoints"
 msgstr "loading api endpoints from {filepath}'"
 
