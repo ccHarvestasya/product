@@ -216,7 +216,7 @@ async def _assert_can_upgrade_node(
 # endregion
 
 
-# pylint: disable=invalid-name
+# pylint: disable=invalid-name,protected-access
 
 
 # region feature variance
@@ -425,6 +425,41 @@ def test_commit_upgrade_restores_previous_path_when_interrupted_during_switch(tm
 		return original_rename(path, target)
 
 	monkeypatch.setattr(Path, 'rename', interrupt_switch)
+	with pytest.raises(KeyboardInterrupt):
+		upgrade_command._commit_upgrade(output_directory, staging_directory, ['userconfig'])
+
+	assert did_backup_active_path
+	assert (old_userconfig / 'config.properties').read_text(encoding='utf8') == 'old'
+	assert (new_userconfig / 'config.properties').read_text(encoding='utf8') == 'new'
+	assert not backup_userconfig.exists()
+
+
+def test_commit_upgrade_restores_previous_path_when_interrupted_after_backup(tmp_path, monkeypatch):
+	output_directory = tmp_path / 'output'
+	staging_directory = tmp_path / 'staging'
+	old_userconfig = output_directory / 'userconfig'
+	new_userconfig = staging_directory / 'userconfig'
+	backup_userconfig = staging_directory / '.backup' / 'userconfig'
+	output_directory.mkdir()
+	staging_directory.mkdir()
+	old_userconfig.mkdir()
+	new_userconfig.mkdir()
+	(old_userconfig / 'config.properties').write_text('old', encoding='utf8')
+	(new_userconfig / 'config.properties').write_text('new', encoding='utf8')
+
+	original_rename = Path.rename
+	did_backup_active_path = False
+
+	def interrupt_after_backup(path, target):
+		nonlocal did_backup_active_path
+		result = original_rename(path, target)
+		if path == old_userconfig and target == backup_userconfig:
+			did_backup_active_path = True
+			raise KeyboardInterrupt()
+
+		return result
+
+	monkeypatch.setattr(Path, 'rename', interrupt_after_backup)
 	with pytest.raises(KeyboardInterrupt):
 		upgrade_command._commit_upgrade(output_directory, staging_directory, ['userconfig'])
 

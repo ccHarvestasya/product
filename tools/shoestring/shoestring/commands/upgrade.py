@@ -39,6 +39,14 @@ def _prepare_staging_directory(output_directories, staging_directories, config):
 		(staging_directories.https_proxy / 'nginx.conf.erb').unlink(missing_ok=True)
 
 
+def _rollback_upgrade_path(current_path, staged_path, backup_path):
+	if not _path_exists(staged_path) and _path_exists(current_path):
+		current_path.rename(staged_path)
+
+	if _path_exists(backup_path):
+		backup_path.rename(current_path)
+
+
 def _commit_upgrade(output_directory, staging_directory, relative_paths):
 	backup_directory = staging_directory / '.backup'
 	backup_directory.mkdir()
@@ -56,33 +64,28 @@ def _commit_upgrade(output_directory, staging_directory, relative_paths):
 			backup_path = backup_directory / relative_path
 			backup_path.parent.mkdir(parents=True, exist_ok=True)
 
-			if _path_exists(current_path):
-				if current_path.is_dir():
-					log.info(_('upgrade-purging-directory').format(directory=current_path))
-				current_path.rename(backup_path)
-
 			try:
+				if _path_exists(current_path):
+					if current_path.is_dir():
+						log.info(_('upgrade-purging-directory').format(directory=current_path))
+					current_path.rename(backup_path)
+
 				if staged_path.is_dir():
 					log.info(_('upgrade-recreating-directory').format(directory=current_path))
 				staged_path.rename(current_path)
-			except BaseException:
-				if _path_exists(backup_path):
-					try:
-						backup_path.rename(current_path)
-					except BaseException as rollback_exception:
-						log.error(_('upgrade-rollback-failed').format(staging_directory=staging_directory))
-						raise UpgradeRollbackError(staging_directory) from rollback_exception
-				raise
 
-			committed_operations.append((current_path, staged_path, backup_path))
+				committed_operations.append((current_path, staged_path, backup_path))
+			except BaseException:
+				try:
+					_rollback_upgrade_path(current_path, staged_path, backup_path)
+				except BaseException as rollback_exception:
+					log.error(_('upgrade-rollback-failed').format(staging_directory=staging_directory))
+					raise UpgradeRollbackError(staging_directory) from rollback_exception
+				raise
 	except BaseException:
 		try:
 			for current_path, staged_path, backup_path in reversed(committed_operations):
-				if _path_exists(current_path):
-					current_path.rename(staged_path)
-
-				if _path_exists(backup_path):
-					backup_path.rename(current_path)
+				_rollback_upgrade_path(current_path, staged_path, backup_path)
 		except BaseException as rollback_exception:
 			log.error(_('upgrade-rollback-failed').format(staging_directory=staging_directory))
 			raise UpgradeRollbackError(staging_directory) from rollback_exception
