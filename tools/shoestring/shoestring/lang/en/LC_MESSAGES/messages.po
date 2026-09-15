@@ -494,11 +494,11 @@ msgstr "Transaction: {transaction}"
 msgid "transaction-serializer-saved-file"
 msgstr "transaction file written to {filepath}"
 
-#: shoestring/commands/upgrade.py:16
+#: shoestring/commands/upgrade.py:55
 msgid "upgrade-purging-directory"
 msgstr "purging DIRECTORY {directory}"
 
-#: shoestring/commands/upgrade.py:21
+#: shoestring/commands/upgrade.py:59
 msgid "upgrade-recreating-directory"
 msgstr "recreating DIRECTORY {directory}"
 

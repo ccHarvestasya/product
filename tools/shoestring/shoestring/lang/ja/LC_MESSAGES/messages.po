@@ -482,11 +482,11 @@ msgstr "トランザクション: {transaction}"
 msgid "transaction-serializer-saved-file"
 msgstr "トランザクションファイルを {filepath} に書き込みました"
 
-#: shoestring/commands/upgrade.py:16
+#: shoestring/commands/upgrade.py:55
 msgid "upgrade-purging-directory"
 msgstr "ディレクトリ {directory} を削除"
 
-#: shoestring/commands/upgrade.py:21
+#: shoestring/commands/upgrade.py:59
 msgid "upgrade-recreating-directory"
 msgstr "ディレクトリ {directory} を再作成"
 
@@ -917,3 +917,4 @@ msgstr "ようこそ"
 #: shoestring/wizard/screens/welcome.py:39
 msgid "wizard-welcome-upgrade"
 msgstr "アップグレード"
+
