@@ -65,17 +65,17 @@ def _commit_upgrade(output_directory, staging_directory, relative_paths):
 				if staged_path.is_dir():
 					log.info(_('upgrade-recreating-directory').format(directory=current_path))
 				staged_path.rename(current_path)
-			except Exception:
+			except BaseException:
 				if _path_exists(backup_path):
 					try:
 						backup_path.rename(current_path)
-					except Exception as rollback_exception:
+					except BaseException as rollback_exception:
 						log.error(_('upgrade-rollback-failed').format(staging_directory=staging_directory))
 						raise UpgradeRollbackError(staging_directory) from rollback_exception
 				raise
 
 			committed_operations.append((current_path, staged_path, backup_path))
-	except Exception:
+	except BaseException:
 		try:
 			for current_path, staged_path, backup_path in reversed(committed_operations):
 				if _path_exists(current_path):
@@ -83,7 +83,7 @@ def _commit_upgrade(output_directory, staging_directory, relative_paths):
 
 				if _path_exists(backup_path):
 					backup_path.rename(current_path)
-		except Exception as rollback_exception:
+		except BaseException as rollback_exception:
 			log.error(_('upgrade-rollback-failed').format(staging_directory=staging_directory))
 			raise UpgradeRollbackError(staging_directory) from rollback_exception
 
