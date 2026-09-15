@@ -1,3 +1,4 @@
+import shutil
 import tempfile
 from pathlib import Path
 from types import SimpleNamespace
@@ -313,6 +314,34 @@ async def test_upgrade_failure_preserves_existing_node(server, monkeypatch):  # 
 				assert before_upgrade == _get_tree_snapshot(output_directory)
 
 
+async def test_upgrade_retains_staging_when_rollback_fails(tmp_path, monkeypatch):
+	with tempfile.TemporaryDirectory() as package_directory:
+		config_filepath = prepare_shoestring_configuration(package_directory, NodeFeatures.PEER, api_https=False)
+		output_directory = tmp_path / 'output'
+		output_directory.mkdir()
+		retained_staging_directory = []
+
+		async def skip_setup(_args):
+			return None
+
+		def fail_commit(_output_directory, staging_directory, _relative_paths):
+			retained_staging_directory.append(staging_directory)
+			raise upgrade_command.UpgradeRollbackError(staging_directory)
+
+		monkeypatch.setattr(upgrade_command, 'run_setup_main', skip_setup)
+		monkeypatch.setattr(upgrade_command, '_commit_upgrade', fail_commit)
+		with pytest.raises(upgrade_command.UpgradeRollbackError):
+			await upgrade_command.run_main(SimpleNamespace(
+				config=str(config_filepath),
+				directory=str(output_directory),
+				package='mainnet',
+				overrides=None,
+				rest_overrides=None))
+
+		assert retained_staging_directory[0].is_dir()
+		shutil.rmtree(retained_staging_directory[0])
+
+
 def test_prepare_staging_directory_creates_https_proxy_when_missing(tmp_path):
 	staging_directory = tmp_path / 'staging'
 	staging_directory.mkdir()
@@ -368,5 +397,104 @@ def test_commit_upgrade_restores_previous_paths_when_switch_fails(tmp_path, monk
 
 	assert (old_userconfig / 'config.properties').read_text(encoding='utf8') == 'old'
 	assert old_compose.read_text(encoding='utf8') == 'old'
+
+
+def test_commit_upgrade_preserves_active_path_when_backup_fails(tmp_path, monkeypatch):
+	output_directory = tmp_path / 'output'
+	staging_directory = tmp_path / 'staging'
+	old_compose = output_directory / 'docker-compose.yaml'
+	new_compose = staging_directory / 'docker-compose.yaml'
+	backup_compose = staging_directory / '.backup' / 'docker-compose.yaml'
+	output_directory.mkdir()
+	staging_directory.mkdir()
+	old_compose.write_text('old', encoding='utf8')
+	new_compose.write_text('new', encoding='utf8')
+
+	original_rename = Path.rename
+
+	def fail_backup(path, target):
+		if path == old_compose and target == backup_compose:
+			raise OSError('simulated backup failure')
+
+		return original_rename(path, target)
+
+	monkeypatch.setattr(Path, 'rename', fail_backup)
+	with pytest.raises(OSError, match='simulated backup failure'):
+		upgrade_command._commit_upgrade(output_directory, staging_directory, ['docker-compose.yaml'])
+
+	assert old_compose.read_text(encoding='utf8') == 'old'
+	assert new_compose.read_text(encoding='utf8') == 'new'
+
+
+def test_commit_upgrade_retains_staging_when_rollback_fails(tmp_path, monkeypatch):
+	output_directory = tmp_path / 'output'
+	staging_directory = tmp_path / 'staging'
+	old_userconfig = output_directory / 'userconfig'
+	new_userconfig = staging_directory / 'userconfig'
+	old_compose = output_directory / 'docker-compose.yaml'
+	new_compose = staging_directory / 'docker-compose.yaml'
+	backup_compose = staging_directory / '.backup' / 'docker-compose.yaml'
+	output_directory.mkdir()
+	staging_directory.mkdir()
+	old_userconfig.mkdir()
+	new_userconfig.mkdir()
+	(old_userconfig / 'config.properties').write_text('old', encoding='utf8')
+	(new_userconfig / 'config.properties').write_text('new', encoding='utf8')
+	old_compose.write_text('old', encoding='utf8')
+	new_compose.write_text('new', encoding='utf8')
+
+	original_rename = Path.rename
+
+	def fail_rollback(path, target):
+		if path == new_compose:
+			raise OSError('simulated switch failure')
+		if path == backup_compose and target == old_compose:
+			raise OSError('simulated rollback failure')
+
+		return original_rename(path, target)
+
+	monkeypatch.setattr(Path, 'rename', fail_rollback)
+	with pytest.raises(upgrade_command.UpgradeRollbackError, match='staging directory retained'):
+		upgrade_command._commit_upgrade(output_directory, staging_directory, ['userconfig', 'docker-compose.yaml'])
+
+	assert staging_directory.is_dir()
+	assert backup_compose.is_file()
+	assert not old_compose.exists()
+
+
+def test_commit_upgrade_retains_staging_when_committed_rollback_fails(tmp_path, monkeypatch):
+	output_directory = tmp_path / 'output'
+	staging_directory = tmp_path / 'staging'
+	old_userconfig = output_directory / 'userconfig'
+	new_userconfig = staging_directory / 'userconfig'
+	old_compose = output_directory / 'docker-compose.yaml'
+	new_compose = staging_directory / 'docker-compose.yaml'
+	backup_userconfig = staging_directory / '.backup' / 'userconfig'
+	output_directory.mkdir()
+	staging_directory.mkdir()
+	old_userconfig.mkdir()
+	new_userconfig.mkdir()
+	(old_userconfig / 'config.properties').write_text('old', encoding='utf8')
+	(new_userconfig / 'config.properties').write_text('new', encoding='utf8')
+	old_compose.write_text('old', encoding='utf8')
+	new_compose.write_text('new', encoding='utf8')
+
+	original_rename = Path.rename
+
+	def fail_committed_rollback(path, target):
+		if path == old_compose:
+			raise OSError('simulated backup failure')
+		if path == output_directory / 'userconfig' and target == new_userconfig:
+			raise OSError('simulated committed rollback failure')
+
+		return original_rename(path, target)
+
+	monkeypatch.setattr(Path, 'rename', fail_committed_rollback)
+	with pytest.raises(upgrade_command.UpgradeRollbackError, match='staging directory retained'):
+		upgrade_command._commit_upgrade(output_directory, staging_directory, ['userconfig', 'docker-compose.yaml'])
+
+	assert staging_directory.is_dir()
+	assert backup_userconfig.is_dir()
+	assert (output_directory / 'userconfig').is_dir()
 
 # endregion

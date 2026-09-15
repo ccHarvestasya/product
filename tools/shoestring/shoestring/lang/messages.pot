@@ -471,12 +471,21 @@ msgstr ""
 msgid "transaction-serializer-saved-file"
 msgstr ""
 
-#: shoestring/commands/upgrade.py:55
+#: shoestring/commands/upgrade.py:50
+msgid "upgrade-missing-staged-path"
+msgstr ""
+
+#: shoestring/commands/upgrade.py:61
 msgid "upgrade-purging-directory"
 msgstr ""
 
-#: shoestring/commands/upgrade.py:59
+#: shoestring/commands/upgrade.py:66
 msgid "upgrade-recreating-directory"
+msgstr ""
+
+#: shoestring/commands/upgrade.py:21 shoestring/commands/upgrade.py:73
+#: shoestring/commands/upgrade.py:87
+msgid "upgrade-rollback-failed"
 msgstr ""
 
 #: shoestring/wizard/screens/bootstrap.py:40

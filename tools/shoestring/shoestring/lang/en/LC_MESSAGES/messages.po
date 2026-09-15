@@ -494,13 +494,22 @@ msgstr "Transaction: {transaction}"
 msgid "transaction-serializer-saved-file"
 msgstr "transaction file written to {filepath}"
 
-#: shoestring/commands/upgrade.py:55
+#: shoestring/commands/upgrade.py:50
+msgid "upgrade-missing-staged-path"
+msgstr "upgrade did not produce {relative_path}"
+
+#: shoestring/commands/upgrade.py:61
 msgid "upgrade-purging-directory"
 msgstr "purging DIRECTORY {directory}"
 
-#: shoestring/commands/upgrade.py:59
+#: shoestring/commands/upgrade.py:66
 msgid "upgrade-recreating-directory"
 msgstr "recreating DIRECTORY {directory}"
+
+#: shoestring/commands/upgrade.py:21 shoestring/commands/upgrade.py:73
+#: shoestring/commands/upgrade.py:87
+msgid "upgrade-rollback-failed"
+msgstr "upgrade rollback failed; staging directory retained at {staging_directory}"
 
 #: shoestring/wizard/screens/bootstrap.py:40
 msgid "wizard-bootstrap-node-key"
