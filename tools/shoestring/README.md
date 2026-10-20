@@ -350,6 +350,8 @@ Describes settings to customize a node.
 * `VOTER` - Node will be configured to vote
 
 `caPassword` supports all available openssl passphrase options: https://www.openssl.org/docs/man3.0/man1/openssl-passphrase-options.html.
+Shoestring forwards literal `pass:...` values to OpenSSL through a private file descriptor and redacts them from displayed output and errors.
+Literal passphrases cannot contain newline, carriage return or NUL characters.
 
 ```
 features       One or more node features to deploy (| delimited)
