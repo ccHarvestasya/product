@@ -8,6 +8,7 @@ from symbolchain.PrivateKeyStorage import PrivateKeyStorage
 
 from shoestring.__main__ import main
 from shoestring.internal.NodeFeatures import NodeFeatures
+from shoestring.internal.PemUtils import read_public_key_from_private_key_pem_file, read_public_key_from_public_key_pem_file
 from shoestring.internal.Preparer import Preparer
 from shoestring.internal.ShoestringConfiguration import parse_shoestring_configuration
 
@@ -139,7 +140,7 @@ async def test_can_renew_node_certificate_with_relative_path_and_force():
 
 # region CA and node certificates renewal
 
-async def _assert_can_renew_ca_and_node_certificates(ca_password=None, use_relative_path=None):
+async def _assert_can_renew_ca_and_node_certificates(ca_password=None, use_relative_path=None, replace_ca_key=False, force=False):
 	# pylint: disable=too-many-locals
 
 	# Arrange:
@@ -170,13 +171,17 @@ async def _assert_can_renew_ca_and_node_certificates(ca_password=None, use_relat
 			assert_certificate_properties(node_certificate_path, 'ORIGINAL CA CN', 'ORIGINAL NODE CN', 375)
 			assert_certificate_properties(ca_certificate_path, 'ORIGINAL CA CN', 'ORIGINAL CA CN', 20 * 365)
 
+			if replace_ca_key:
+				private_key_storage.save('ca.key', PrivateKey.random())
+
 			# Act:
 			await main([
 				'renew-certificates',
 				'--config', str(config_filepath_2),
 				'--directory', output_directory,
 				'--ca-key-path', str(ca_key_path),
-				'--renew-ca'
+				'--renew-ca',
+				*(['--force'] if force else [])
 			])
 
 			# Assert: node certificate is regenerated (subject changed)
@@ -189,6 +194,11 @@ async def _assert_can_renew_ca_and_node_certificates(ca_password=None, use_relat
 			create_openssl_executor().dispatch(['verify', '-CAfile', ca_certificate_path, ca_certificate_path])
 			assert ca_certificate_last_modified_time != ca_certificate_path.stat().st_mtime
 
+			# - ca public key matches the private key used to renew the certificates
+			expected_ca_public_key = read_public_key_from_private_key_pem_file(ca_key_path, preparer.config.node.ca_password)
+			assert expected_ca_public_key == read_public_key_from_public_key_pem_file(
+				preparer.directories.certificates / 'ca.pubkey.pem')
+
 			# verify that node.full == node.crt + ca.crt
 			_assert_node_full_certificate(ca_certificate_path, node_certificate_path, preparer.directories.certificates)
 
@@ -199,6 +209,12 @@ async def test_can_renew_ca_and_node_certificates():
 
 async def test_can_renew_ca_and_node_certificates_with_ca_password():
 	await _assert_can_renew_ca_and_node_certificates('abcd')
+
+
+@pytest.mark.parametrize('ca_password', [None, 'abcd'])
+@pytest.mark.parametrize('force', [False, True])
+async def test_can_renew_ca_and_node_certificates_with_new_ca_key(ca_password, force):
+	await _assert_can_renew_ca_and_node_certificates(ca_password, replace_ca_key=True, force=force)
 
 # endregion
 
