@@ -237,10 +237,13 @@ renew-certificates --config CONFIG [--directory DIRECTORY] --ca-key-path CA_KEY_
   --ca-key-path CA_KEY_PATH path to main private key PEM file
   --renew-ca                renews CA certificate too
   --retain-node-key         retain node key
-  --force                   force overwrite of certificates
 ```
 
 When `--renew-ca` is set, both CA and node certificates will be regenerated. Otherwise, only node certificate will be.
+
+Renewal stages new files and backups on the destination filesystem before replacing deployed files, including when renewing across filesystems. If replacement fails, the previous files are restored. If rollback also fails, backups are retained at the path reported in the error.
+
+Rollback protects against handled installation failures. The certificate set is not switched atomically for concurrent readers, and abrupt process termination can interrupt installation.
 
 ### renew-voting-keys
 

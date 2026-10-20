@@ -41,16 +41,11 @@ def _assert_node_full_certificate(ca_certificate_filepath, node_certificate_file
 	assert node_full_crt_data == node_crt_data + ca_crt_data
 
 
-async def _assert_can_renew_node_certificate(ca_password=None, retain_key=False, use_relative_path=False, force=False):
+async def _assert_can_renew_node_certificate(ca_password=None, retain_key=False, use_relative_path=False):
 	# pylint: disable=too-many-locals
 
 	# Arrange:
-	if use_relative_path and not force:
-		# Set the temp directory to cwd so that temp and relative paths are resolved to the same filesystem.
-		# If install path and temp are on different filesystem device then --force has to be used.
-		tempfile.tempdir = os.getcwd()
-
-	with tempfile.TemporaryDirectory() as output_directory:
+	with tempfile.TemporaryDirectory(dir=os.getcwd() if use_relative_path else None) as output_directory:
 		config_filepath_1 = _create_configuration(output_directory, ca_password, 'ORIGINAL CA CN', 'ORIGINAL NODE CN', '1.shoestring.ini')
 		config_filepath_2 = _create_configuration(output_directory, ca_password, 'ORIGINAL CA CN', 'NEW NODE CN', '2.shoestring.ini')
 		preparer = Preparer(output_directory, parse_shoestring_configuration(config_filepath_1))
@@ -88,8 +83,7 @@ async def _assert_can_renew_node_certificate(ca_password=None, retain_key=False,
 			'--config', str(config_filepath_2),
 			'--directory', str(node_path),
 			'--ca-key-path', str(ca_key_path),
-			*(['--retain-node-key'] if retain_key else []),
-			*(['--force'] if force else [])
+			*(['--retain-node-key'] if retain_key else [])
 		])
 
 		# Assert: node certificate is regenerated (subject changed)
@@ -127,12 +121,34 @@ async def test_can_renew_node_certificate_with_relative_path():
 	await _assert_can_renew_node_certificate(use_relative_path=True)
 
 
-async def test_can_renew_node_certificate_with_force():
-	await _assert_can_renew_node_certificate(force=True)
+@pytest.mark.parametrize('renew_ca', [False, True])
+async def test_failed_renewal_preserves_original_certificates(tmp_path, monkeypatch, renew_ca):
+	config_path = _create_configuration(tmp_path, None, 'CA CN', 'NODE CN', 'shoestring.ini')
+	PrivateKeyStorage(tmp_path).save('ca.key', PrivateKey.random())
+	ca_key_path = tmp_path / 'ca.key.pem'
+	preparer = Preparer(tmp_path, parse_shoestring_configuration(config_path))
+	certificates = preparer.directories.certificates
+	certificates.mkdir(parents=True)
+	preparer.generate_certificates(ca_key_path, require_ca=True)
+	original = {path.name: path.read_bytes() for path in certificates.iterdir()}
+	replace = os.replace
+	calls = []
 
+	def failing_replace(source, destination):
+		calls.append(source)
+		if 2 == len(calls):
+			raise OSError('injected replacement failure')
+		return replace(source, destination)
 
-async def test_can_renew_node_certificate_with_relative_path_and_force():
-	await _assert_can_renew_node_certificate(use_relative_path=True, force=True)
+	monkeypatch.setattr('shoestring.internal.CertificateFactory.os.replace', failing_replace)
+	with pytest.raises(OSError, match='injected replacement failure'):
+		await main([
+			'renew-certificates', '--config', str(config_path),
+			'--directory', str(tmp_path), '--ca-key-path', str(ca_key_path),
+			*(['--renew-ca'] if renew_ca else [])
+		])
+
+	assert original == {path.name: path.read_bytes() for path in certificates.iterdir()}
 
 # endregion
 

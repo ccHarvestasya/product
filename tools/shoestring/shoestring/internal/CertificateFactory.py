@@ -3,6 +3,8 @@ import shutil
 import tempfile
 from pathlib import Path
 
+from zenlog import log
+
 
 class CertificateFactory:
 	"""Uses openssl to generate SSL certificates and related files."""
@@ -217,10 +219,44 @@ class CertificateFactory:
 
 	@staticmethod
 	def _package(output_directory, package_filter, package_filenames):
-		for filename in package_filenames:
-			if not Path(filename).exists() or not filename.startswith(package_filter):
-				continue
+		output_directory = Path(output_directory)
+		filenames = [name for name in package_filenames if name.startswith(package_filter) and Path(name).exists()]
+		if not filenames:
+			return
 
-			destination_path = Path(output_directory) / filename
-			shutil.move(filename, destination_path)
-			destination_path.chmod(0o400)
+		# Stage on the destination filesystem so replacement also works across devices.
+		staging_directory = Path(tempfile.mkdtemp(prefix='.certificates-', dir=output_directory))
+		backup_directory = staging_directory / 'backup'
+		replaced = []
+		keep_backup = False
+		try:
+			backup_directory.mkdir()
+			# Finish all copying and permission changes before touching deployed files.
+			for filename in filenames:
+				staged_path = staging_directory / filename
+				shutil.copy2(filename, staged_path)
+				staged_path.chmod(0o400)
+				destination_path = output_directory / filename
+				if destination_path.exists():
+					shutil.copy2(destination_path, backup_directory / filename)
+
+			try:
+				for filename in filenames:
+					os.replace(staging_directory / filename, output_directory / filename)
+					replaced.append(filename)
+			except BaseException:
+				try:
+					for filename in reversed(replaced):
+						backup_path = backup_directory / filename
+						if backup_path.exists():
+							os.replace(backup_path, output_directory / filename)
+						else:
+							(output_directory / filename).unlink()
+				except BaseException:
+					keep_backup = True
+					log.error(_('certificate-factory-error-rollback').format(backup_directory=backup_directory))
+					raise SystemExit(1) from None
+				raise
+		finally:
+			if not keep_backup:
+				shutil.rmtree(staging_directory)

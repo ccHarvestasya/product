@@ -1,10 +1,14 @@
 import datetime
+import gettext
 import os
 import re
 import shutil
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
+
+import pytest
 
 from shoestring.internal.CertificateFactory import CertificateFactory
 from shoestring.internal.OpensslExecutor import OpensslExecutor
@@ -408,6 +412,66 @@ class CertificateFactoryTest(unittest.TestCase):
 
 	# region packaging
 
+	def test_package_restores_original_set_when_replacement_fails(self):
+		for package_filter in ('', 'node'):
+			filenames = [name for name in CertificateFactory.CERTIFICATE_FILENAMES if name.startswith(package_filter)]
+			for failure_index in range(len(filenames)):
+				with self.subTest(package_filter=package_filter, failure_index=failure_index):
+					self._assert_package_failure_preserves_files(package_filter, failure_index)
+
+	def _assert_package_failure_preserves_files(self, package_filter, failure_index):
+		with tempfile.TemporaryDirectory() as output_directory:
+			output_path = Path(output_directory)
+			# Leave one destination absent to verify newly installed files are removed on rollback.
+			for name in CertificateFactory.CERTIFICATE_FILENAMES[1:] + ['unrelated.txt']:
+				(output_path / name).write_text(f'original {name}', encoding='utf8')
+				(output_path / name).chmod(0o400)
+			original = {path.name: (path.read_bytes(), path.stat()) for path in output_path.iterdir()}
+
+			with CertificateFactory(self._create_executor(), output_path / 'ca.key.pem') as factory:
+				for name in CertificateFactory.CERTIFICATE_FILENAMES:
+					Path(name).write_text(f'new {name}', encoding='utf8')
+				replace = os.replace
+				calls = []
+
+				def failing_replace(source, destination):
+					calls.append(source)
+					if len(calls) == failure_index + 1:
+						raise OSError('injected replacement failure')
+					return replace(source, destination)
+
+				with patch('shoestring.internal.CertificateFactory.os.replace', side_effect=failing_replace):
+					with self.assertRaisesRegex(OSError, 'injected replacement failure'):
+						factory.package(output_path, package_filter)
+
+			self.assertEqual(set(original), {path.name for path in output_path.iterdir()})
+			for name, (content, stat) in original.items():
+				self.assertEqual(content, (output_path / name).read_bytes())
+				self.assertEqual(stat.st_mode, (output_path / name).stat().st_mode)
+				self.assertEqual(stat.st_mtime_ns, (output_path / name).stat().st_mtime_ns)
+
+	def test_package_does_not_change_original_files_when_staging_fails(self):
+		with tempfile.TemporaryDirectory() as output_directory:
+			output_path = Path(output_directory)
+			with CertificateFactory(self._create_executor(), output_path / 'ca.key.pem') as factory:
+				for name in CertificateFactory.CERTIFICATE_FILENAMES:
+					(output_path / name).write_text('original', encoding='utf8')
+					Path(name).write_text('new', encoding='utf8')
+				copy = shutil.copy2
+
+				def failing_copy(source, destination):
+					if Path(source).name == 'node.key.pem':
+						raise OSError('injected staging failure')
+					return copy(source, destination)
+
+				with patch('shoestring.internal.CertificateFactory.shutil.copy2', side_effect=failing_copy):
+					with self.assertRaisesRegex(OSError, 'injected staging failure'):
+						factory.package(output_path)
+
+			self.assertEqual(set(CertificateFactory.CERTIFICATE_FILENAMES), {path.name for path in output_path.iterdir()})
+			for path in output_path.iterdir():
+				self.assertEqual('original', path.read_text(encoding='utf8'))
+
 	def _assert_all_files_read_only(self, directory, expected_files):
 		# check files
 		actual_files = sorted(list(path.name for path in Path(directory).iterdir()))
@@ -485,3 +549,39 @@ class CertificateFactoryTest(unittest.TestCase):
 					self._assert_all_files_read_only(package_directory, ['node.key.pem'])
 
 	# endregion
+
+
+@pytest.mark.parametrize('language, expected_message', [
+	('en', 'Certificate renewal failed and the previous files could not be fully restored.'),
+	('ja', '証明書の更新と元の状態への復元に失敗しました。')
+])
+def test_rollback_failure_logs_message(tmp_path, monkeypatch, caplog, language, expected_message):
+	lang = gettext.translation('messages', localedir='shoestring/lang', languages=(language,))
+	monkeypatch.setattr('builtins._', lang.gettext)
+	with CertificateFactory(OpensslExecutor(), tmp_path / 'ca.key.pem') as factory:
+		for name in CertificateFactory.CERTIFICATE_FILENAMES:
+			(tmp_path / name).write_text('original', encoding='utf8')
+			Path(name).write_text('new', encoding='utf8')
+		replace = os.replace
+		calls = []
+
+		def failing_replace(source, destination):
+			calls.append(source)
+			if 1 < len(calls):
+				raise OSError('injected persistent failure')
+			return replace(source, destination)
+
+		monkeypatch.setattr('shoestring.internal.CertificateFactory.os.replace', failing_replace)
+		with pytest.raises(SystemExit) as error:
+			factory.package(tmp_path)
+
+	backup_directory = next(tmp_path.glob('.certificates-*')) / 'backup'
+	assert 1 == error.value.code
+	assert expected_message in caplog.text
+	assert str(backup_directory) in caplog.text
+	assert 'injected persistent failure' not in caplog.text
+	assert 'ERROR' == caplog.records[-1].levelname
+	assert caplog.records[-1].exc_info is None
+	assert set(CertificateFactory.CERTIFICATE_FILENAMES) == {path.name for path in backup_directory.iterdir()}
+	for path in backup_directory.iterdir():
+		assert 'original' == path.read_text(encoding='utf8')

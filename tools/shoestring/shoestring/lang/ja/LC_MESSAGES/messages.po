@@ -18,7 +18,7 @@ msgid "argument-help-announce-transaction-transaction"
 msgstr "送信するシリアライズ済みトランザクションファイル"
 
 #: shoestring/commands/min_cosignatures_count.py:35
-#: shoestring/commands/renew_certificates.py:40
+#: shoestring/commands/renew_certificates.py:37
 #: shoestring/commands/setup.py:155 shoestring/commands/signer.py:93
 msgid "argument-help-ca-key-path"
 msgstr "メイン秘密鍵PEMファイルへのパス"
@@ -27,7 +27,7 @@ msgstr "メイン秘密鍵PEMファイルへのパス"
 #: shoestring/commands/health.py:74 shoestring/commands/import_bootstrap.py:49
 #: shoestring/commands/import_harvesters.py:97 shoestring/commands/init.py:29
 #: shoestring/commands/min_cosignatures_count.py:34
-#: shoestring/commands/renew_certificates.py:38
+#: shoestring/commands/renew_certificates.py:35
 #: shoestring/commands/renew_voting_keys.py:112
 #: shoestring/commands/reset_data.py:86 shoestring/commands/setup.py:147
 #: shoestring/commands/signer.py:92
@@ -35,7 +35,7 @@ msgid "argument-help-config"
 msgstr "shoestring設定ファイルへのパス"
 
 #: shoestring/commands/health.py:75
-#: shoestring/commands/renew_certificates.py:39
+#: shoestring/commands/renew_certificates.py:36
 #: shoestring/commands/renew_voting_keys.py:113
 #: shoestring/commands/reset_data.py:87 shoestring/commands/setup.py:149
 msgid "argument-help-directory"
@@ -101,15 +101,11 @@ msgstr "ネットワークを指定"
 msgid "argument-help-pemview-show-private"
 msgstr "秘密鍵も表示する"
 
-#: shoestring/commands/renew_certificates.py:43
-msgid "argument-help-renew-certificates-force"
-msgstr "既存のノード証明書を強制的に上書きする"
-
-#: shoestring/commands/renew_certificates.py:41
+#: shoestring/commands/renew_certificates.py:38
 msgid "argument-help-renew-certificates-renew-ca"
 msgstr "CA証明書も更新"
 
-#: shoestring/commands/renew_certificates.py:42
+#: shoestring/commands/renew_certificates.py:39
 msgid "argument-help-renew-certificates-retain-node-key"
 msgstr "ノードキーを保持"
 
@@ -146,6 +142,12 @@ msgstr "トランザクションバイナリペイロード"
 #: shoestring/commands/signer.py:94
 msgid "argument-help-signer-save"
 msgstr "署名されたペイロードを入力と同じファイルに保存"
+
+#: shoestring/internal/CertificateFactory.py:257
+msgid "certificate-factory-error-rollback"
+msgstr ""
+"証明書の更新と元の状態への復元に失敗しました。残っているバックアップは {backup_directory} "
+"に保存されています。ノードを再起動する前に、証明書一式を確認・復旧してください。"
 
 #: shoestring/internal/FileDownloader.py:40
 msgid "file-downloader-already-downloaded"
@@ -917,3 +919,4 @@ msgstr "ようこそ"
 #: shoestring/wizard/screens/welcome.py:39
 msgid "wizard-welcome-upgrade"
 msgstr "アップグレード"
+
