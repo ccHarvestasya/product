@@ -3,6 +3,7 @@ from pathlib import Path
 
 from zenlog import log
 
+from shoestring.commands import DEFAULT_CONFIG_PATH
 from shoestring.internal.ShoestringConfiguration import parse_shoestring_configuration
 
 
@@ -83,7 +84,7 @@ async def run_main(args):
 
 
 def add_arguments(parser):
-	parser.add_argument('--config', help=_('argument-help-config'), required=True)
+	parser.add_argument('--config', help=_('argument-help-config'), default=DEFAULT_CONFIG_PATH)
 	parser.add_argument('--directory', help=_('argument-help-directory').format(default_path=Path.home()), default=str(Path.home()))
 	parser.add_argument('--purge-harvesters', help=_('argument-help-reset-data-purge-harvesters'), action='store_true')
 	parser.set_defaults(func=run_main)

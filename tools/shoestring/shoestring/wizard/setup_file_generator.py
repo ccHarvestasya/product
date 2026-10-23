@@ -4,11 +4,10 @@ from collections import namedtuple
 from pathlib import Path
 
 from shoestring.commands.import_bootstrap import run_main as run_import_bootstrap
-from shoestring.commands.init import run_main as run_init
+from shoestring.commands.init import prepare_configuration
 from shoestring.internal.ConfigurationManager import ConfigurationManager, load_shoestring_patches_from_file
 from shoestring.internal.NodeFeatures import NodeFeatures
 
-InitArgs = namedtuple('InitArgs', ['package', 'config'])
 ImportBootstrapArgs = namedtuple('ImportBootstrapArgs', ['config', 'bootstrap', 'include_node_key'])
 
 
@@ -70,10 +69,10 @@ def prepare_overrides_file(screens, output_filename):
 
 
 async def prepare_shoestring_config(network_type, config_filepath):
-	"""Run shoestring init command."""
+	"""Prepares a shoestring configuration template."""
 
 	with DisableLogger():
-		await run_init(InitArgs(network_type, config_filepath))
+		await prepare_configuration(network_type, config_filepath)
 
 
 async def prepare_shoestring_files(screens, directory):

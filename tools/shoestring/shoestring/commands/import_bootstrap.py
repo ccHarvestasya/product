@@ -4,6 +4,7 @@ from pathlib import Path
 
 from zenlog import log
 
+from shoestring.commands import DEFAULT_CONFIG_PATH
 from shoestring.internal.ConfigurationManager import ConfigurationManager
 
 
@@ -46,7 +47,7 @@ async def run_main(args):
 
 
 def add_arguments(parser):
-	parser.add_argument('--config', help=_('argument-help-config'), required=True)
+	parser.add_argument('--config', help=_('argument-help-config'), default=DEFAULT_CONFIG_PATH)
 	parser.add_argument('--bootstrap', help=_('argument-help-import-bootstrap-bootstrap'), required=True)
 	parser.add_argument('--include-node-key', help=_('argument-help-import-bootstrap-include-node-key'), action='store_true')
 	parser.set_defaults(func=run_main)

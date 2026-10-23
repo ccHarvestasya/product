@@ -486,6 +486,20 @@ class PreparerTest(unittest.TestCase):
 					'height': '72cm'
 				}, rest_config['nodeMetadata'])
 
+	def test_can_configure_rest_api_node_with_empty_object_overrides(self):
+		with tempfile.TemporaryDirectory() as output_directory:
+			with Preparer(output_directory, self._create_configuration(NodeFeatures.API)) as preparer:
+				self._initialize_temp_directory_with_package_files(preparer)
+				original_rest_path = preparer.directories.temp / 'rest/rest.json'
+				expected_config = json.loads(original_rest_path.read_text(encoding='utf8'))
+				overrides_path = preparer.directories.temp / 'rest_overrides.json'
+				overrides_path.write_text('{}', encoding='utf8')
+
+				preparer.configure_rest(overrides_path)
+
+				actual_config = json.loads((preparer.directories.userconfig / 'rest.json').read_text(encoding='utf8'))
+				self.assertEqual(expected_config, actual_config)
+
 	def test_can_configure_rest_light_node(self):
 		self._assert_can_configure_rest(NodeFeatures.API | NodeFeatures.HARVESTER, ['rest.json'], None, True)
 

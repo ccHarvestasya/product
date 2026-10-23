@@ -59,25 +59,51 @@ In commands that require `--package` switch, the list of currently supported net
 
 As documented below, alternatively full path to package zip file can be provided using `file:///filename` or `http(s)://`.
 
+All commands that accept `--config` default to `shoestring/shoestring.ini`, relative to the current working directory. An explicit `--config` takes precedence. Override files still require explicit `--overrides` or `--rest-overrides` arguments.
+
 ## Setup Commands
 
 ### init
 
 Extracts a template shoestring configuration file from a package that the user can then customize.
 
-```
-init [--package PACKAGE] config
+Creates the parent directory if needed. Creates `overrides.ini` (with the defaults shown below) and `rest_overrides.json` (`{}`) alongside the configuration file if they do not already exist. Existing override files are preserved; the configuration template is overwritten on each run.
 
-  config             path to shoestring configuration file
+```
+init [--package PACKAGE] [config]
+
+  config             path to shoestring configuration file (default: shoestring/shoestring.ini)
   --package PACKAGE  Network configuration package. Possible values: (name | file:///filename | http(s)://uri) (default: mainnet)
 ```
+
+The initial contents of `overrides.ini` are:
+
+```ini
+# Replace YOUR_* values before using this file.
+
+[user.account]
+enableDelegatedHarvestersAutoDetection = true
+
+[harvesting.harvesting]
+maxUnlockedAccounts = 10
+beneficiaryAddress = YOUR_BENEFICIARY_ADDRESS
+
+[node.node]
+minFeeMultiplier = 100
+
+[node.localnode]
+host = YOUR_HOST_NAME
+friendlyName = YOUR_FRIENDLY_NAME
+```
+
+Replace `YOUR_BENEFICIARY_ADDRESS`, `YOUR_HOST_NAME`, and `YOUR_FRIENDLY_NAME` with your own values before using the overrides file.
 
 ### min-cosignatures-count
 
 Automatically detects the minimum cosignatures required for an account and optionally updates the shoestring configuration file.
 
 ```
-min-cosignatures-count --config CONFIG --ca-key-path CA_KEY_PATH [--update]
+min-cosignatures-count [--config CONFIG] --ca-key-path CA_KEY_PATH [--update]
 
   --config CONFIG           path to shoestring configuration file
   --ca-key-path CA_KEY_PATH path to main private key PEM file
@@ -90,7 +116,7 @@ Imports settings from a symbol-bootstrap installation.
 
 
 ```
-import-bootstrap --config CONFIG --bootstrap BOOTSTRAP [--include-node-key]
+import-bootstrap [--config CONFIG] --bootstrap BOOTSTRAP [--include-node-key]
 
   --config CONFIG       path to shoestring configuration file
   --bootstrap BOOTSTRAP path to bootstrap target directory
@@ -103,7 +129,7 @@ Imports harvesters from an existing harvesters.dat file.
 
 
 ```
-import-harvesters --config CONFIG --in-harvesters IN_HARVESTERS --in-pem IN_PEM [--out-harvesters OUT_HARVESTERS] [--out-pem OUT_PEM]
+import-harvesters [--config CONFIG] --in-harvesters IN_HARVESTERS --in-pem IN_PEM [--out-harvesters OUT_HARVESTERS] [--out-pem OUT_PEM]
 
   --config CONFIG                 path to shoestring configuration file
   --in-harvesters IN_HARVESTERS   input harvesters.dat file that is encrypted with in-pem
@@ -145,7 +171,7 @@ Sets up a Symbol node from scratch
 
 ```
 setup \
-    --config CONFIG \
+    [--config CONFIG] \
     [--package PACKAGE] \
     [--directory DIRECTORY] \
     [--overrides OVERRIDES] \
@@ -173,7 +199,7 @@ This command will generate a transaction that will need to be sent to the networ
 Signs a transaction that can then be announced to the network
 
 ```
-signer --config CONFIG --ca-key-path CA_KEY_PATH [--save] filename
+signer [--config CONFIG] --ca-key-path CA_KEY_PATH [--save] filename
 
   filename                  transaction binary payload
   --config CONFIG           path to shoestring configuration file
@@ -186,7 +212,7 @@ signer --config CONFIG --ca-key-path CA_KEY_PATH [--save] filename
 Announces a transaction to the network.
 
 ```
-announce-transaction --config CONFIG --transaction TRANSACTION
+announce-transaction [--config CONFIG] --transaction TRANSACTION
 
   --config CONFIG           path to shoestring configuration file
   --transaction TRANSACTION file containing serialized transaction to send
@@ -198,7 +224,7 @@ Checks the health of the local Symbol node.
 
 
 ```
-health [-h] --config CONFIG [--directory DIRECTORY]
+health [-h] [--config CONFIG] [--directory DIRECTORY]
 
   --config CONFIG       path to shoestring configuration file
   --directory DIRECTORY installation directory (default: $HOME)
@@ -212,7 +238,7 @@ Upgrades a node to the latest client version.
 
 ```
 upgrade \
-    --config CONFIG \
+    [--config CONFIG] \
     [--package PACKAGE] \
     [--directory DIRECTORY] \
     [--overrides OVERRIDES] \
@@ -230,7 +256,7 @@ upgrade \
 Renews peer certificates.
 
 ```
-renew-certificates --config CONFIG [--directory DIRECTORY] --ca-key-path CA_KEY_PATH [--renew-ca] [--retain-node-key]
+renew-certificates [--config CONFIG] [--directory DIRECTORY] --ca-key-path CA_KEY_PATH [--renew-ca] [--retain-node-key]
 
   --config CONFIG           path to shoestring configuration file
   --directory DIRECTORY     installation directory (default: $HOME)
@@ -247,7 +273,7 @@ When `--renew-ca` is set, both CA and node certificates will be regenerated. Oth
 Renews voting keys.
 
 ```
-renew-voting-keys --config CONFIG [--directory DIRECTORY]
+renew-voting-keys [--config CONFIG] [--directory DIRECTORY]
 
   --config CONFIG           path to shoestring configuration file
   --directory DIRECTORY     installation directory (default: $HOME)
@@ -260,7 +286,7 @@ This command will generate a transaction that will need to be sent to the networ
 Resets blockchain state to allow a resync from scratch.
 
 ```
-reset-data --config CONFIG [--directory DIRECTORY] [--purge-harvesters]
+reset-data [--config CONFIG] [--directory DIRECTORY] [--purge-harvesters]
 
   --config CONFIG           path to shoestring configuration file
   --directory DIRECTORY     installation directory (default: $HOME)
