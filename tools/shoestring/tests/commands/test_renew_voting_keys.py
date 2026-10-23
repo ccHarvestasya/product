@@ -2,12 +2,14 @@ import os
 import shutil
 import tempfile
 from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 from symbolchain.CryptoTypes import PrivateKey
 from symbolchain.sc import LinkAction, TransactionFactory, TransactionType
 from symbolchain.symbol.KeyPair import KeyPair
 from symbolchain.symbol.VotingKeysGenerator import VotingKeysGenerator
+from symbollightapi.model.Exceptions import NodeException
 
 from shoestring.__main__ import main
 from shoestring.internal.CertificateFactory import CertificateFactory
@@ -131,6 +133,37 @@ async def test_renew_voting_keys_fails_when_node_is_not_voter(server, caplog):  
 			assert not (Path(output_directory) / 'keys' / 'voting').exists()
 
 			# - no transaction is created
+			assert not (Path(output_directory) / 'renew_voting_keys_transaction.dat').exists()
+
+
+@pytest.mark.parametrize('has_existing_keys', [False, True])
+async def test_renew_voting_keys_preserves_files_when_network_time_fails(server, has_existing_keys):  # pylint: disable=redefined-outer-name
+	# Arrange:
+	with tempfile.TemporaryDirectory() as output_directory:
+		with tempfile.TemporaryDirectory() as package_directory:
+			await _prepare_output_directory(Path(package_directory), Path(output_directory), NodeFeatures.VOTER, server.make_url(''))
+			config_filepath = prepare_shoestring_configuration(package_directory, NodeFeatures.VOTER, server.make_url(''))
+
+			voting_keys_directory = Path(output_directory) / 'keys' / 'voting'
+			if has_existing_keys:
+				_write_voting_keys_file(voting_keys_directory, 1, 2700, 2799)
+				_write_voting_keys_file(voting_keys_directory, 3, 2800, 2899)
+
+			original_files = {filepath.name: filepath.read_bytes() for filepath in voting_keys_directory.iterdir()}
+
+			# Act: network time cannot be retrieved
+			with patch(
+				'shoestring.commands.renew_voting_keys.SymbolConnector.network_time',
+				side_effect=NodeException('network time unavailable')):
+				with pytest.raises(NodeException, match='network time unavailable'):
+					await main([
+						'renew-voting-keys',
+						'--config', str(config_filepath),
+						'--directory', output_directory
+					])
+
+			# Assert: no voting keys files are created, removed, renamed or modified
+			assert original_files == {filepath.name: filepath.read_bytes() for filepath in voting_keys_directory.iterdir()}
 			assert not (Path(output_directory) / 'renew_voting_keys_transaction.dat').exists()
 
 
