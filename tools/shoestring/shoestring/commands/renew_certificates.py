@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 
 from shoestring.internal.CertificateFactory import CertificateFactory
+from shoestring.internal.ConfigurationManager import ConfigurationManager
 from shoestring.internal.NodeKeyUtils import write_node_key_file
 from shoestring.internal.OpensslExecutor import OpensslExecutor
 from shoestring.internal.Preparer import Preparer
@@ -25,7 +26,8 @@ async def run_main(args):
 			factory.reuse_ca_certificate(config.node.ca_common_name, directories.certificates)
 
 		write_node_key_file(factory, directories.certificates / 'node.key.pem' if args.retain_node_key else None)
-		factory.generate_node_certificate(config.node.node_common_name)
+		factory.generate_node_certificate(
+			config.node.node_common_name, node_host=ConfigurationManager(directories.resources).lookup_node_host())
 		factory.create_node_certificate_chain()
 
 		package_filter = '' if args.renew_ca else 'node'

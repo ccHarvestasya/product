@@ -1,4 +1,5 @@
 import datetime
+import ipaddress
 import os
 import re
 
@@ -7,6 +8,21 @@ from shoestring.internal.OpensslExecutor import OpensslExecutor
 
 def create_openssl_executor():
 	return OpensslExecutor(os.environ.get('OPENSSL_EXECUTABLE', 'openssl'))
+
+
+def assert_certificate_matches_host(certificate_path, ca_certificate_path, host):
+	"""Verifies the TLS server certificate chain and its configured endpoint."""
+
+	try:
+		ipaddress.ip_address(host)
+		verify_option = '-verify_ip'
+	except ValueError:
+		verify_option = '-verify_hostname'
+
+	create_openssl_executor().dispatch([
+		'verify', '-x509_strict', '-purpose', 'sslserver', '-CAfile', ca_certificate_path,
+		verify_option, host, certificate_path
+	])
 
 
 def assert_certificate_properties(certificate_path, expected_issuer, expected_subject, expected_days):

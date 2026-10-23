@@ -38,6 +38,15 @@ class ConfigurationManager:
 
 		return values
 
+	def lookup_node_host(self):
+		"""Retrieves the configured node endpoint, if node resources are available."""
+
+		if not (self.source_directory / 'config-node.properties').exists():
+			return None
+
+		host = self.lookup('config-node.properties', [('localnode', 'host')])[0]
+		return host.strip() if host else None
+
 	def patch(self, filename, replacements):
 		"""Patches the specified file with the specified replacements."""
 

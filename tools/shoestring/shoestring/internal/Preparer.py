@@ -352,7 +352,7 @@ class Preparer:
 			factory.extract_ca_public_key()
 			factory.generate_ca_certificate(self.config.node.ca_common_name)
 			write_node_key_file(factory, self.config.imports.node_key)
-			factory.generate_node_certificate(self.config.node.node_common_name)
+			factory.generate_node_certificate(self.config.node.node_common_name, node_host=self.config_manager.lookup_node_host())
 			factory.create_node_certificate_chain()
 
 			factory.package(self.directories.certificates)

@@ -362,6 +362,12 @@ caCommonName   Common name of generated CA certificates
 nodeCommonName Common name of generated Node certificates
 ```
 
+Node certificate Subject Alternative Names (SANs) use `[localnode] host` from
+`userconfig/resources/config-node.properties`. DNS names produce DNS SANs and IP
+addresses produce IP SANs. `nodeCommonName` remains the display name and is never
+used to infer a SAN. When the host is unset, the generated certificate has no SAN.
+After changing the host, run `renew-certificates` to update the certificate.
+
 ### Overrides
 
 INI file that is used to customize advanced Symbol settings.

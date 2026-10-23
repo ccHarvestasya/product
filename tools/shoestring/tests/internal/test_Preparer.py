@@ -23,6 +23,7 @@ from shoestring.internal.ShoestringConfiguration import (
 	TransactionConfiguration
 )
 
+from ..test.CertificateTestUtils import assert_certificate_matches_host
 from ..test.TestPackager import prepare_testnet_package
 from ..test.TransactionTestUtils import AggregateDescriptor, LinkDescriptor, assert_aggregate_transaction, assert_link_transaction
 
@@ -727,6 +728,17 @@ class PreparerTest(unittest.TestCase):
 					self._assert_all_files_read_only(preparer.directories.certificates, [
 						'ca.crt.pem', 'ca.pubkey.pem', 'node.crt.pem', 'node.full.crt.pem', 'node.key.pem'
 					])
+
+	def test_generate_certificates_uses_configured_host_for_subject_alt_name(self):
+		for host in ['node.example.com', '127.0.0.1', '2001:db8::1']:
+			with self.subTest(host=host), tempfile.TemporaryDirectory() as output_directory:
+				with Preparer(output_directory, self._create_configuration(NodeFeatures.PEER)) as preparer:
+					preparer.create_subdirectories()
+					(preparer.directories.resources / 'config-node.properties').write_text(
+						f'[node]\nhost = wrong.example.com\n[localnode]\nhost = {host}\n', encoding='utf8')
+					preparer.generate_certificates(Path(output_directory) / 'ca.key.pem', require_ca=False)
+					assert_certificate_matches_host(
+						preparer.directories.certificates / 'node.crt.pem', preparer.directories.certificates / 'ca.crt.pem', host)
 
 	def test_can_generate_certificates_when_optional_ca_key_is_not_present(self):
 		# Arrange:
