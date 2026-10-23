@@ -215,7 +215,8 @@ async def test_can_renew_voting_keys_when_some_are_present_and_active(server):  
 				(3000, 3719)))
 
 
-async def test_can_renew_voting_keys_when_some_are_present_and_inactive(server):  # pylint: disable=redefined-outer-name
+@pytest.mark.parametrize('ordinals', [(1, 2, 3, 4), (1, 3, 5, 7)])
+async def test_can_renew_voting_keys_when_some_are_present_and_inactive(server, ordinals):  # pylint: disable=redefined-outer-name
 	# Arrange:
 	with tempfile.TemporaryDirectory() as output_directory:
 		with tempfile.TemporaryDirectory() as package_directory:
@@ -223,10 +224,15 @@ async def test_can_renew_voting_keys_when_some_are_present_and_inactive(server):
 			config_filepath = prepare_shoestring_configuration(package_directory, NodeFeatures.VOTER, server.make_url(''))
 
 			voting_keys_directory = Path(output_directory) / 'keys' / 'voting'
-			expired_root_voting_public_key_1 = _write_voting_keys_file(voting_keys_directory, 1, 2600, 2699)
-			expired_root_voting_public_key_2 = _write_voting_keys_file(voting_keys_directory, 2, 2700, 2799)
-			_write_voting_keys_file(voting_keys_directory, 3, 2800, 2825)  # last epoch matches current epoch
-			_write_voting_keys_file(voting_keys_directory, 4, 2826, 2999)
+			expired_root_voting_public_key_1 = _write_voting_keys_file(voting_keys_directory, ordinals[0], 2600, 2699)
+			expired_root_voting_public_key_2 = _write_voting_keys_file(voting_keys_directory, ordinals[1], 2700, 2799)
+			_write_voting_keys_file(voting_keys_directory, ordinals[2], 2800, 2825)  # last epoch matches current epoch
+			_write_voting_keys_file(voting_keys_directory, ordinals[3], 2826, 2999)
+			active_files = {
+				voting_keys_directory / f'private_key_tree{ordinal}.dat':
+					(voting_keys_directory / f'private_key_tree{ordinal}.dat').read_bytes()
+				for ordinal in ordinals[2:]
+			}
 
 			# Act:
 			await main([
@@ -238,10 +244,12 @@ async def test_can_renew_voting_keys_when_some_are_present_and_inactive(server):
 			# Assert: inactive voting keys files are deleted, active voting keys files are preserved and new voting keys file is created
 			voting_key_descriptors = inspect_voting_key_files(voting_keys_directory)
 			assert [
-				(1, 2800, 2825),
-				(2, 2826, 2999),
-				(3, 3000, 3719),
+				(ordinals[2], 2800, 2825),
+				(ordinals[3], 2826, 2999),
+				(ordinals[3] + 1, 3000, 3719),
 			] == _map_voting_key_descriptors_to_tuples(voting_key_descriptors)
+			for filepath, original_contents in active_files.items():
+				assert original_contents == filepath.read_bytes()
 
 			# - transaction is created
 			transaction = _read_transaction(output_directory)

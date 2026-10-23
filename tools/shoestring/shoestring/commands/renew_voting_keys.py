@@ -1,4 +1,3 @@
-import shutil
 from pathlib import Path
 
 from symbollightapi.connector.SymbolConnector import SymbolConnector
@@ -57,12 +56,6 @@ def _clean_up_voting_keys_files(voting_keys_directory, inactive_voting_key_descr
 		expired_voting_keys_filepath = _get_voting_keys_filepath(descriptor.ordinal)
 		log.info(_('renew-voting-keys-removing-expired-voting-keys').format(filepath=expired_voting_keys_filepath))
 		expired_voting_keys_filepath.unlink()
-
-	# renumber active voting keys files
-	next_ordinal = 1
-	for descriptor in inspect_voting_key_files(voting_keys_directory):
-		shutil.move(_get_voting_keys_filepath(descriptor.ordinal), _get_voting_keys_filepath(next_ordinal))
-		next_ordinal += 1
 
 
 async def run_main(args):
