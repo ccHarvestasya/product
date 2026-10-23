@@ -7,7 +7,7 @@ from zenlog import log
 from shoestring.internal.ConfigurationManager import ConfigurationManager
 from shoestring.internal.LinkTransactionBuilder import LinkTransactionBuilder
 from shoestring.internal.NodeFeatures import NodeFeatures
-from shoestring.internal.NodewatchClient import get_current_finalization_epoch
+from shoestring.internal.NodewatchClient import get_verified_finalization_epoch
 from shoestring.internal.PeerDownloader import load_api_endpoints
 from shoestring.internal.PemUtils import read_public_key_from_public_key_pem_file
 from shoestring.internal.Preparer import Preparer
@@ -26,18 +26,8 @@ def _load_voting_key_descriptors(directory, current_epoch):
 	return (active_voting_key_descriptors, inactive_voting_key_descriptors)
 
 
-async def _get_network_time(resources_directory):
-	api_endpoints = load_api_endpoints(resources_directory)
-
-	log.info(_('general-connecting-to-node').format(endpoint=api_endpoints[0]))
-	connector = SymbolConnector(api_endpoints[0])
-
+async def _save_transaction(transaction_config, directories, transaction_builder, connector):
 	network_time = await connector.network_time()
-	return network_time
-
-
-async def _save_transaction(transaction_config, directories, transaction_builder):
-	network_time = await _get_network_time(directories.resources)
 	aggregate_transaction, transaction_hash = transaction_builder.build(
 		network_time.add_hours(transaction_config.timeout_hours),
 		transaction_config.fee_multiplier,
@@ -75,8 +65,12 @@ async def run_main(args):
 	directories = Preparer.DirectoryLocator(None, Path(args.directory))
 	config_manager = ConfigurationManager(directories.resources)
 
-	# detect the current finalized height and load the voting key files
-	current_finalization_epoch = await get_current_finalization_epoch(config.services.nodewatch, config_manager)
+	api_endpoints = load_api_endpoints(directories.resources)
+	log.info(_('general-connecting-to-node').format(endpoint=api_endpoints[0]))
+	connector = SymbolConnector(api_endpoints[0])
+
+	# verify the current epoch before inspecting or changing voting keys
+	current_finalization_epoch = await get_verified_finalization_epoch(config.services.nodewatch, config_manager, connector)
 	(active_voting_key_descriptors, inactive_voting_key_descriptors) = _load_voting_key_descriptors(
 		directories.voting_keys,
 		current_finalization_epoch)
@@ -102,7 +96,7 @@ async def run_main(args):
 	transaction_builder.link_voting_public_key(voter_configurator.voting_public_key, *new_voting_key_file_epoch_range)
 
 	# generate transaction
-	await _save_transaction(config.transaction, directories, transaction_builder)
+	await _save_transaction(config.transaction, directories, transaction_builder, connector)
 
 	# clean up voting keys files
 	_clean_up_voting_keys_files(directories.voting_keys, inactive_voting_key_descriptors)

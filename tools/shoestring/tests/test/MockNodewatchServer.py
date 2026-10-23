@@ -97,10 +97,12 @@ async def setup_mock_nodewatch_server(aiohttp_client, redirect_network_requests=
 			self.endpoint = ''
 			self.multisig_account_addresses = []
 			self.request_json_payloads = []
+			self.nodewatch_finalized_height = 2033136
+			self.rest_finalized_height = 2033136
 
 		async def api_symbol_height(self, request):
 			return await self._process(request, {
-				'finalizedHeight': 2033136,
+				'finalizedHeight': self.nodewatch_finalized_height,
 				'height': 2033194
 			})
 
@@ -125,6 +127,19 @@ async def setup_mock_nodewatch_server(aiohttp_client, redirect_network_requests=
 			return await self._process(request, {
 				'code': 'ResourceNotFound',
 				'message': 'no resource exists with id \'NC5RFPFQGYFGNDOHRL7TXVKJWUBNMJCB4P3TA5X\''
+			})
+
+		async def chain_info(self, request):
+			return await self._process(request, {
+				'height': '2033194',
+				'scoreHigh': '0',
+				'scoreLow': '0',
+				'latestFinalizedBlock': {
+					'finalizationEpoch': 2825,
+					'finalizationPoint': 1,
+					'height': str(self.rest_finalized_height),
+					'hash': '00' * 32
+				}
 			})
 
 		async def node_time(self, request):
@@ -176,6 +191,7 @@ async def setup_mock_nodewatch_server(aiohttp_client, redirect_network_requests=
 	app.router.add_get('/api/symbol/nodes/api', mock_server.api_nodes)
 
 	if redirect_network_requests:
+		app.router.add_get('/chain/info', mock_server.chain_info)
 		app.router.add_get(r'/accounts/{account_id}', mock_server.accounts_by_id)
 		app.router.add_get('/node/time', mock_server.node_time)
 		app.router.add_get(r'/account/{address}/multisig', mock_server.account_multisig)

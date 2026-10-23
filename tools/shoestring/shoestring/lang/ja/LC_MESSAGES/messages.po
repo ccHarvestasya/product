@@ -28,7 +28,7 @@ msgstr "メイン秘密鍵PEMファイルへのパス"
 #: shoestring/commands/import_harvesters.py:97 shoestring/commands/init.py:29
 #: shoestring/commands/min_cosignatures_count.py:34
 #: shoestring/commands/renew_certificates.py:38
-#: shoestring/commands/renew_voting_keys.py:112
+#: shoestring/commands/renew_voting_keys.py:106
 #: shoestring/commands/reset_data.py:86 shoestring/commands/setup.py:147
 #: shoestring/commands/signer.py:92
 msgid "argument-help-config"
@@ -36,7 +36,7 @@ msgstr "shoestring設定ファイルへのパス"
 
 #: shoestring/commands/health.py:75
 #: shoestring/commands/renew_certificates.py:39
-#: shoestring/commands/renew_voting_keys.py:113
+#: shoestring/commands/renew_voting_keys.py:107
 #: shoestring/commands/reset_data.py:87 shoestring/commands/setup.py:149
 msgid "argument-help-directory"
 msgstr "インストールディレクトリ（デフォルト: {default_path}）"
@@ -161,7 +161,7 @@ msgstr "ダウンロードされたファイル ({descriptor_name}) に無効な
 
 #: shoestring/commands/announce_transaction.py:15
 #: shoestring/commands/min_cosignatures_count.py:18
-#: shoestring/commands/renew_voting_keys.py:32 shoestring/commands/setup.py:62
+#: shoestring/commands/renew_voting_keys.py:69 shoestring/commands/setup.py:62
 msgid "general-connecting-to-node"
 msgstr "ノード {endpoint} へ接続中"
 
@@ -175,7 +175,7 @@ msgstr "ファイル {source_path} を {destination_path} へコピー中"
 msgid "general-copying-tree"
 msgstr "ツリー {source_path} を {destination_path} へコピー中"
 
-#: shoestring/commands/renew_voting_keys.py:46
+#: shoestring/commands/renew_voting_keys.py:36
 #: shoestring/internal/Preparer.py:415
 msgid "general-created-aggregate-transaction"
 msgstr "ハッシュ {transaction_hash} の集約トランザクションを作成しました"
@@ -378,6 +378,18 @@ msgstr "現在の最終エポックが {epoch} として検出されました"
 msgid "nodewatch-client-detected-height"
 msgstr "最後に確定したブロック高が {height} として検出されました"
 
+#: shoestring/internal/NodewatchClient.py:67
+msgid "nodewatch-client-inconsistent-epochs-aborting"
+msgstr "再確認後もファイナライゼーションエポックが一致しないため中止します: NodeWatch 高さ {nodewatch_height}、エポック {nodewatch_epoch}; REST {endpoint} 高さ {rest_height}、エポック {rest_epoch}"
+
+#: shoestring/internal/NodewatchClient.py:69
+msgid "nodewatch-client-inconsistent-epochs-retrying"
+msgstr "ファイナライゼーションエポックが一致しないため双方を再確認します: NodeWatch 高さ {nodewatch_height}、エポック {nodewatch_epoch}; REST {endpoint} 高さ {rest_height}、エポック {rest_epoch}"
+
+#: shoestring/internal/NodewatchClient.py:63
+msgid "nodewatch-client-verified-epoch"
+msgstr "ファイナライゼーションエポックの一致を確認しました: NodeWatch 高さ {nodewatch_height}、エポック {nodewatch_epoch}; REST {endpoint} 高さ {rest_height}、エポック {rest_epoch}"
+
 #: shoestring/internal/PeerDownloader.py:79
 msgid "peer-downloader-loading-api-endpoints"
 msgstr "ファイル {filepath} からAPIエンドポイントを読み込み中"
@@ -430,19 +442,19 @@ msgstr "秘密鍵　: {private_key}"
 msgid "pemview-show-public-key"
 msgstr "公開鍵　: {public_key}"
 
-#: shoestring/commands/renew_voting_keys.py:89
+#: shoestring/commands/renew_voting_keys.py:83
 msgid "renew-voting-keys-maximum-already-registered"
 msgstr "このアカウントにはすでに最大数の投票キーが登録されています"
 
-#: shoestring/commands/renew_voting_keys.py:85
+#: shoestring/commands/renew_voting_keys.py:79
 msgid "renew-voting-keys-no-voting-keys-found"
 msgstr "投票が有効ですが、既存の投票キーファイルが見つかりませんでした"
 
-#: shoestring/commands/renew_voting_keys.py:72
+#: shoestring/commands/renew_voting_keys.py:62
 msgid "renew-voting-keys-not-voting"
 msgstr "ノードが投票用に設定されていないため、処理を中止します"
 
-#: shoestring/commands/renew_voting_keys.py:58
+#: shoestring/commands/renew_voting_keys.py:48
 msgid "renew-voting-keys-removing-expired-voting-keys"
 msgstr "期限切れの投票キーを削除しています: {filepath}"
 

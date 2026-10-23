@@ -2,6 +2,7 @@ import os
 import shutil
 import tempfile
 from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 from symbolchain.CryptoTypes import PrivateKey
@@ -134,6 +135,47 @@ async def test_renew_voting_keys_fails_when_node_is_not_voter(server, caplog):  
 			assert not (Path(output_directory) / 'renew_voting_keys_transaction.dat').exists()
 
 
+@pytest.mark.parametrize('has_existing_files', [False, True])
+@pytest.mark.parametrize('nodewatch_height, rest_height, error_type', [
+	(2033136, 2032560, RuntimeError),
+	(2032560, 2033136, RuntimeError),
+	(0, 2033136, ValueError),
+	(2033136, 0, ValueError)
+])
+async def test_renew_voting_keys_preserves_files_when_epoch_verification_fails(
+	server, has_existing_files, nodewatch_height, rest_height, error_type
+):  # pylint: disable=redefined-outer-name
+	# Arrange:
+	with tempfile.TemporaryDirectory() as output_directory:
+		with tempfile.TemporaryDirectory() as package_directory:
+			await _prepare_output_directory(Path(package_directory), Path(output_directory), NodeFeatures.VOTER, server.make_url(''))
+			config_filepath = prepare_shoestring_configuration(package_directory, NodeFeatures.VOTER, server.make_url(''))
+			voting_keys_directory = Path(output_directory) / 'keys' / 'voting'
+			transaction_filepath = Path(output_directory) / 'renew_voting_keys_transaction.dat'
+			if has_existing_files:
+				_write_voting_keys_file(voting_keys_directory, 1, 2700, 2799)
+				_write_voting_keys_file(voting_keys_directory, 3, 2800, 2899)
+				transaction_filepath.write_bytes(b'previous transaction')
+			original_files = {filepath: filepath.read_bytes() for filepath in voting_keys_directory.iterdir()}
+			server.mock.nodewatch_finalized_height = nodewatch_height
+			server.mock.rest_finalized_height = rest_height
+
+			# Act:
+			with pytest.raises(error_type):
+				await main(['renew-voting-keys', '--config', str(config_filepath), '--directory', output_directory])
+
+			# Assert: no key files or transaction files are created, removed, renamed or modified
+			assert set(original_files) == set(voting_keys_directory.iterdir())
+			for filepath, original_contents in original_files.items():
+				assert original_contents == filepath.read_bytes()
+			if has_existing_files:
+				assert b'previous transaction' == transaction_filepath.read_bytes()
+			else:
+				assert not transaction_filepath.exists()
+			assert f'{server.make_url("")}/node/time' not in server.mock.urls
+			assert (2 if RuntimeError == error_type else 1) == server.mock.urls.count(f'{server.make_url("")}/chain/info')
+
+
 async def test_can_renew_voting_keys_when_none_are_present(server, caplog):  # pylint: disable=redefined-outer-name
 	# Arrange:
 	with tempfile.TemporaryDirectory() as output_directory:
@@ -141,12 +183,16 @@ async def test_can_renew_voting_keys_when_none_are_present(server, caplog):  # p
 			await _prepare_output_directory(Path(package_directory), Path(output_directory), NodeFeatures.VOTER, server.make_url(''))
 			config_filepath = prepare_shoestring_configuration(package_directory, NodeFeatures.VOTER, server.make_url(''))
 
-			# Act:
-			await main([
-				'renew-voting-keys',
-				'--config', str(config_filepath),
-				'--directory', output_directory
-			])
+			# Act: pin verification and network time retrieval to the selected endpoint
+			with patch('shoestring.commands.renew_voting_keys.load_api_endpoints', return_value=[str(server.make_url(''))]) as load_endpoints:
+				await main([
+					'renew-voting-keys',
+					'--config', str(config_filepath),
+					'--directory', output_directory
+				])
+				load_endpoints.assert_called_once_with(Path(output_directory) / 'userconfig' / 'resources')
+			assert f'{server.make_url("")}/chain/info' in server.mock.urls
+			assert f'{server.make_url("")}/node/time' in server.mock.urls
 
 			# Assert: warning is raised
 			assert_message_is_logged('voting is enabled, but no existing voting key files were found', caplog)
