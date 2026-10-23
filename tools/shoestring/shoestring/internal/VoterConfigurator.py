@@ -47,7 +47,7 @@ class VoterConfigurator:
 			('localnode', 'roles', f'{current_roles},Voting')
 		])
 
-	def generate_voting_key_file(self, directory, current_finalization_epoch, grace_period_epochs=1):
+	def generate_voting_key_file(self, directory, current_finalization_epoch, grace_period_epochs=1, *, minimum_start_epoch=None):
 		"""Generates a voting key file."""
 
 		if self.is_imported:
@@ -71,6 +71,8 @@ class VoterConfigurator:
 			ordinal = 1
 			start_epoch = current_finalization_epoch + 1 + grace_period_epochs
 
+		if minimum_start_epoch is not None:
+			start_epoch = max(start_epoch, minimum_start_epoch)
 		end_epoch = start_epoch + max_voting_key_lifetime - 1
 
 		voting_keys_generator = VotingKeysGenerator(self.voting_key_pair)

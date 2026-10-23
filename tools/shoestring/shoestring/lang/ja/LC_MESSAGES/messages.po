@@ -28,7 +28,7 @@ msgstr "メイン秘密鍵PEMファイルへのパス"
 #: shoestring/commands/import_harvesters.py:97 shoestring/commands/init.py:29
 #: shoestring/commands/min_cosignatures_count.py:34
 #: shoestring/commands/renew_certificates.py:38
-#: shoestring/commands/renew_voting_keys.py:112
+#: shoestring/commands/renew_voting_keys.py:113
 #: shoestring/commands/reset_data.py:86 shoestring/commands/setup.py:147
 #: shoestring/commands/signer.py:92
 msgid "argument-help-config"
@@ -36,7 +36,7 @@ msgstr "shoestring設定ファイルへのパス"
 
 #: shoestring/commands/health.py:75
 #: shoestring/commands/renew_certificates.py:39
-#: shoestring/commands/renew_voting_keys.py:113
+#: shoestring/commands/renew_voting_keys.py:114
 #: shoestring/commands/reset_data.py:87 shoestring/commands/setup.py:149
 msgid "argument-help-directory"
 msgstr "インストールディレクトリ（デフォルト: {default_path}）"
@@ -161,7 +161,7 @@ msgstr "ダウンロードされたファイル ({descriptor_name}) に無効な
 
 #: shoestring/commands/announce_transaction.py:15
 #: shoestring/commands/min_cosignatures_count.py:18
-#: shoestring/commands/renew_voting_keys.py:32 shoestring/commands/setup.py:62
+#: shoestring/commands/renew_voting_keys.py:76 shoestring/commands/setup.py:62
 msgid "general-connecting-to-node"
 msgstr "ノード {endpoint} へ接続中"
 
@@ -175,7 +175,7 @@ msgstr "ファイル {source_path} を {destination_path} へコピー中"
 msgid "general-copying-tree"
 msgstr "ツリー {source_path} を {destination_path} へコピー中"
 
-#: shoestring/commands/renew_voting_keys.py:46
+#: shoestring/commands/renew_voting_keys.py:30
 #: shoestring/internal/Preparer.py:415
 msgid "general-created-aggregate-transaction"
 msgstr "ハッシュ {transaction_hash} の集約トランザクションを作成しました"
@@ -430,21 +430,47 @@ msgstr "秘密鍵　: {private_key}"
 msgid "pemview-show-public-key"
 msgstr "公開鍵　: {public_key}"
 
-#: shoestring/commands/renew_voting_keys.py:89
+#: shoestring/internal/VotingKeyRenewal.py:58
+msgid "renew-voting-keys-conflicting-local-key"
+msgstr "未登録の投票鍵がオンチェーンの登録と競合しています: {keys}"
+
+#: shoestring/internal/VotingKeyRenewal.py:64
+msgid "renew-voting-keys-invalid-reusable-key"
+msgstr "未登録の投票鍵のエポック範囲が不正です: {keys}"
+
+#: shoestring/commands/renew_voting_keys.py:92
 msgid "renew-voting-keys-maximum-already-registered"
 msgstr "このアカウントにはすでに最大数の投票キーが登録されています"
 
-#: shoestring/commands/renew_voting_keys.py:85
+#: shoestring/commands/renew_voting_keys.py:88
+msgid "renew-voting-keys-missing-files"
+msgstr "登録済み投票鍵のローカルファイルがありません。登録は維持します: {keys}"
+
+#: shoestring/internal/VotingKeyRenewal.py:39
+msgid "renew-voting-keys-multiple-unregistered"
+msgstr "未登録の投票鍵が複数あります。手動で整理してから再実行してください: {keys}"
+
+#: shoestring/commands/renew_voting_keys.py:86
 msgid "renew-voting-keys-no-voting-keys-found"
 msgstr "投票が有効ですが、既存の投票キーファイルが見つかりませんでした"
 
-#: shoestring/commands/renew_voting_keys.py:72
+#: shoestring/commands/renew_voting_keys.py:68
 msgid "renew-voting-keys-not-voting"
 msgstr "ノードが投票用に設定されていないため、処理を中止します"
 
-#: shoestring/commands/renew_voting_keys.py:58
+#: shoestring/internal/VotingKeyRenewal.py:73
+msgid "renew-voting-keys-protected-transaction"
+msgstr ""
+"トランザクションファイル {filepath} "
+"を上書きできません。このアカウントとネットワークの未署名の投票鍵更新である必要があります。別の場所へ移動してから再実行してください"
+
+#: shoestring/commands/renew_voting_keys.py:42
 msgid "renew-voting-keys-removing-expired-voting-keys"
 msgstr "期限切れの投票キーを削除しています: {filepath}"
+
+#: shoestring/commands/renew_voting_keys.py:54
+msgid "renew-voting-keys-reusing-key"
+msgstr "未登録の投票鍵を再利用します: {keys}"
 
 #: shoestring/commands/reset_data.py:10
 msgid "reset-data-recreating-directory"
@@ -479,6 +505,7 @@ msgid "signer-transaction"
 msgstr "トランザクション: {transaction}"
 
 #: shoestring/internal/TransactionSerializer.py:12
+#: shoestring/internal/VotingKeyRenewal.py:112
 msgid "transaction-serializer-saved-file"
 msgstr "トランザクションファイルを {filepath} に書き込みました"
 

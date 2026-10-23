@@ -2,12 +2,17 @@ import os
 import shutil
 import tempfile
 from pathlib import Path
+from types import SimpleNamespace
+from unittest.mock import patch
 
 import pytest
 from symbolchain.CryptoTypes import PrivateKey
-from symbolchain.sc import LinkAction, TransactionFactory, TransactionType
+from symbolchain.facade.SymbolFacade import SymbolFacade
+from symbolchain.sc import Cosignature, LinkAction, Signature, TransactionFactory, TransactionType
 from symbolchain.symbol.KeyPair import KeyPair
+from symbolchain.symbol.Network import NetworkTimestamp
 from symbolchain.symbol.VotingKeysGenerator import VotingKeysGenerator
+from symbollightapi.model.Exceptions import NodeException
 
 from shoestring.__main__ import main
 from shoestring.internal.CertificateFactory import CertificateFactory
@@ -103,6 +108,25 @@ def _read_transaction(directory):
 		transaction_bytes = infile.read()
 		return TransactionFactory.deserialize(transaction_bytes)
 
+
+def _set_registered_voting_keys(mock_server, descriptors):
+	mock_server.mock.voting_public_keys = [{
+		'publicKey': str(descriptor.public_key), 'startEpoch': descriptor.start_epoch, 'endEpoch': descriptor.end_epoch
+	} for descriptor in descriptors]
+
+
+@pytest.fixture
+async def renewal_context(server):  # pylint: disable=redefined-outer-name
+	with tempfile.TemporaryDirectory() as output_directory:
+		with tempfile.TemporaryDirectory() as package_directory:
+			directory = Path(output_directory)
+			await _prepare_output_directory(Path(package_directory), directory, NodeFeatures.VOTER, server.make_url(''))
+			config_filepath = prepare_shoestring_configuration(package_directory, NodeFeatures.VOTER, server.make_url(''))
+			yield SimpleNamespace(
+				directory=directory,
+				keys_directory=directory / 'keys' / 'voting',
+				args=['renew-voting-keys', '--config', str(config_filepath), '--directory', output_directory])
+
 # endregion
 
 
@@ -182,6 +206,7 @@ async def test_can_renew_voting_keys_when_some_are_present_and_active(server):  
 			voting_keys_directory = Path(output_directory) / 'keys' / 'voting'
 			_write_voting_keys_file(voting_keys_directory, 1, 2800, 2899)
 			_write_voting_keys_file(voting_keys_directory, 2, 2900, 2999)
+			_set_registered_voting_keys(server, inspect_voting_key_files(voting_keys_directory))
 
 			# Act:
 			await main([
@@ -227,6 +252,7 @@ async def test_can_renew_voting_keys_when_some_are_present_and_inactive(server):
 			expired_root_voting_public_key_2 = _write_voting_keys_file(voting_keys_directory, 2, 2700, 2799)
 			_write_voting_keys_file(voting_keys_directory, 3, 2800, 2825)  # last epoch matches current epoch
 			_write_voting_keys_file(voting_keys_directory, 4, 2826, 2999)
+			_set_registered_voting_keys(server, inspect_voting_key_files(voting_keys_directory))
 
 			# Act:
 			await main([
@@ -281,6 +307,7 @@ async def test_cannot_renew_voting_keys_when_max_keys_are_active(server, caplog)
 			_write_voting_keys_file(voting_keys_directory, 1, 2800, 2825)  # last epoch matches current epoch
 			_write_voting_keys_file(voting_keys_directory, 2, 3100, 3199)
 			_write_voting_keys_file(voting_keys_directory, 3, 3200, 3299)
+			_set_registered_voting_keys(server, inspect_voting_key_files(voting_keys_directory))
 
 			# Act:
 			await main([
@@ -302,3 +329,183 @@ async def test_cannot_renew_voting_keys_when_max_keys_are_active(server, caplog)
 
 			# no transaction is created
 			assert not (Path(output_directory) / 'renew_voting_keys_transaction.dat').exists()
+
+
+# pylint: disable=redefined-outer-name
+
+
+@pytest.mark.parametrize('has_expired_link', [False, True])
+async def test_repeated_renewal_reuses_unregistered_key(renewal_context, server, has_expired_link):
+	if has_expired_link:
+		server.mock.voting_public_keys = [{
+			'publicKey': str(KeyPair(PrivateKey.random()).public_key), 'startEpoch': 2700, 'endEpoch': 2799
+		}]
+	await main(renewal_context.args)
+	original_keys = inspect_voting_key_files(renewal_context.keys_directory)
+	original_files = {path.name: path.read_bytes() for path in renewal_context.keys_directory.iterdir()}
+
+	await main(renewal_context.args)
+
+	assert original_files == {path.name: path.read_bytes() for path in renewal_context.keys_directory.iterdir()}
+	transaction = _read_transaction(renewal_context.directory)
+	assert (2 if has_expired_link else 1) == len(transaction.transactions)
+	assert original_keys[0].public_key.bytes == transaction.transactions[-1].linked_public_key.bytes
+	assert 0o600 == (renewal_context.directory / 'renew_voting_keys_transaction.dat').stat().st_mode & 0o777
+
+	# Once the previous key is registered, a subsequent renewal creates the next key.
+	_set_registered_voting_keys(server, original_keys)
+	await main(renewal_context.args)
+	keys = inspect_voting_key_files(renewal_context.keys_directory)
+	assert 2 == len(keys)
+	assert original_keys[0].end_epoch + 1 == keys[1].start_epoch
+	assert keys[0].public_key != keys[1].public_key
+
+
+@pytest.mark.parametrize('has_expired_files', [False, True])
+async def test_missing_registered_keys_still_fill_limit(renewal_context, server, caplog, has_expired_files):
+	server.mock.voting_public_keys = [{
+		'publicKey': str(KeyPair(PrivateKey.random()).public_key), 'startEpoch': start, 'endEpoch': start + 99
+	} for start in (2800, 2900, 3000)]
+	if has_expired_files:
+		_write_voting_keys_file(renewal_context.keys_directory, 1, 2600, 2699)
+		_write_voting_keys_file(renewal_context.keys_directory, 2, 2700, 2799)
+	original_files = {path.name: path.read_bytes() for path in renewal_context.keys_directory.iterdir()}
+
+	await main(renewal_context.args)
+
+	assert_message_is_logged('maximum number of voting keys are already registered for this account', caplog)
+	assert original_files == {path.name: path.read_bytes() for path in renewal_context.keys_directory.iterdir()}
+	assert not (renewal_context.directory / 'renew_voting_keys_transaction.dat').exists()
+	assert not any(url.endswith('/node/time') for url in server.mock.urls)
+
+
+async def test_missing_future_key_is_preserved_and_followed(renewal_context, server, caplog):
+	public_key = KeyPair(PrivateKey.random()).public_key
+	server.mock.voting_public_keys = [{'publicKey': str(public_key), 'startEpoch': 2900, 'endEpoch': 2999}]
+	await main(renewal_context.args)
+	transaction = _read_transaction(renewal_context.directory)
+	assert 1 == len(transaction.transactions)
+	assert LinkAction.LINK == transaction.transactions[0].link_action
+	assert 3000 == transaction.transactions[0].start_epoch.value
+	assert str(public_key) in caplog.text
+
+
+async def test_local_expired_keys_are_not_unlinked_without_registration(renewal_context):
+	_write_voting_keys_file(renewal_context.keys_directory, 1, 2700, 2799)
+	await main(renewal_context.args)
+	transaction = _read_transaction(renewal_context.directory)
+	assert 1 == len(transaction.transactions)
+	assert LinkAction.LINK == transaction.transactions[0].link_action
+	assert 2827 == transaction.transactions[0].start_epoch.value
+
+
+async def test_multiple_pending_keys_preserve_files_and_output(renewal_context):
+	await main(renewal_context.args)
+	_write_voting_keys_file(renewal_context.keys_directory, 3, 3547, 3646)
+	original_files = {path.name: path.read_bytes() for path in renewal_context.keys_directory.iterdir()}
+	transaction_path = renewal_context.directory / 'renew_voting_keys_transaction.dat'
+	original_transaction = transaction_path.read_bytes()
+
+	with pytest.raises(RuntimeError, match='multiple'):
+		await main(renewal_context.args)
+
+	assert original_files == {path.name: path.read_bytes() for path in renewal_context.keys_directory.iterdir()}
+	assert original_transaction == transaction_path.read_bytes()
+
+
+@pytest.mark.parametrize('source', ['account_links', 'network_time'])
+async def test_network_failure_precedes_file_changes(renewal_context, source):
+	await main(renewal_context.args)
+	original_files = {path.name: path.read_bytes() for path in renewal_context.keys_directory.iterdir()}
+	transaction_path = renewal_context.directory / 'renew_voting_keys_transaction.dat'
+	original_transaction = transaction_path.read_bytes()
+	with patch(f'shoestring.commands.renew_voting_keys.SymbolConnector.{source}', side_effect=NodeException('unavailable')):
+		with pytest.raises(NodeException):
+			await main(renewal_context.args)
+	assert original_files == {path.name: path.read_bytes() for path in renewal_context.keys_directory.iterdir()}
+	assert original_transaction == transaction_path.read_bytes()
+
+
+@pytest.mark.parametrize('has_output', [False, True])
+async def test_save_failure_can_retry_without_new_keys(renewal_context, has_output):
+	transaction_path = renewal_context.directory / 'renew_voting_keys_transaction.dat'
+	if has_output:
+		await main(renewal_context.args)
+	original_transaction = transaction_path.read_bytes() if has_output else None
+	with patch('shoestring.internal.VotingKeyRenewal.Path.replace', side_effect=OSError('save failed')):
+		with pytest.raises(OSError, match='save failed'):
+			await main(renewal_context.args)
+	if has_output:
+		assert original_transaction == transaction_path.read_bytes()
+	else:
+		assert not transaction_path.exists()
+	assert not list(renewal_context.directory.glob('.renew_voting_keys_*.tmp'))
+	original_keys = inspect_voting_key_files(renewal_context.keys_directory)
+
+	await main(renewal_context.args)
+
+	assert original_keys == inspect_voting_key_files(renewal_context.keys_directory)
+	assert original_keys[0].public_key.bytes == _read_transaction(renewal_context.directory).transactions[-1].linked_public_key.bytes
+
+
+@pytest.mark.parametrize('kind', [
+	'signed', 'cosigned', 'corrupt', 'foreign_account', 'foreign_network', 'unrelated', 'empty',
+	'foreign_embedded', 'foreign_embedded_network', 'nonaggregate', 'trailing'
+])
+async def test_existing_transaction_output_is_protected(renewal_context, kind):
+	await main(renewal_context.args)
+	transaction = _read_transaction(renewal_context.directory)
+	if 'signed' == kind:
+		transaction.signature = Signature(bytes([1]) * 64)
+	elif 'cosigned' == kind:
+		transaction.cosignatures = [Cosignature()]
+	elif 'foreign_account' == kind:
+		transaction.signer_public_key = type(transaction.signer_public_key)(bytes([1]) * 32)
+	elif 'foreign_network' == kind:
+		transaction.network = type(transaction.network).MAINNET
+	elif 'unrelated' == kind:
+		transaction.transactions[0].type_ = TransactionType.ACCOUNT_KEY_LINK
+	elif 'empty' == kind:
+		transaction.transactions = []
+	elif 'foreign_embedded' == kind:
+		transaction.transactions[0].signer_public_key = type(transaction.signer_public_key)(bytes([1]) * 32)
+	elif 'foreign_embedded_network' == kind:
+		transaction.transactions[0].network = type(transaction.network).MAINNET
+	elif 'nonaggregate' == kind:
+		transaction = SymbolFacade('testnet').transaction_factory.create({
+			'type': 'voting_key_link_transaction_v1', 'signer_public_key': transaction.signer_public_key.bytes,
+			'linked_public_key': transaction.transactions[0].linked_public_key.bytes,
+			'start_epoch': 2827, 'end_epoch': 3546, 'link_action': 'link', 'deadline': 1
+		})
+	transaction_path = renewal_context.directory / 'renew_voting_keys_transaction.dat'
+	payload = b'corrupt' if 'corrupt' == kind else transaction.serialize()
+	if 'trailing' == kind:
+		payload += b'extra data'
+	transaction_path.write_bytes(payload)
+	original_keys = inspect_voting_key_files(renewal_context.keys_directory)
+
+	with pytest.raises(RuntimeError, match='cannot overwrite'):
+		await main(renewal_context.args)
+
+	assert payload == transaction_path.read_bytes()
+	assert original_keys == inspect_voting_key_files(renewal_context.keys_directory)
+
+
+async def test_reused_key_gets_a_new_transaction_deadline(renewal_context):
+	await main(renewal_context.args)
+	previous_transaction = _read_transaction(renewal_context.directory)
+	previous_keys = inspect_voting_key_files(renewal_context.keys_directory)
+	with patch('shoestring.commands.renew_voting_keys.SymbolConnector.network_time', return_value=NetworkTimestamp(123516789)):
+		await main(renewal_context.args)
+	assert previous_keys == inspect_voting_key_files(renewal_context.keys_directory)
+	assert previous_transaction.deadline.value + 60000 == _read_transaction(renewal_context.directory).deadline.value
+
+
+async def test_unsigned_bonded_output_can_be_regenerated(renewal_context):
+	await main(renewal_context.args)
+	previous_keys = inspect_voting_key_files(renewal_context.keys_directory)
+	transaction = _read_transaction(renewal_context.directory)
+	transaction.type_ = TransactionType.AGGREGATE_BONDED
+	(renewal_context.directory / 'renew_voting_keys_transaction.dat').write_bytes(transaction.serialize())
+	await main(renewal_context.args)
+	assert previous_keys == inspect_voting_key_files(renewal_context.keys_directory)

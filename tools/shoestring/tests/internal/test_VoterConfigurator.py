@@ -199,6 +199,23 @@ class VoterConfiguratorTest(unittest.TestCase):
 			self.assertEqual(400, epoch_range.start_epoch)
 			self.assertEqual(400 + 221, epoch_range.end_epoch)
 
+	def test_can_generate_voting_key_file_with_minimum_start_epoch(self):
+		for minimum_start_epoch, expected_start_epoch in [(500, 500), (300, 400)]:
+			with self.subTest(minimum_start_epoch=minimum_start_epoch):
+				with tempfile.TemporaryDirectory() as temp_directory:
+					voting_key_file_directory = self._prepare_generate_voting_key_file_test(temp_directory)
+					self._write_voting_key_file_header(voting_key_file_directory, 'private_key_tree7.dat', 300, 399)
+					configurator = VoterConfigurator(ConfigurationManager(temp_directory))
+
+					epoch_range = configurator.generate_voting_key_file(
+						voting_key_file_directory, 400, minimum_start_epoch=minimum_start_epoch)
+
+					self.assertEqual(expected_start_epoch, epoch_range.start_epoch)
+					self.assertEqual(expected_start_epoch + 221, epoch_range.end_epoch)
+					self.assertEqual(
+						(expected_start_epoch, expected_start_epoch + 221, configurator.voting_public_key),
+						self._read_voting_key_file_header(voting_key_file_directory / 'private_key_tree8.dat'))
+
 	def test_can_generate_voting_key_file_import(self):
 		# Arrange:
 		with tempfile.TemporaryDirectory() as source_directory:

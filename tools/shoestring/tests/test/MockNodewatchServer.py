@@ -97,6 +97,7 @@ async def setup_mock_nodewatch_server(aiohttp_client, redirect_network_requests=
 			self.endpoint = ''
 			self.multisig_account_addresses = []
 			self.request_json_payloads = []
+			self.voting_public_keys = None
 
 		async def api_symbol_height(self, request):
 			return await self._process(request, {
@@ -122,6 +123,11 @@ async def setup_mock_nodewatch_server(aiohttp_client, redirect_network_requests=
 			return await self._process(request, NODEWATCH_API_NODES if not redirect_network_requests else [])
 
 		async def accounts_by_id(self, request):
+			if self.voting_public_keys is not None:
+				return await self._process(request, {'account': {
+					'supplementalPublicKeys': {'voting': {'publicKeys': self.voting_public_keys}}
+				}})
+
 			return await self._process(request, {
 				'code': 'ResourceNotFound',
 				'message': 'no resource exists with id \'NC5RFPFQGYFGNDOHRL7TXVKJWUBNMJCB4P3TA5X\''
