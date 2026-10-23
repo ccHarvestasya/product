@@ -67,7 +67,7 @@ All commands that accept `--config` default to `shoestring/shoestring.ini`, rela
 
 Extracts a template shoestring configuration file from a package that the user can then customize.
 
-Creates the parent directory if needed. Creates `overrides.ini` (with the defaults shown below) and `rest_overrides.json` (`{}`) alongside the configuration file if they do not already exist. Existing override files are preserved; the configuration template is overwritten on each run.
+Creates the parent directory if needed. Creates `overrides.ini` (with the defaults shown below) and `rest_overrides.json` (`{}`) alongside the configuration file if they do not already exist. Existing override files are preserved. If the configuration file already exists, it is preserved and the new template is saved with `.new` appended to its filename (for example, `shoestring/shoestring.ini.new`). An existing `.new` file is overwritten. After saving, `init` displays instructions to migrate your settings to the new template and replace the current configuration after reviewing it.
 
 ```
 init [--package PACKAGE] [config]

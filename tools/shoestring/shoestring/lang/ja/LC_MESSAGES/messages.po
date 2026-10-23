@@ -302,6 +302,10 @@ msgstr "入力harvestersと出力harvestersは異なる必要があります"
 msgid "import-harvesters-list-header"
 msgstr "公開鍵 {public_key} を使用して {filepath} でハーベスターをリスト中"
 
+#: shoestring/commands/init.py:63
+msgid "init-configuration-migration-required"
+msgstr "既存の設定ファイル {config_path} は保持しました。新しいテンプレートを {new_path} に保存しました。現行の設定を {new_path} に移行し、確認後に {config_path} を置き換えてください。"
+
 #: shoestring/__main__.py:20
 msgid "main-announce-transaction-help"
 msgstr "トランザクションをネットワークにアナウンスします"

@@ -308,6 +308,10 @@ msgstr "in-harvesters and out-harvesters must be different"
 msgid "import-harvesters-list-header"
 msgstr "listing harvesters in {filepath} using public key {public_key}"
 
+#: shoestring/commands/init.py:63
+msgid "init-configuration-migration-required"
+msgstr "Existing configuration {config_path} was preserved. Saved the new template to {new_path}. Migrate your current settings to {new_path}, then replace {config_path} after reviewing the result."
+
 #: shoestring/__main__.py:20
 msgid "main-announce-transaction-help"
 msgstr "announces a transaction to the network"

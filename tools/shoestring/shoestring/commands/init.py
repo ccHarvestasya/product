@@ -49,7 +49,8 @@ async def prepare_configuration(package, config_filepath):
 
 async def run_main(args):
 	config_filepath = Path(args.config)
-	await prepare_configuration(args.package, config_filepath)
+	output_filepath = config_filepath.with_name(config_filepath.name + '.new') if config_filepath.exists() else config_filepath
+	await prepare_configuration(args.package, output_filepath)
 
 	for filename, contents in (('overrides.ini', DEFAULT_OVERRIDES), ('rest_overrides.json', '{}')):
 		try:
@@ -57,6 +58,9 @@ async def run_main(args):
 				outfile.write(contents)
 		except FileExistsError:
 			pass
+
+	if output_filepath != config_filepath:
+		log.info(_('init-configuration-migration-required').format(config_path=config_filepath, new_path=output_filepath))
 
 
 def add_arguments(parser):

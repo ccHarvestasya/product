@@ -291,6 +291,10 @@ msgstr ""
 msgid "import-harvesters-list-header"
 msgstr ""
 
+#: shoestring/commands/init.py:63
+msgid "init-configuration-migration-required"
+msgstr ""
+
 #: shoestring/__main__.py:20
 msgid "main-announce-transaction-help"
 msgstr ""
