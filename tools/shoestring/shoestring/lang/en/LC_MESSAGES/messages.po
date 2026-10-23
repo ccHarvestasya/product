@@ -164,6 +164,7 @@ msgstr "downloaded file ({descriptor_name}) has invalid hash"
 #: shoestring/commands/announce_transaction.py:15
 #: shoestring/commands/min_cosignatures_count.py:18
 #: shoestring/commands/renew_voting_keys.py:32 shoestring/commands/setup.py:62
+#: shoestring/healthagents/voting_keys.py:33
 msgid "general-connecting-to-node"
 msgstr "connecting to {endpoint}"
 
@@ -238,27 +239,52 @@ msgstr "HTTPS certificate looks ok: valid from {start_date} to {end_date}"
 msgid "health-running-health-agent"
 msgstr "running health agent for {module_name}"
 
-#: shoestring/healthagents/voting_keys.py:23
+#: shoestring/healthagents/voting_keys.py:74
 msgid "health-voting-keys-active"
 msgstr "active voting keys discovered for epochs {start_epoch} to {end_epoch}"
 
-#: shoestring/healthagents/voting_keys.py:21
+#: shoestring/healthagents/voting_keys.py:68
 msgid "health-voting-keys-expired"
 msgstr "expired voting keys discovered for epochs {start_epoch} to {end_epoch}"
 
-#: shoestring/healthagents/voting_keys.py:26
+#: shoestring/healthagents/voting_keys.py:76
 msgid "health-voting-keys-future"
 msgstr "future voting keys discovered for epochs {start_epoch} to {end_epoch}"
 
-#: shoestring/healthagents/voting_keys.py:32
-msgid "health-voting-keys-not-registered"
-msgstr "no voting keys are registered for the current epoch {epoch}"
+#: shoestring/healthagents/voting_keys.py:38
+#: shoestring/healthagents/voting_keys.py:40
+msgid "health-voting-keys-invalid-registration"
+msgstr "invalid voting key epoch range in REST response"
 
-#: shoestring/healthagents/voting_keys.py:34
+#: shoestring/healthagents/voting_keys.py:80
+msgid "health-voting-keys-missing-file"
+msgstr ""
+"registered voting key has no matching local file: {public_key}, epochs "
+"{start_epoch} to {end_epoch}"
+
+#: shoestring/healthagents/voting_keys.py:29
+msgid "health-voting-keys-no-api-endpoints"
+msgstr "cannot verify voting keys: no REST endpoints found in saved peers"
+
+#: shoestring/healthagents/voting_keys.py:70
+msgid "health-voting-keys-not-linked"
+msgstr ""
+"local voting key {filename} is not linked with the same public key and "
+"epoch range: {public_key}, epochs {start_epoch} to {end_epoch}"
+
+#: shoestring/healthagents/voting_keys.py:89
+msgid "health-voting-keys-not-registered"
+msgstr "no locally available linked voting keys cover the current epoch {epoch}"
+
+#: shoestring/healthagents/voting_keys.py:91
 msgid "health-voting-keys-registered"
 msgstr ""
-"voting keys are registered from the current epoch {start_epoch} until "
-"epoch {end_epoch}"
+"locally available voting keys are linked from the current epoch "
+"{start_epoch} until epoch {end_epoch}"
+
+#: shoestring/healthagents/voting_keys.py:42
+msgid "health-voting-keys-unverifiable"
+msgstr "cannot verify voting keys using REST {endpoint}: {reason}"
 
 #: shoestring/healthagents/websockets.py:21
 msgid "health-websockets-connected"

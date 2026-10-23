@@ -153,6 +153,7 @@ msgstr ""
 #: shoestring/commands/announce_transaction.py:15
 #: shoestring/commands/min_cosignatures_count.py:18
 #: shoestring/commands/renew_voting_keys.py:32 shoestring/commands/setup.py:62
+#: shoestring/healthagents/voting_keys.py:33
 msgid "general-connecting-to-node"
 msgstr ""
 
@@ -227,24 +228,45 @@ msgstr ""
 msgid "health-running-health-agent"
 msgstr ""
 
-#: shoestring/healthagents/voting_keys.py:23
+#: shoestring/healthagents/voting_keys.py:74
 msgid "health-voting-keys-active"
 msgstr ""
 
-#: shoestring/healthagents/voting_keys.py:21
+#: shoestring/healthagents/voting_keys.py:68
 msgid "health-voting-keys-expired"
 msgstr ""
 
-#: shoestring/healthagents/voting_keys.py:26
+#: shoestring/healthagents/voting_keys.py:76
 msgid "health-voting-keys-future"
 msgstr ""
 
-#: shoestring/healthagents/voting_keys.py:32
+#: shoestring/healthagents/voting_keys.py:38
+#: shoestring/healthagents/voting_keys.py:40
+msgid "health-voting-keys-invalid-registration"
+msgstr ""
+
+#: shoestring/healthagents/voting_keys.py:80
+msgid "health-voting-keys-missing-file"
+msgstr ""
+
+#: shoestring/healthagents/voting_keys.py:29
+msgid "health-voting-keys-no-api-endpoints"
+msgstr ""
+
+#: shoestring/healthagents/voting_keys.py:70
+msgid "health-voting-keys-not-linked"
+msgstr ""
+
+#: shoestring/healthagents/voting_keys.py:89
 msgid "health-voting-keys-not-registered"
 msgstr ""
 
-#: shoestring/healthagents/voting_keys.py:34
+#: shoestring/healthagents/voting_keys.py:91
 msgid "health-voting-keys-registered"
+msgstr ""
+
+#: shoestring/healthagents/voting_keys.py:42
+msgid "health-voting-keys-unverifiable"
 msgstr ""
 
 #: shoestring/healthagents/websockets.py:21

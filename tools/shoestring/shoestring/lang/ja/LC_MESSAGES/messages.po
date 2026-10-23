@@ -162,6 +162,7 @@ msgstr "ダウンロードされたファイル ({descriptor_name}) に無効な
 #: shoestring/commands/announce_transaction.py:15
 #: shoestring/commands/min_cosignatures_count.py:18
 #: shoestring/commands/renew_voting_keys.py:32 shoestring/commands/setup.py:62
+#: shoestring/healthagents/voting_keys.py:33
 msgid "general-connecting-to-node"
 msgstr "ノード {endpoint} へ接続中"
 
@@ -236,25 +237,48 @@ msgstr "HTTPS証明書は正常です: {start_date} から {end_date} まで有�
 msgid "health-running-health-agent"
 msgstr "モジュール {module_name} のヘルスエージェントを実行"
 
-#: shoestring/healthagents/voting_keys.py:23
+#: shoestring/healthagents/voting_keys.py:74
 msgid "health-voting-keys-active"
 msgstr "エポック {start_epoch} から {end_epoch} までのアクティブな投票キーが検出されました"
 
-#: shoestring/healthagents/voting_keys.py:21
+#: shoestring/healthagents/voting_keys.py:68
 msgid "health-voting-keys-expired"
 msgstr "エポック {start_epoch} から {end_epoch} までの期限切れの投票キーが検出されました"
 
-#: shoestring/healthagents/voting_keys.py:26
+#: shoestring/healthagents/voting_keys.py:76
 msgid "health-voting-keys-future"
 msgstr "エポック {start_epoch} から {end_epoch} までの将来の投票キーが検出されました"
 
-#: shoestring/healthagents/voting_keys.py:32
-msgid "health-voting-keys-not-registered"
-msgstr "現在のエポック {epoch} に登録された投票キーはありません"
+#: shoestring/healthagents/voting_keys.py:38
+#: shoestring/healthagents/voting_keys.py:40
+msgid "health-voting-keys-invalid-registration"
+msgstr "REST応答内の投票鍵のエポック範囲が不正です"
 
-#: shoestring/healthagents/voting_keys.py:34
+#: shoestring/healthagents/voting_keys.py:80
+msgid "health-voting-keys-missing-file"
+msgstr "登録済み投票鍵に一致するローカルファイルがありません: {public_key}、エポック {start_epoch} から {end_epoch}"
+
+#: shoestring/healthagents/voting_keys.py:29
+msgid "health-voting-keys-no-api-endpoints"
+msgstr "投票鍵を確認できません: 保存済みpeer一覧にREST接続先がありません"
+
+#: shoestring/healthagents/voting_keys.py:70
+msgid "health-voting-keys-not-linked"
+msgstr ""
+"ローカル投票鍵 {filename} と公開鍵・エポック範囲が一致する登録がありません: {public_key}、エポック "
+"{start_epoch} から {end_epoch}"
+
+#: shoestring/healthagents/voting_keys.py:89
+msgid "health-voting-keys-not-registered"
+msgstr "現在のエポック {epoch} で利用できる、ローカルファイルと登録が一致する投票鍵はありません"
+
+#: shoestring/healthagents/voting_keys.py:91
 msgid "health-voting-keys-registered"
-msgstr "投票キーは現在のエポック {start_epoch} から エポック {end_epoch} まで登録されています"
+msgstr "ローカルファイルと登録が一致する投票鍵は、現在のエポック {start_epoch} からエポック {end_epoch} まで利用できます"
+
+#: shoestring/healthagents/voting_keys.py:42
+msgid "health-voting-keys-unverifiable"
+msgstr "REST {endpoint} を使用して投票鍵を確認できません: {reason}"
 
 #: shoestring/healthagents/websockets.py:21
 msgid "health-websockets-connected"
