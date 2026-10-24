@@ -8,7 +8,6 @@ from symbolchain.symbol.KeyPair import KeyPair
 from symbolchain.symbol.SharedKey import SharedKey
 from zenlog import log
 
-from shoestring.internal.ConfigurationPaths import DEFAULT_CONFIG_PATH
 from shoestring.internal.PemUtils import read_private_key_from_private_key_pem_file
 from shoestring.internal.ShoestringConfiguration import parse_shoestring_configuration
 
@@ -95,7 +94,7 @@ def run_main(args):
 
 
 def add_arguments(parser):
-	parser.add_argument('--config', help=_('argument-help-config'), default=DEFAULT_CONFIG_PATH)
+	parser.add_argument('--config', help=_('argument-help-config'))
 	parser.add_argument('--in-harvesters', help=_('argument-help-import-harvesters-in-harvesters'), required=True)
 	parser.add_argument('--in-pem', help=_('argument-help-import-harvesters-in-pem'), required=True)
 

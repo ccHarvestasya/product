@@ -2,7 +2,6 @@ import os
 from pathlib import Path
 
 from shoestring.internal.CertificateFactory import CertificateFactory
-from shoestring.internal.ConfigurationPaths import DEFAULT_CONFIG_PATH
 from shoestring.internal.NodeKeyUtils import write_node_key_file
 from shoestring.internal.OpensslExecutor import OpensslExecutor
 from shoestring.internal.Preparer import Preparer
@@ -36,7 +35,7 @@ async def run_main(args):
 
 
 def add_arguments(parser):
-	parser.add_argument('--config', help=_('argument-help-config'), default=DEFAULT_CONFIG_PATH)
+	parser.add_argument('--config', help=_('argument-help-config'))
 	parser.add_argument('--directory', help=_('argument-help-directory').format(default_path=Path.home()), default=str(Path.home()))
 	parser.add_argument('--ca-key-path', help=_('argument-help-ca-key-path'), required=True)
 	parser.add_argument('--renew-ca', help=_('argument-help-renew-certificates-renew-ca'), action='store_true')

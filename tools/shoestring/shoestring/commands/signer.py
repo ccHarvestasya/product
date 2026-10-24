@@ -5,7 +5,6 @@ from symbolchain.facade.SymbolFacade import SymbolFacade
 from symbolchain.symbol.KeyPair import KeyPair
 from zenlog import log
 
-from ..internal.ConfigurationPaths import DEFAULT_CONFIG_PATH
 from ..internal.PemUtils import read_private_key_from_private_key_pem_file
 from ..internal.ShoestringConfiguration import parse_shoestring_configuration
 from ..internal.TransactionSerializer import write_transaction_to_file
@@ -90,7 +89,7 @@ def run_main(args):
 
 
 def add_arguments(parser):
-	parser.add_argument('--config', help=_('argument-help-config'), default=DEFAULT_CONFIG_PATH)
+	parser.add_argument('--config', help=_('argument-help-config'))
 	parser.add_argument('--ca-key-path', help=_('argument-help-ca-key-path'), required=True)
 	parser.add_argument('--save', help=_('argument-help-signer-save'), action='store_true')
 	parser.add_argument('filename', help=_('argument-help-signer-filename'))

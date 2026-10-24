@@ -49,9 +49,10 @@ async def test_setup_and_upgrade_apply_override_defaults(deployment_args, defaul
 	_write_overrides(Path('custom'), 'wrong directory')
 	_write_rest_overrides(Path('custom'), 'wrong directory')
 	_write_rest_overrides(Path('shoestring'), 'wrong working directory')
+	_write_overrides(Path('shoestring'), 'wrong working directory')
 	for command in ('setup', 'upgrade'):
 		if 'ini' in default_files:
-			_write_overrides(Path('shoestring'), f'{command} default')
+			_write_overrides(Path('node/shoestring'), f'{command} default')
 		if 'json' in default_files:
 			_write_rest_overrides(Path('node/shoestring'), f'{command} default')
 		args = [command] + deployment_args
@@ -86,10 +87,9 @@ async def test_missing_explicit_overrides_fail_before_changes(tmp_path, monkeypa
 	compose_path = tmp_path / 'node/docker-compose.yaml'
 	compose_path.write_text('preserve compose', encoding='utf8')
 	if explicit_default_path:
-		default_directory = Path('shoestring') if '--overrides' == option else Path('node/shoestring')
-		missing_filepath = default_directory / filename
+		missing_filepath = Path('node/shoestring') / filename
 	else:
-		_write_overrides(Path('shoestring'), 'default must not mask a missing explicit file')
+		_write_overrides(Path('node/shoestring'), 'default must not mask a missing explicit file')
 		_write_rest_overrides(Path('node/shoestring'), 'default must not mask a missing explicit file')
 		missing_filepath = Path('missing') / filename
 	args = [command, '--config', str(config_filepath), '--directory', 'node', option, str(missing_filepath)]
@@ -130,3 +130,26 @@ async def test_wizard_setup_reads_destination_rest_overrides(deployment_args, re
 		assert contents == json.loads(destination_rest_path.read_text(encoding='utf8'))
 	else:
 		assert not destination_rest_path.exists()
+
+
+async def test_setup_and_upgrade_use_all_destination_defaults(deployment_args):
+	config_path = Path('node/shoestring/shoestring.ini')
+	config_path.parent.mkdir()
+	config_path.write_bytes(Path('custom/sai.shoestring.ini').read_bytes())
+	Path('shoestring').mkdir()
+	Path('shoestring/shoestring.ini').write_text('unrelated configuration', encoding='utf8')
+	_write_overrides(Path('shoestring'), 'unrelated node')
+	_write_rest_overrides(Path('shoestring'), 'unrelated node')
+	for command in ('setup', 'upgrade'):
+		_write_overrides(config_path.parent, f'{command} destination')
+		_write_rest_overrides(config_path.parent, f'{command} destination')
+		args = [command] + deployment_args[2:]
+		if 'setup' == command:
+			args += ['--security', 'insecure', '--ca-key-path', 'ca.key.pem']
+
+		await main(args)
+
+		manager = ConfigurationManager(Path('node/userconfig/resources'))
+		assert [f'{command} destination'] == manager.lookup('config-node.properties', [('localnode', 'friendlyName')])
+		rest_config = json.loads(Path('node/userconfig/rest.json').read_text(encoding='utf8'))
+		assert f'{command} destination' == rest_config['nodeMetadata']['animal']

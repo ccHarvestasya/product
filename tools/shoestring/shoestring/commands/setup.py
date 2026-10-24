@@ -7,7 +7,7 @@ from symbollightapi.connector.SymbolConnector import SymbolConnector
 from zenlog import log
 
 from shoestring.internal.ConfigurationManager import ConfigurationManager, load_patches_from_file
-from shoestring.internal.ConfigurationPaths import DEFAULT_CONFIG_PATH, DEFAULT_OVERRIDES_PATH, DEFAULT_REST_OVERRIDES_PATH
+from shoestring.internal.ConfigurationPaths import DEFAULT_OVERRIDES_PATH, DEFAULT_REST_OVERRIDES_PATH
 from shoestring.internal.NodeFeatures import NodeFeatures
 from shoestring.internal.NodewatchClient import get_current_finalization_epoch
 from shoestring.internal.OverrideResolver import resolve_override_paths
@@ -147,7 +147,7 @@ async def run_main(args):
 
 
 def add_arguments(parser, is_initial_setup=True):
-	parser.add_argument('--config', help=_('argument-help-config'), default=DEFAULT_CONFIG_PATH)
+	parser.add_argument('--config', help=_('argument-help-config'))
 	parser.add_argument('--package', help=_('argument-help-setup-package'), default='mainnet')
 	parser.add_argument('--directory', help=_('argument-help-directory').format(default_path=Path.home()), default=str(Path.home()))
 	parser.add_argument('--overrides', help=_('argument-help-setup-overrides').format(default_path=DEFAULT_OVERRIDES_PATH))

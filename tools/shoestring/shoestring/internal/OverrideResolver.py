@@ -14,6 +14,6 @@ def resolve_override_paths(overrides, rest_overrides, directory):
 		return default_path if Path(default_path).exists() else None
 
 	return (
-		resolve_path(overrides, DEFAULT_OVERRIDES_PATH),
+		resolve_path(overrides, str(Path(directory) / DEFAULT_OVERRIDES_PATH)),
 		resolve_path(rest_overrides, str(Path(directory) / DEFAULT_REST_OVERRIDES_PATH))
 	)

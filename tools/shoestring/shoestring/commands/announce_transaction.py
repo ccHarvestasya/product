@@ -3,7 +3,6 @@ from symbolchain.facade.SymbolFacade import SymbolFacade
 from symbollightapi.connector.SymbolConnector import SymbolConnector
 from zenlog import log
 
-from shoestring.internal.ConfigurationPaths import DEFAULT_CONFIG_PATH
 from shoestring.internal.NodeDownloader import detect_api_endpoints
 from shoestring.internal.ShoestringConfiguration import parse_shoestring_configuration
 
@@ -33,6 +32,6 @@ async def run_main(args):
 
 
 def add_arguments(parser):
-	parser.add_argument('--config', help=_('argument-help-config'), default=DEFAULT_CONFIG_PATH)
+	parser.add_argument('--config', help=_('argument-help-config'))
 	parser.add_argument('--transaction', help=_('argument-help-announce-transaction-transaction'), required=True)
 	parser.set_defaults(func=run_main)

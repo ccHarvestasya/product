@@ -32,7 +32,7 @@ msgstr "メイン秘密鍵PEMファイルへのパス"
 #: shoestring/commands/reset_data.py:86 shoestring/commands/setup.py:147
 #: shoestring/commands/signer.py:92
 msgid "argument-help-config"
-msgstr "shoestring設定ファイルへのパス"
+msgstr "Shoestring設定ファイルへのパス (デフォルト: --directory 配下の shoestring/shoestring.ini 、--directory がないコマンドは起動ディレクトリ基準; 明示指定は起動ディレクトリ基準の相対パスまたは絶対パス)"
 
 #: shoestring/commands/health.py:75
 #: shoestring/commands/renew_certificates.py:39
@@ -123,7 +123,7 @@ msgstr "リンクトランザクションのみを再生成する"
 
 #: shoestring/commands/setup.py:150
 msgid "argument-help-setup-overrides"
-msgstr "カスタムユーザー設定ファイルへのパス (デフォルト: {default_path}; なければ省略、明示指定したファイルは必須)"
+msgstr "カスタムユーザー設定ファイルへのパス (デフォルト: --directory 配下の {default_path}; なければ省略、明示指定は起動ディレクトリ基準の相対パスまたは絶対パス、指定ファイルは必須)"
 
 #: shoestring/commands/init.py:28 shoestring/commands/setup.py:148
 msgid "argument-help-setup-package"
@@ -133,7 +133,7 @@ msgstr ""
 
 #: shoestring/commands/setup.py:151
 msgid "argument-help-setup-rest-overrides"
-msgstr "カスタムユーザーREST設定へのパス (APIロールのみ; デフォルト: --directory 配下の {default_path}; なければ省略、明示指定したファイルは必須)"
+msgstr "カスタムユーザーREST設定へのパス (APIロールのみ; デフォルト: --directory 配下の {default_path}; なければ省略、明示指定は起動ディレクトリ基準の相対パスまたは絶対パス、指定ファイルは必須)"
 
 #: shoestring/commands/setup.py:154
 msgid "argument-help-setup-security"

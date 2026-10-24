@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pytest
 
 from shoestring.__main__ import main, parse_args
@@ -37,11 +39,35 @@ async def test_can_run_help_when_no_command_provided(capsys):
 	['signer', '--ca-key-path', 'key.pem', 'transaction.bin'],
 	['upgrade']
 ])
-@pytest.mark.parametrize('config_path', [None, 'custom/config.ini'])
+@pytest.mark.parametrize('config_path', [None, 'custom/config.ini', '/tmp/custom/config.ini'])
 def test_config_path_defaults_and_explicit_override(monkeypatch, command_args, config_path):
 	monkeypatch.setattr('builtins._', lambda message: message, raising=False)
 	args = command_args + (['--config', config_path] if config_path else [])
 
 	parsed_args = parse_args(args)
 
-	assert (config_path or 'shoestring/shoestring.ini') == parsed_args.config
+	directory_commands = {'health', 'renew-certificates', 'renew-voting-keys', 'reset-data', 'setup', 'upgrade'}
+	expected_default = str(Path.home() / 'shoestring/shoestring.ini') if command_args[0] in directory_commands else 'shoestring/shoestring.ini'
+	assert (config_path or expected_default) == parsed_args.config
+
+
+@pytest.mark.parametrize('command_args', [
+	['health'],
+	['renew-certificates', '--ca-key-path', 'key.pem'],
+	['renew-voting-keys'],
+	['reset-data'],
+	['setup', '--ca-key-path', 'key.pem'],
+	['upgrade']
+])
+@pytest.mark.parametrize('directory', ['nodes/example', '/tmp/example'])
+@pytest.mark.parametrize('config_path', [None, 'custom/config.ini', '/tmp/custom/config.ini'])
+def test_config_resolution_with_directory(monkeypatch, command_args, directory, config_path):
+	monkeypatch.setattr('builtins._', lambda message: message, raising=False)
+	args = command_args + ['--directory', directory]
+	if config_path is not None:
+		args += ['--config', config_path]
+
+	parsed_args = parse_args(args)
+
+	expected_path = config_path if config_path is not None else f'{directory}/shoestring/shoestring.ini'
+	assert expected_path == parsed_args.config

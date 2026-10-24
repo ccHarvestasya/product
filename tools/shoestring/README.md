@@ -59,7 +59,13 @@ In commands that require `--package` switch, the list of currently supported net
 
 As documented below, alternatively full path to package zip file can be provided using `file:///filename` or `http(s)://`.
 
-All commands that accept `--config` default to `shoestring/shoestring.ini`, relative to the current working directory. An explicit `--config` takes precedence. `setup` and `upgrade` default to `shoestring/overrides.ini` relative to the current working directory for `--overrides`. For `--rest-overrides`, they use `shoestring/rest_overrides.json` inside the installation directory specified by `--directory`. Neither default depends on `--config`. This also applies to wizard setup when it does not pass an explicit REST override path; the wizard file generation behavior is unchanged. Missing default files are skipped. Explicit override paths take precedence and must exist; missing explicit files cause an error before any configuration changes or upgrade deletions.
+For commands with `--directory`, omitted configuration paths are resolved under that installation directory:
+
+- `--config`: `DIRECTORY/shoestring/shoestring.ini`
+- `--overrides`: `DIRECTORY/shoestring/overrides.ini`
+- `--rest-overrides`: `DIRECTORY/shoestring/rest_overrides.json`
+
+`--directory` defaults to the home directory. Commands without `--directory`, including `init`, continue to use `shoestring/shoestring.ini` relative to the current working directory. Explicit relative paths are always relative to the current working directory, and absolute paths are used as provided. Missing default override files are skipped; explicitly specified override files must exist. Wizard file generation is unchanged, and its explicit paths take precedence.
 
 ## Setup Commands
 
@@ -182,7 +188,7 @@ setup \
   --config CONFIG                       path to shoestring configuration file
   --package PACKAGE                     Network configuration package. Possible values: (name | file:///filename | http(s)://uri) (default: mainnet)
   --directory DIRECTORY                 installation directory (default: $HOME)
-  --overrides OVERRIDES                 path to custom user settings (default: shoestring/overrides.ini; skipped if absent)
+  --overrides OVERRIDES                 path to custom user settings (default: DIRECTORY/shoestring/overrides.ini; skipped if absent)
   --rest-overrides REST_OVERRIDES       path to custom user REST settings (API roles only; default: DIRECTORY/shoestring/rest_overrides.json; skipped if absent)
   --security                            security mode (default: default)
   --ca-key-path CA_KEY_PATH             path to main private key PEM file
@@ -247,7 +253,7 @@ upgrade \
   --config CONFIG                       path to shoestring configuration file
   --package PACKAGE                     Network configuration package. Possible values: (name | file:///filename | http(s)://uri) (default: mainnet)
   --directory DIRECTORY                 installation directory (default: $HOME)
-  --overrides OVERRIDES                 path to custom user settings (default: shoestring/overrides.ini; skipped if absent)
+  --overrides OVERRIDES                 path to custom user settings (default: DIRECTORY/shoestring/overrides.ini; skipped if absent)
   --rest-overrides REST_OVERRIDES       path to custom user REST settings (API roles only; default: DIRECTORY/shoestring/rest_overrides.json; skipped if absent)
 ```
 
