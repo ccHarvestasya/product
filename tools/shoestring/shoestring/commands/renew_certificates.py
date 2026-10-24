@@ -1,8 +1,8 @@
 import os
 from pathlib import Path
 
-from shoestring.commands import DEFAULT_CONFIG_PATH
 from shoestring.internal.CertificateFactory import CertificateFactory
+from shoestring.internal.ConfigurationPaths import DEFAULT_CONFIG_PATH
 from shoestring.internal.NodeKeyUtils import write_node_key_file
 from shoestring.internal.OpensslExecutor import OpensslExecutor
 from shoestring.internal.Preparer import Preparer

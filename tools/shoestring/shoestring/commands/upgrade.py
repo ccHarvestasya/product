@@ -5,6 +5,7 @@ from zenlog import log
 
 from shoestring.internal.ConfigurationManager import ConfigurationManager
 from shoestring.internal.NodeFeatures import NodeFeatures
+from shoestring.internal.OverrideResolver import resolve_override_paths
 from shoestring.internal.Preparer import Preparer
 from shoestring.internal.ShoestringConfiguration import parse_shoestring_configuration
 
@@ -32,6 +33,7 @@ def _load_harvester_configuration_patches(config_manager):
 
 
 async def run_main(args):
+	resolve_override_paths(args.overrides, args.rest_overrides, args.directory)
 	config = parse_shoestring_configuration(args.config)
 	directories = Preparer.DirectoryLocator(None, Path(args.directory))
 

@@ -5,8 +5,7 @@ from symbolchain.facade.SymbolFacade import SymbolFacade
 from symbolchain.symbol.KeyPair import KeyPair
 from zenlog import log
 
-from shoestring.commands import DEFAULT_CONFIG_PATH
-
+from ..internal.ConfigurationPaths import DEFAULT_CONFIG_PATH
 from ..internal.PemUtils import read_private_key_from_private_key_pem_file
 from ..internal.ShoestringConfiguration import parse_shoestring_configuration
 from ..internal.TransactionSerializer import write_transaction_to_file

@@ -3,8 +3,8 @@ from pathlib import Path
 from symbollightapi.connector.SymbolConnector import SymbolConnector
 from zenlog import log
 
-from shoestring.commands import DEFAULT_CONFIG_PATH
 from shoestring.internal.ConfigurationManager import ConfigurationManager
+from shoestring.internal.ConfigurationPaths import DEFAULT_CONFIG_PATH
 from shoestring.internal.MultisigAnalyzer import calculate_min_cosignatures_count
 from shoestring.internal.NodeDownloader import detect_api_endpoints
 from shoestring.internal.PemUtils import read_public_key_from_private_key_pem_file

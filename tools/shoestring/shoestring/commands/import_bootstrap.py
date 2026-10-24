@@ -4,8 +4,8 @@ from pathlib import Path
 
 from zenlog import log
 
-from shoestring.commands import DEFAULT_CONFIG_PATH
 from shoestring.internal.ConfigurationManager import ConfigurationManager
+from shoestring.internal.ConfigurationPaths import DEFAULT_CONFIG_PATH
 
 
 async def run_main(args):

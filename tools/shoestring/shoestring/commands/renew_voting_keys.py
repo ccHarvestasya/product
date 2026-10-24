@@ -4,8 +4,8 @@ from pathlib import Path
 from symbollightapi.connector.SymbolConnector import SymbolConnector
 from zenlog import log
 
-from shoestring.commands import DEFAULT_CONFIG_PATH
 from shoestring.internal.ConfigurationManager import ConfigurationManager
+from shoestring.internal.ConfigurationPaths import DEFAULT_CONFIG_PATH
 from shoestring.internal.LinkTransactionBuilder import LinkTransactionBuilder
 from shoestring.internal.NodeFeatures import NodeFeatures
 from shoestring.internal.NodewatchClient import get_current_finalization_epoch

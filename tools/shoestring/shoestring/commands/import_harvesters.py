@@ -8,7 +8,7 @@ from symbolchain.symbol.KeyPair import KeyPair
 from symbolchain.symbol.SharedKey import SharedKey
 from zenlog import log
 
-from shoestring.commands import DEFAULT_CONFIG_PATH
+from shoestring.internal.ConfigurationPaths import DEFAULT_CONFIG_PATH
 from shoestring.internal.PemUtils import read_private_key_from_private_key_pem_file
 from shoestring.internal.ShoestringConfiguration import parse_shoestring_configuration
 

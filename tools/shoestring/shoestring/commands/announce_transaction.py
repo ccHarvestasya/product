@@ -3,7 +3,7 @@ from symbolchain.facade.SymbolFacade import SymbolFacade
 from symbollightapi.connector.SymbolConnector import SymbolConnector
 from zenlog import log
 
-from shoestring.commands import DEFAULT_CONFIG_PATH
+from shoestring.internal.ConfigurationPaths import DEFAULT_CONFIG_PATH
 from shoestring.internal.NodeDownloader import detect_api_endpoints
 from shoestring.internal.ShoestringConfiguration import parse_shoestring_configuration
 

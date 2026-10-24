@@ -123,7 +123,7 @@ msgstr "リンクトランザクションのみを再生成する"
 
 #: shoestring/commands/setup.py:150
 msgid "argument-help-setup-overrides"
-msgstr "カスタムユーザー設定ファイルへのパス"
+msgstr "カスタムユーザー設定ファイルへのパス (デフォルト: {default_path}; なければ省略、明示指定したファイルは必須)"
 
 #: shoestring/commands/init.py:28 shoestring/commands/setup.py:148
 msgid "argument-help-setup-package"
@@ -133,7 +133,7 @@ msgstr ""
 
 #: shoestring/commands/setup.py:151
 msgid "argument-help-setup-rest-overrides"
-msgstr "カスタムユーザーREST設定へのパス（これはAPIロールにのみ有効）"
+msgstr "カスタムユーザーREST設定へのパス (APIロールのみ; デフォルト: --directory 配下の {default_path}; なければ省略、明示指定したファイルは必須)"
 
 #: shoestring/commands/setup.py:154
 msgid "argument-help-setup-security"
