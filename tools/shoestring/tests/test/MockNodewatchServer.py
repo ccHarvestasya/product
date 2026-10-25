@@ -105,7 +105,7 @@ async def setup_mock_nodewatch_server(aiohttp_client, redirect_network_requests=
 			})
 
 		async def peer_nodes(self, request):
-			return await self._process(request, NODEWATCH_PEER_NODES if not redirect_network_requests else [
+			return await self._process(request, NODEWATCH_PEER_NODES + NODEWATCH_API_NODES if not redirect_network_requests else [
 				{
 					'mainPublicKey': '6CEB918020E9701C664F46FEDD73A969EE4927FEF1DF6B6CBAEAC817CA7CBF34',
 					'endpoint': str(self.endpoint),
@@ -133,6 +133,9 @@ async def setup_mock_nodewatch_server(aiohttp_client, redirect_network_requests=
 					'sendTimestamp': 123456789
 				}
 			})
+
+		async def node_info(self, request):
+			return await self._process(request, {'port': 7900})
 
 		async def account_multisig(self, request):
 			address = Address(request.match_info['address'])
@@ -178,6 +181,7 @@ async def setup_mock_nodewatch_server(aiohttp_client, redirect_network_requests=
 	if redirect_network_requests:
 		app.router.add_get(r'/accounts/{account_id}', mock_server.accounts_by_id)
 		app.router.add_get('/node/time', mock_server.node_time)
+		app.router.add_get('/node/info', mock_server.node_info)
 		app.router.add_get(r'/account/{address}/multisig', mock_server.account_multisig)
 		app.router.add_put('/transactions', mock_server.announce_transaction)
 		app.router.add_put('/transactions/partial', mock_server.announce_transaction)

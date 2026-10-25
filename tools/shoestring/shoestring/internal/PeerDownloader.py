@@ -42,10 +42,12 @@ async def download_peers(nodewatch_endpoint, resources_directory, save_api_nodes
 	downloader.min_balance = min_balance
 
 	await downloader.download_peer_nodes()
-	_save_peers_file(downloader.select_peer_nodes(), resources_directory, 'p2p')
-
 	if save_api_nodes:
 		await downloader.download_api_nodes()
+
+	await downloader.resolve_peer_ports()
+	_save_peers_file(downloader.select_peer_nodes(), resources_directory, 'p2p')
+	if save_api_nodes:
 		_save_peers_file(downloader.select_api_nodes(), resources_directory, 'api')
 
 	return downloader.select_api_endpoints()
