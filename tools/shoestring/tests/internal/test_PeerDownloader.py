@@ -137,6 +137,30 @@ async def test_can_download_peers_for_api_node(nodewatch_server):  # pylint: dis
 
 # region load_api_endpoints
 
+@pytest.mark.parametrize('peers_name', ['p2p', 'api'])
+@pytest.mark.parametrize('api_port, expected_scheme', [
+	(443, 'https'),
+	('443', 'https'),
+	(3001, 'https'),
+	('3001', 'https'),
+	(3000, 'http'),
+	(3333, 'http')
+])
+def test_can_load_api_endpoint_with_explicit_port(tmp_path, peers_name, api_port, expected_scheme):
+	# Arrange:
+	peers_json = {'knownPeers': [{
+		'endpoint': {'host': 'node.example.com', 'api_port': api_port},
+		'metadata': {'roles': 'Peer,Api'}
+	}]}
+	(tmp_path / f'peers-{peers_name}.json').write_text(json.dumps(peers_json), encoding='utf8')
+
+	# Act:
+	api_endpoints = load_api_endpoints(tmp_path)
+
+	# Assert:
+	assert [f'{expected_scheme}://node.example.com:{api_port}'] == api_endpoints
+
+
 async def test_can_load_api_endpoints_from_peer_file(nodewatch_server):  # pylint: disable=redefined-outer-name
 	# Arrange:
 	with tempfile.TemporaryDirectory() as output_directory_name:
