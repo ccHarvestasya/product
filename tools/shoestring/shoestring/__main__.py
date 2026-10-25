@@ -1,10 +1,10 @@
-import argparse
-import asyncio
 import gettext
 import importlib
 import os
 import sys
 from pathlib import Path
+
+from shoestring.internal.SecretMasking import SecretArgumentParser, run_cli
 
 
 def register_subcommand(subparsers, name, help_text):
@@ -14,7 +14,7 @@ def register_subcommand(subparsers, name, help_text):
 
 
 def parse_args(args):
-	parser = argparse.ArgumentParser(description=_('main-title'))
+	parser = SecretArgumentParser(description=_('main-title'))
 	subparsers = parser.add_subparsers(title='subcommands', help=_('main-subcommands-help'))
 
 	register_subcommand(subparsers, 'announce-transaction', _('main-announce-transaction-help'))
@@ -52,4 +52,4 @@ async def main(args):
 
 
 if '__main__' == __name__:
-	asyncio.run(main(sys.argv[1:]))
+	run_cli(main(sys.argv[1:]))

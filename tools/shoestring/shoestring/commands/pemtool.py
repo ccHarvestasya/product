@@ -6,6 +6,8 @@ from symbolchain.CryptoTypes import PrivateKey
 from symbolchain.PrivateKeyStorage import PrivateKeyStorage
 from zenlog import log
 
+from shoestring.internal.SecretMasking import register_secret
+
 
 def _get_private_key(filename):
 	if not filename:
@@ -14,6 +16,7 @@ def _get_private_key(filename):
 		with open(filename, 'rt', encoding='utf8') as infile:
 			private_key = infile.read()
 
+	register_secret(private_key.strip())
 	return private_key.strip()
 
 
@@ -31,7 +34,9 @@ def run_main(args):
 	password = None
 	if args.ask_pass:
 		password = getpass.getpass(f'Provide {filepath} password: ')
+		register_secret(password)
 		confirmation = getpass.getpass(f'Confirm {filepath} password: ')
+		register_secret(confirmation)
 		if confirmation != password:
 			raise RuntimeError(_('pemtool-error-password-mismatch'))
 

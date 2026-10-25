@@ -4,6 +4,8 @@ from pathlib import Path
 
 from symbolchain.symbol.Network import NetworkTimestamp
 
+from .SecretMasking import protect_config_errors, read_config, register_config_secrets
+
 
 class ConfigurationManager:
 	"""Manages configuration properties files in a resources directory."""
@@ -30,6 +32,7 @@ class ConfigurationManager:
 						key_match = self.key_regex.match(line)
 						if key_match and key == key_match.group(1):
 							values[i] = key_match.group(3)
+							register_config_secrets(f'{key} = {values[i]}')
 							break
 
 				section_match = self.section_regex.match(line)
@@ -40,6 +43,9 @@ class ConfigurationManager:
 
 	def patch(self, filename, replacements):
 		"""Patches the specified file with the specified replacements."""
+
+		for _, key, value in replacements:
+			register_config_secrets(f'{key} = {value}')
 
 		config_filepath = self.source_directory / filename
 
@@ -69,13 +75,13 @@ class ConfigurationManager:
 			outfile.write('\n')
 
 
+@protect_config_errors
 def load_patches_from_file(filename):
 	"""Loads patch information from a file."""
 
 	parser = configparser.ConfigParser()
 	parser.optionxform = str  # configure case-sensitive keys
-	with open(filename, 'rt', encoding='utf8') as infile:
-		parser.read_file(infile)
+	read_config(parser, filename)
 
 	patches = {}
 	for section in parser.sections():
@@ -91,13 +97,13 @@ def load_patches_from_file(filename):
 	return patches
 
 
+@protect_config_errors
 def load_shoestring_patches_from_file(filename, only_sections=None):
 	"""Loads patch information from ini file."""
 
 	parser = configparser.ConfigParser()
 	parser.optionxform = str  # configure case-sensitive keys
-	with open(filename, 'rt', encoding='utf8') as infile:
-		parser.read_file(infile)
+	read_config(parser, filename)
 
 	sections = parser.sections() if only_sections is None else only_sections
 	patches = []

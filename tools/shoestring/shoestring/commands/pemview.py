@@ -7,6 +7,8 @@ from symbolchain.symbol.KeyPair import KeyPair
 from symbolchain.symbol.Network import Network
 from zenlog import log
 
+from shoestring.internal.SecretMasking import explicit_secret_output, register_secret
+
 
 def run_main(args):
 	filepath = Path(args.input)
@@ -19,9 +21,11 @@ def run_main(args):
 	password = None
 	if args.ask_pass:
 		password = getpass.getpass(f'Provide {filepath} password: ')
+		register_secret(password)
 
 	storage = PrivateKeyStorage(filepath.parent, password)
 	private_key = storage.load(filepath.stem)
+	register_secret(private_key)
 
 	log.info(_('pemview-loaded-pem-file').format(filepath=filepath))
 
@@ -33,7 +37,8 @@ def run_main(args):
 	log.info(_('pemview-show-public-key').format(public_key=key_pair.public_key))
 
 	if args.show_private:
-		log.info(_('pemview-show-private-key').format(private_key=key_pair.private_key))
+		with explicit_secret_output():
+			log.info(_('pemview-show-private-key').format(private_key=key_pair.private_key))
 
 
 def add_arguments(parser):

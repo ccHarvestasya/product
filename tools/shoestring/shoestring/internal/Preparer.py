@@ -16,6 +16,7 @@ from .LinkTransactionBuilder import LinkTransactionBuilder
 from .NodeFeatures import NodeFeatures
 from .NodeKeyUtils import write_node_key_file
 from .OpensslExecutor import OpensslExecutor
+from .SecretMasking import read_json_config
 from .VoterConfigurator import VoterConfigurator
 
 VotingKeyDescriptor = namedtuple('VotingKeyDescriptor', ['public_key', 'start_epoch', 'end_epoch'])
@@ -294,11 +295,11 @@ class Preparer:
 
 			# load the rest config
 			with open(rest_json_filepath, 'rt', encoding='utf8') as rest_config_infile:
-				rest_config = json.load(rest_config_infile)
+				rest_config = read_json_config(rest_config_infile)
 
 			# customize user rest config
 			with open(rest_overrides_filename, 'rt', encoding='utf8') as rest_overrides_infile:
-				merge_json_configuration(rest_config, json.load(rest_overrides_infile))
+				merge_json_configuration(rest_config, read_json_config(rest_overrides_infile))
 
 			# rewrite the rest config
 			with open(rest_json_filepath, 'wt', encoding='utf8') as rest_config_outfile:

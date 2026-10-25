@@ -5,6 +5,8 @@ from contextlib import ExitStack, contextmanager
 from subprocess import PIPE, STDOUT, Popen, TimeoutExpired
 from threading import Thread
 
+from .SecretMasking import redact, register_secret
+
 
 @contextmanager
 def _passphrase_pipe(password):
@@ -37,6 +39,7 @@ def _prepare_passphrases(command_line):
 				continue
 
 			password = command_line[index + 1][5:]
+			register_secret(password)
 			if '\n' in password or '\r' in password or '\0' in password:
 				raise ValueError('OpenSSL passphrases cannot contain newline or NUL characters')
 			password_fd = stack.enter_context(_passphrase_pipe(password.encode('utf8') + b'\n'))
@@ -75,6 +78,10 @@ class OpensslExecutor:
 
 		command_line = [self.executable_path] + [str(arg) for arg in args]
 		all_lines = []
+		# External sources can contain values unknown to this process. Hide their diagnostics entirely.
+		hide_diagnostics = any(
+			command_line[index] in ('-passin', '-passout', '-pass') and not command_line[index + 1].startswith('pass:')
+			for index in range(1, len(command_line) - 1))
 		with _prepare_passphrases(command_line) as (pass_fds, secrets):
 			with Popen(command_line, stdout=PIPE, stderr=STDOUT, stdin=PIPE, pass_fds=pass_fds) as process:
 				try:
@@ -83,18 +90,17 @@ class OpensslExecutor:
 					process.kill()
 					process.communicate()
 					# TimeoutExpired can contain partial, unsanitized subprocess output.
-					raise RuntimeError(f'{" ".join(command_line)} timed out') from None
+					raise RuntimeError(redact(f'{" ".join(command_line)} timed out')) from None
 
-			for line_bin in stdout_lines.splitlines(keepends=True):
-				line = line_bin.decode('ascii')
-				all_lines.append(line)
-
-				if show_output:
-					sys.stdout.write(_redact(line_bin, secrets).decode('ascii'))
-					sys.stdout.flush()
+			all_lines = stdout_lines.decode('utf8', errors='replace').splitlines(keepends=True)
+			diagnostics = '[REDACTED]\n' if hide_diagnostics else redact(
+				_redact(stdout_lines, secrets).decode('utf8', errors='replace'))
+			if show_output and stdout_lines:
+				sys.stdout.write(diagnostics)
+				sys.stdout.flush()
 
 			if 0 != process.returncode:
 				formatted_command_line = ' '.join(command_line)
-				raise RuntimeError(f'{formatted_command_line} exited with {process.returncode}, stdout:\n{_redact(stdout_lines, secrets)}')
+				raise RuntimeError(redact(f'{formatted_command_line} exited with {process.returncode}, stdout:\n{diagnostics}'))
 
 		return all_lines

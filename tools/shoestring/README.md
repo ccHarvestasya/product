@@ -352,6 +352,10 @@ Describes settings to customize a node.
 `caPassword` supports all available openssl passphrase options: https://www.openssl.org/docs/man3.0/man1/openssl-passphrase-options.html.
 Shoestring forwards literal `pass:...` values to OpenSSL through a private file descriptor and redacts them from displayed output and errors.
 Literal passphrases cannot contain newline, carriage return or NUL characters.
+Shoestring masks known secret values, sensitive configuration fields and URL credentials in logs and CLI exception messages.
+Configuration objects hide `caPassword` in their string representation; configuration files retain the actual values needed by the node.
+Diagnostics from OpenSSL commands using external passphrase sources (`env:`, `file:`, `fd:` or `stdin`) are hidden because their secret values may be unknown to Shoestring.
+OpenSSL return values remain unmodified for internal cryptographic processing. `pemview --show-private` explicitly permits private key output.
 
 ```
 features       One or more node features to deploy (| delimited)

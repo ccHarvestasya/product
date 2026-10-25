@@ -4,6 +4,7 @@ from cryptography.hazmat.primitives import serialization
 from symbolchain.CryptoTypes import PrivateKey, PublicKey
 
 from .OpensslExecutor import OpensslExecutor
+from .SecretMasking import register_secret
 
 
 def read_public_key_from_public_key_pem_file(filepath):  # pylint: disable=invalid-name
@@ -52,10 +53,14 @@ def read_private_key_from_private_key_pem_file(filepath, password=None):  # pyli
 				encoding=serialization.Encoding.Raw,
 				format=serialization.PrivateFormat.Raw,
 				encryption_algorithm=serialization.NoEncryption())
-			return PrivateKey(private_key_bytes)
+			private_key = PrivateKey(private_key_bytes)
+			register_secret(private_key)
+			return private_key
 
 	lines = _dispatch_openssl(filepath, password, 'text')
-	return PrivateKey(_parse_stdout_key(lines, 'priv', 'pub'))
+	private_key = PrivateKey(_parse_stdout_key(lines, 'priv', 'pub'))
+	register_secret(private_key)
+	return private_key
 
 
 def read_public_key_from_private_key_pem_file(filepath, password=None):  # pylint: disable=invalid-name

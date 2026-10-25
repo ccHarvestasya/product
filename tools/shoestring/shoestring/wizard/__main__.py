@@ -1,4 +1,3 @@
-import asyncio
 import gettext
 import os
 from functools import partial
@@ -15,6 +14,7 @@ from prompt_toolkit.widgets.toolbars import ValidationToolbar
 from zenlog import log
 
 from shoestring.__main__ import main as shoestring_main
+from shoestring.internal.SecretMasking import run_cli
 from shoestring.wizard.screens.modal import create as create_message_box_float
 from shoestring.wizard.screens.modal import show as show_message_box
 
@@ -105,4 +105,4 @@ async def main():  # pylint: disable=too-many-locals
 
 
 if '__main__' == __name__:
-	asyncio.run(main())
+	run_cli(main())

@@ -6,6 +6,7 @@ from symbolchain.CryptoTypes import Hash256
 from symbolchain.symbol.Network import Network
 
 from .NodeFeatures import NodeFeatures
+from .SecretMasking import protect_config_errors, read_config, register_secret
 
 ImagesConfiguration = namedtuple('ImagesConfiguration', ['client', 'rest', 'mongo'])
 ServicesConfiguration = namedtuple('ServicesConfiguration', ['nodewatch'])
@@ -13,9 +14,20 @@ TransactionConfiguration = namedtuple('TransactionConfiguration', [
 	'fee_multiplier', 'timeout_hours', 'min_cosignatures_count', 'hash_lock_duration', 'currency_mosaic_id', 'locked_funds_per_aggregate'
 ])
 ImportsConfiguration = namedtuple('ImportsConfiguration', ['harvester', 'voter', 'node_key'])
-NodeConfiguration = namedtuple('NodeConfiguration', [
+_NodeConfiguration = namedtuple('NodeConfiguration', [
 	'features', 'user_id', 'group_id', 'ca_password', 'api_https', 'full_api', 'ca_common_name', 'node_common_name'
 ])
+
+
+class NodeConfiguration(_NodeConfiguration):
+	"""Node settings with a safe diagnostic representation."""
+
+	__slots__ = ()
+
+	def __repr__(self):
+		return _NodeConfiguration.__repr__(self._replace(ca_password='[REDACTED]' if self.ca_password else ''))
+
+
 ShoestringConfiguration = namedtuple('ShoestringConfiguration', ['network', 'images', 'services', 'transaction', 'imports', 'node'])
 
 
@@ -74,6 +86,8 @@ def parse_node_configuration(config):
 	user_id = int(config['userId'])
 	group_id = int(config['groupId'])
 	ca_password = config['caPassword']
+	if ca_password.startswith('pass:'):
+		register_secret(ca_password)
 	api_https = config['apiHttps'].lower() == 'true'
 	full_api = NodeFeatures.API in features and not config['lightApi'].lower() == 'true'
 	ca_common_name = config['caCommonName']
@@ -82,12 +96,12 @@ def parse_node_configuration(config):
 	return NodeConfiguration(features, user_id, group_id, ca_password, api_https, full_api, ca_common_name, node_common_name)
 
 
+@protect_config_errors
 def parse_shoestring_configuration(filename):
 	"""Parses a shoestring configuration file."""
 
 	parser = configparser.ConfigParser()
-	with open(filename, 'rt', encoding='utf8') as infile:
-		parser.read_file(infile)
+	read_config(parser, filename)
 
 	return ShoestringConfiguration(
 		parse_network_configuration(parser['network']),
