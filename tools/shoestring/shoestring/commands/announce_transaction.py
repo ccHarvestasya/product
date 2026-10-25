@@ -1,19 +1,14 @@
 from symbolchain import sc
 from symbolchain.facade.SymbolFacade import SymbolFacade
-from symbollightapi.connector.SymbolConnector import SymbolConnector
 from zenlog import log
 
 from shoestring.internal.NodeDownloader import detect_api_endpoints
+from shoestring.internal.RestApiClient import run_with_api_nodes
 from shoestring.internal.ShoestringConfiguration import parse_shoestring_configuration
 
 
 async def run_main(args):
 	config = parse_shoestring_configuration(args.config)
-
-	api_endpoint = (await detect_api_endpoints(config.services.nodewatch, 1))[0]
-
-	log.info(_('general-connecting-to-node').format(endpoint=api_endpoint))
-	connector = SymbolConnector(api_endpoint)
 
 	with open(args.transaction, 'rb') as infile:
 		transaction_bytes = infile.read()
@@ -23,11 +18,15 @@ async def run_main(args):
 	transaction_hash = SymbolFacade(config.network).hash_transaction(transaction)
 	log.info(_('announce-transaction-preparing-to-announce').format(transaction_hash=transaction_hash, transaction_type=transaction_type))
 
-	announce_transaction = connector.announce_transaction
-	if sc.TransactionType.AGGREGATE_BONDED == transaction_type:
-		announce_transaction = connector.announce_partial_transaction
+	async def announce(connector):
+		if sc.TransactionType.AGGREGATE_BONDED == transaction_type:
+			await connector.announce_partial_transaction(transaction)
+		else:
+			await connector.announce_transaction(transaction)
 
-	await announce_transaction(transaction)
+	api_endpoints = await detect_api_endpoints(config.services.nodewatch, 10)
+	# Reuse the same signed transaction on every attempt so its payload and hash stay unchanged.
+	await run_with_api_nodes(api_endpoints, announce)
 	log.info(_('announce-transaction-announce-successful'))
 
 

@@ -21,6 +21,7 @@ from shoestring.internal.VoterConfigurator import inspect_voting_key_files
 from ..test.ConfigurationTestUtils import prepare_shoestring_configuration
 from ..test.LogTestUtils import assert_message_is_logged
 from ..test.MockNodewatchServer import setup_mock_nodewatch_server
+from ..test.RestApiTestUtils import setup_rest_failover
 from ..test.TestPackager import prepare_testnet_package
 from ..test.TransactionTestUtils import AggregateDescriptor, LinkDescriptor, assert_aggregate_transaction, assert_link_transaction
 
@@ -134,8 +135,17 @@ async def test_renew_voting_keys_fails_when_node_is_not_voter(server, caplog):  
 			assert not (Path(output_directory) / 'renew_voting_keys_transaction.dat').exists()
 
 
-async def test_can_renew_voting_keys_when_none_are_present(server, caplog):  # pylint: disable=redefined-outer-name
+@pytest.mark.parametrize('failover', [False, True])
+async def test_can_renew_voting_keys_when_none_are_present(
+	server, caplog, aiohttp_client, monkeypatch, failover
+):  # pylint: disable=redefined-outer-name
 	# Arrange:
+	if failover:
+		await setup_rest_failover(server, aiohttp_client, monkeypatch)
+		monkeypatch.setattr('shoestring.commands.renew_voting_keys.load_api_endpoints', lambda _: [
+			str(server.mock.endpoint), str(server.make_url(''))
+		])
+
 	with tempfile.TemporaryDirectory() as output_directory:
 		with tempfile.TemporaryDirectory() as package_directory:
 			await _prepare_output_directory(Path(package_directory), Path(output_directory), NodeFeatures.VOTER, server.make_url(''))

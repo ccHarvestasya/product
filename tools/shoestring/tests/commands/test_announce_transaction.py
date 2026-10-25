@@ -12,6 +12,7 @@ from shoestring.internal.NodeFeatures import NodeFeatures
 
 from ..test.ConfigurationTestUtils import prepare_shoestring_configuration
 from ..test.MockNodewatchServer import setup_mock_nodewatch_server
+from ..test.RestApiTestUtils import setup_rest_failover
 
 # region server fixture
 
@@ -98,5 +99,22 @@ async def test_can_announce_aggregate_bonded_transaction(server):  # pylint: dis
 
 	# Act + Assert:
 	await _run_test(server, 'transactions/partial', create_transaction_descriptor)
+
+
+@pytest.mark.parametrize('transaction_type, url_path', [
+	('aggregate_complete_transaction_v3', 'transactions'),
+	('aggregate_bonded_transaction_v3', 'transactions/partial')
+])
+async def test_can_announce_on_next_node_with_identical_payload(
+	server, aiohttp_client, monkeypatch, transaction_type, url_path
+):  # pylint: disable=redefined-outer-name
+	# Arrange:
+	requests = await setup_rest_failover(server, aiohttp_client, monkeypatch)
+
+	# Act:
+	await _run_test(server, url_path, lambda: _create_aggregate_transaction_descriptor(transaction_type))
+
+	# Assert: the retry sends the original transaction, without rebuilding or changing its payload
+	assert [{'path': f'/{url_path}', 'payload': server.mock.request_json_payloads[0]}] == requests
 
 # endregion

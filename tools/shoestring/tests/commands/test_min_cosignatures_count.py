@@ -15,6 +15,7 @@ from shoestring.internal.ShoestringConfiguration import NodeConfiguration, Shoes
 from ..test.ConfigurationTestUtils import prepare_shoestring_configuration
 from ..test.LogTestUtils import assert_message_is_logged
 from ..test.MockNodewatchServer import setup_mock_nodewatch_server
+from ..test.RestApiTestUtils import setup_rest_failover
 
 # region server fixture
 
@@ -74,6 +75,18 @@ async def test_can_detect_min_cosignatures_count_without_update_flag(server, cap
 
 async def test_can_detect_and_update_min_cosignatures_count_with_update_flag(server, caplog):  # pylint: disable=redefined-outer-name
 	await _run_test(server, caplog, ['--update'], 2)
+
+
+async def test_can_detect_and_update_on_next_node(server, caplog, aiohttp_client, monkeypatch):  # pylint: disable=redefined-outer-name
+	# Arrange:
+	requests = await setup_rest_failover(server, aiohttp_client, monkeypatch)
+
+	# Act:
+	await _run_test(server, caplog, ['--update'], 2)
+
+	# Assert:
+	assert 1 == len(requests)
+	assert requests[0]['path'].endswith('/multisig')
 
 
 # endregion

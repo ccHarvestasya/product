@@ -16,6 +16,7 @@ from ..test.CertificateTestUtils import assert_certificate_properties
 from ..test.ConfigurationTestUtils import prepare_shoestring_configuration
 from ..test.FileSystemTestUtils import assert_expected_files_and_permissions
 from ..test.MockNodewatchServer import setup_mock_nodewatch_server
+from ..test.RestApiTestUtils import setup_rest_failover
 from ..test.TestPackager import prepare_testnet_package
 
 # region server fixture
@@ -215,6 +216,18 @@ async def _assert_can_prepare_node(
 
 async def test_can_prepare_peer_node(server):  # pylint: disable=redefined-outer-name
 	await _assert_can_prepare_node(server, NodeFeatures.PEER, PEER_OUTPUT_FILES)
+
+
+async def test_can_prepare_peer_node_after_rest_failure(server, aiohttp_client, monkeypatch):  # pylint: disable=redefined-outer-name
+	# Arrange:
+	requests = await setup_rest_failover(server, aiohttp_client, monkeypatch)
+
+	# Act:
+	await _assert_can_prepare_node(server, NodeFeatures.PEER, PEER_OUTPUT_FILES)
+
+	# Assert: the first node fails after fetching account links; setup completes using the next node
+	assert '/node/time' == requests[-1]['path']
+	assert any(request['path'].startswith('/accounts/') for request in requests)
 
 
 async def test_can_prepare_api_node(server):  # pylint: disable=redefined-outer-name
@@ -541,6 +554,17 @@ async def _assert_can_regenerate_links(server, node_features):  # pylint: disabl
 
 async def test_can_regenerate_links_harvester_node(server):  # pylint: disable=redefined-outer-name
 	await _assert_can_regenerate_links(server, NodeFeatures.HARVESTER)
+
+
+async def test_can_regenerate_links_after_rest_failure(server, aiohttp_client, monkeypatch):  # pylint: disable=redefined-outer-name
+	# Arrange:
+	requests = await setup_rest_failover(server, aiohttp_client, monkeypatch)
+
+	# Act:
+	await _assert_can_regenerate_links(server, NodeFeatures.HARVESTER)
+
+	# Assert: both initial setup and --output-transaction-only recover from the failed node
+	assert 2 == sum('/node/time' == request['path'] for request in requests)
 
 
 async def test_can_regenerate_links_voter_node(server):  # pylint: disable=redefined-outer-name

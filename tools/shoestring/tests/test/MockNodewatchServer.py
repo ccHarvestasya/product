@@ -95,6 +95,7 @@ async def setup_mock_nodewatch_server(aiohttp_client, redirect_network_requests=
 		def __init__(self):
 			self.urls = []
 			self.endpoint = ''
+			self.additional_endpoints = []
 			self.multisig_account_addresses = []
 			self.request_json_payloads = []
 
@@ -105,7 +106,7 @@ async def setup_mock_nodewatch_server(aiohttp_client, redirect_network_requests=
 			})
 
 		async def peer_nodes(self, request):
-			return await self._process(request, NODEWATCH_PEER_NODES + NODEWATCH_API_NODES if not redirect_network_requests else [
+			nodes = NODEWATCH_PEER_NODES + NODEWATCH_API_NODES if not redirect_network_requests else [
 				{
 					'mainPublicKey': '6CEB918020E9701C664F46FEDD73A969EE4927FEF1DF6B6CBAEAC817CA7CBF34',
 					'endpoint': str(self.endpoint),
@@ -116,7 +117,13 @@ async def setup_mock_nodewatch_server(aiohttp_client, redirect_network_requests=
 					'balance': 1000000,
 					'roles': 7
 				}
-			])
+			]
+			if redirect_network_requests:
+				nodes += [
+					{**nodes[0], 'mainPublicKey': f'{index:064X}', 'endpoint': str(endpoint)}
+					for index, endpoint in enumerate(self.additional_endpoints, start=1)
+				]
+			return await self._process(request, nodes)
 
 		async def api_nodes(self, request):
 			return await self._process(request, NODEWATCH_API_NODES if not redirect_network_requests else [])

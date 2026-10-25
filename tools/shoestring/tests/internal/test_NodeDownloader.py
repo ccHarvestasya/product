@@ -363,7 +363,7 @@ async def test_can_limit_selected_api_endpoints(server):  # pylint: disable=rede
 
 # region detect_api_endpoints
 
-async def can_detect_api_endpoints(server):  # pylint: disable=redefined-outer-name
+async def test_can_detect_api_endpoints(server):  # pylint: disable=redefined-outer-name
 	# Act:
 	endpoints = await detect_api_endpoints(server.make_url(''), 2)
 

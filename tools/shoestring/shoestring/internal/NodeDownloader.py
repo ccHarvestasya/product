@@ -142,5 +142,5 @@ async def detect_api_endpoints(nodewatch_endpoint, count=1):
 
 	downloader = NodeDownloader(nodewatch_endpoint)
 	downloader.max_output_nodes = count
-	await downloader.download_peer_nodes()
+	await downloader.download_api_nodes()
 	return downloader.select_api_endpoints()[:count]

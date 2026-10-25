@@ -3,16 +3,17 @@ import socket
 import sys
 from pathlib import Path
 
-from symbollightapi.connector.SymbolConnector import SymbolConnector
 from zenlog import log
 
 from shoestring.internal.ConfigurationManager import ConfigurationManager, load_patches_from_file
+from shoestring.internal.NodeDownloader import detect_api_endpoints
 from shoestring.internal.NodeFeatures import NodeFeatures
 from shoestring.internal.NodewatchClient import get_current_finalization_epoch
 from shoestring.internal.PackageResolver import download_and_extract_package
-from shoestring.internal.PeerDownloader import download_peers, find_api_node
+from shoestring.internal.PeerDownloader import download_peers
 from shoestring.internal.PemUtils import read_public_key_from_public_key_pem_file
 from shoestring.internal.Preparer import Preparer
+from shoestring.internal.RestApiClient import run_with_api_nodes
 from shoestring.internal.ShoestringConfiguration import parse_shoestring_configuration
 from shoestring.internal.TransactionSerializer import write_transaction_to_file
 
@@ -58,14 +59,15 @@ async def _prepare_keys_and_certificates(config, preparer, ca_key_path):
 	preparer.generate_certificates(ca_key_path, require_ca=False)
 
 
-async def _prepare_linking_transaction(preparer, api_endpoint):
-	log.info(_('general-connecting-to-node').format(endpoint=api_endpoint))
-	connector = SymbolConnector(api_endpoint)
-
+async def _prepare_linking_transaction(preparer, api_endpoints):
 	account_public_key = read_public_key_from_public_key_pem_file(preparer.directories.certificates / 'ca.pubkey.pem')
-	existing_links = await connector.account_links(account_public_key)
 
-	network_time = await connector.network_time()
+	async def fetch_account_state(connector):
+		existing_links = await connector.account_links(account_public_key)
+		network_time = await connector.network_time()
+		return existing_links, network_time
+
+	existing_links, network_time = await run_with_api_nodes(api_endpoints, fetch_account_state)
 	transaction = preparer.prepare_linking_transaction(account_public_key, existing_links, network_time.timestamp)
 
 	if transaction:
@@ -81,11 +83,11 @@ async def run_main(args):
 	if is_initial_setup and args.output_transaction_only:
 		log.info(_('setup-status-output-transaction-only'))
 
-		api_endpoint = await find_api_node(config.services.nodewatch)
+		api_endpoints = await detect_api_endpoints(config.services.nodewatch, 10)
 		preparer = Preparer(Path(args.directory), config, log)
 		preparer.load_keys()
 
-		await _prepare_linking_transaction(preparer, api_endpoint)
+		await _prepare_linking_transaction(preparer, api_endpoints)
 		return
 
 	with Preparer(Path(args.directory), config, log) as preparer:
@@ -140,7 +142,7 @@ async def run_main(args):
 			await _prepare_keys_and_certificates(config, preparer, args.ca_key_path)
 
 			# generate transaction
-			await _prepare_linking_transaction(preparer, api_endpoints[0])
+			await _prepare_linking_transaction(preparer, api_endpoints)
 
 
 def add_arguments(parser, is_initial_setup=True):

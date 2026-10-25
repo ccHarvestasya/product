@@ -1,7 +1,6 @@
 import shutil
 from pathlib import Path
 
-from symbollightapi.connector.SymbolConnector import SymbolConnector
 from zenlog import log
 
 from shoestring.internal.ConfigurationManager import ConfigurationManager
@@ -11,6 +10,7 @@ from shoestring.internal.NodewatchClient import get_current_finalization_epoch
 from shoestring.internal.PeerDownloader import load_api_endpoints
 from shoestring.internal.PemUtils import read_public_key_from_public_key_pem_file
 from shoestring.internal.Preparer import Preparer
+from shoestring.internal.RestApiClient import run_with_api_nodes
 from shoestring.internal.ShoestringConfiguration import parse_shoestring_configuration
 from shoestring.internal.TransactionSerializer import write_transaction_to_file
 from shoestring.internal.VoterConfigurator import VoterConfigurator, inspect_voting_key_files
@@ -29,11 +29,7 @@ def _load_voting_key_descriptors(directory, current_epoch):
 async def _get_network_time(resources_directory):
 	api_endpoints = load_api_endpoints(resources_directory)
 
-	log.info(_('general-connecting-to-node').format(endpoint=api_endpoints[0]))
-	connector = SymbolConnector(api_endpoints[0])
-
-	network_time = await connector.network_time()
-	return network_time
+	return await run_with_api_nodes(api_endpoints, lambda connector: connector.network_time())
 
 
 async def _save_transaction(transaction_config, directories, transaction_builder):
