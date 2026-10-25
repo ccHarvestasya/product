@@ -1,9 +1,11 @@
 import json
 import tempfile
 from pathlib import Path
+from unittest.mock import AsyncMock
 
 import pytest
 
+from shoestring.internal.NodeDownloader import NodeDownloader
 from shoestring.internal.PeerDownloader import download_peers, find_api_node, load_api_endpoints
 
 from ..test.MockNodewatchServer import setup_mock_nodewatch_server
@@ -12,7 +14,8 @@ from ..test.MockNodewatchServer import setup_mock_nodewatch_server
 
 
 @pytest.fixture
-async def nodewatch_server(aiohttp_client):
+async def nodewatch_server(aiohttp_client, monkeypatch):
+	monkeypatch.setattr(NodeDownloader, '_resolve_peer_port', AsyncMock(return_value=7900))
 	return await setup_mock_nodewatch_server(aiohttp_client)
 
 # endregion
@@ -97,7 +100,7 @@ async def test_can_download_peers_for_api_node(nodewatch_server):  # pylint: dis
 		# Assert: peer and api nodes were downloaded
 		assert [
 			f'{nodewatch_server.make_url("")}/api/symbol/nodes/peer',
-			f'{nodewatch_server.make_url("")}/api/symbol/nodes/api'
+			f'{nodewatch_server.make_url("")}/api/symbol/nodes/peer'
 		] == nodewatch_server.mock.urls
 
 		# - check generated files

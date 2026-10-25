@@ -43,9 +43,11 @@ async def test_can_download_api_nodes(server):  # pylint: disable=redefined-oute
 	await downloader.download_api_nodes()
 
 	# Assert:
-	assert [f'{server.make_url("")}/api/symbol/nodes/api'] == server.mock.urls
-	assert 2 == len(downloader.nodes)
-	assert ['150C8CE', '3E8846B'] == [node['name'] for node in downloader.nodes]
+	assert [f'{server.make_url("")}/api/symbol/nodes/peer'] == server.mock.urls
+	assert 6 == len(downloader.nodes)
+	assert [
+		'', 'Thank you !', 'The Wolf Farm owned by Tresto(@TrendStream)', 'voting node', '150C8CE', '3E8846B'
+	] == [node['name'] for node in downloader.nodes]
 
 # endregion
 
@@ -61,9 +63,37 @@ async def _create_downloader_with_nodes(server):  # pylint: disable=redefined-ou
 	# Sanity:
 	assert [
 		f'{server.make_url("")}/api/symbol/nodes/peer',
-		f'{server.make_url("")}/api/symbol/nodes/api'
+		f'{server.make_url("")}/api/symbol/nodes/peer'
 	] == server.mock.urls
+	downloader.peer_ports = {node['endpoint']: 7900 for node in downloader.nodes if node['roles'] & 0x02}
 	return downloader
+
+
+@pytest.mark.parametrize('roles, source_port, expected_endpoint', [
+	(1, 7901, {'host': 'node.example.com', 'port': 7901}),
+	(5, 7902, {'host': 'node.example.com', 'port': 7902}),
+	(2, 3000, {'host': 'node.example.com', 'port': 7903, 'api_port': 3000}),
+	(3, 3333, {'host': 'node.example.com', 'port': 7903, 'api_port': 3333}),
+	(7, 3001, {'host': 'node.example.com', 'port': 7903, 'api_port': 3001})
+])
+def test_can_select_nodes_with_correct_peer_port(roles, source_port, expected_endpoint):
+	# Arrange:
+	downloader = NodeDownloader('')
+	downloader.peer_ports = {f'http://node.example.com:{source_port}': 7903}
+	downloader.nodes = [{
+		'mainPublicKey': '776B597C1C80782224A3DA9A19FD5D23A3281CF866B9F4720A4414568447A92A',
+		'endpoint': f'http://node.example.com:{source_port}',
+		'name': 'custom port node',
+		'balance': 100,
+		'roles': roles
+	}]
+
+	# Act:
+	nodes = downloader.select_peer_nodes() if roles & 0x01 else downloader.select_api_nodes()
+
+	# Assert:
+	assert 1 == len(nodes)
+	assert expected_endpoint == nodes[0]['endpoint']
 
 
 async def test_can_select_peer_nodes_with_endpoint(server):  # pylint: disable=redefined-outer-name

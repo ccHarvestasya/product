@@ -31,3 +31,4 @@ python = "^3.10"
 filterwarnings = [
 	"ignore:The 'warn' method is deprecated:DeprecationWarning"
 ]
+tmp_path_retention_policy = "none"
