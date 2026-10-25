@@ -29,9 +29,9 @@ async def test_can_download_peer_nodes(server):  # pylint: disable=redefined-out
 
 	# Assert:
 	assert [f'{server.make_url("")}/api/symbol/nodes/peer'] == server.mock.urls
-	assert 6 == len(downloader.nodes)
+	assert 5 == len(downloader.nodes)
 	assert [
-		'', '! symplanet2', 'Thank you !', 'The Wolf Farm owned by Tresto(@TrendStream)', '! symplanet1', 'voting node'
+		'', 'Thank you !', 'The Wolf Farm owned by Tresto(@TrendStream)', '! symplanet1', 'voting node'
 	] == [node['name'] for node in downloader.nodes]
 
 
@@ -44,9 +44,9 @@ async def test_can_download_api_nodes(server):  # pylint: disable=redefined-oute
 
 	# Assert:
 	assert [f'{server.make_url("")}/api/symbol/nodes/peer'] == server.mock.urls
-	assert 6 == len(downloader.nodes)
+	assert 5 == len(downloader.nodes)
 	assert [
-		'', 'Thank you !', 'The Wolf Farm owned by Tresto(@TrendStream)', 'voting node', '150C8CE', '3E8846B'
+		'', 'Thank you !', 'The Wolf Farm owned by Tresto(@TrendStream)', 'voting node', '150C8CE'
 	] == [node['name'] for node in downloader.nodes]
 
 # endregion

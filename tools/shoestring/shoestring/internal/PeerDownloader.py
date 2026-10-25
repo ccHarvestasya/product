@@ -15,7 +15,10 @@ async def find_api_node(nodewatch_endpoint):
 	downloader.max_output_nodes = 1
 	await downloader.download_peer_nodes()
 
-	return downloader.select_api_endpoints()[0]
+	api_endpoints = downloader.select_api_endpoints()
+	if not api_endpoints:
+		raise RuntimeError('no REST API nodes are available')
+	return api_endpoints[0]
 
 # endregion
 
@@ -66,7 +69,10 @@ def _extract_api_endpoint(node_json):
 	endpoint_json = node_json['endpoint']
 	port = int(endpoint_json['api_port'] if 'api_port' in endpoint_json else 3000)
 	scheme = 'https' if port in (443, 3001) else 'http'
-	return f'{scheme}://{endpoint_json["host"]}:{port}'
+	host = endpoint_json['host']
+	if ':' in host and not host.startswith('['):
+		host = f'[{host}]'
+	return f'{scheme}://{host}:{port}'
 
 
 def load_api_endpoints(resources_directory):

@@ -49,6 +49,8 @@ async def test_can_generate_peer_files_with_resolved_peer_ports(aiohttp_client, 
 		_make_node(endpoint, 3),
 		_make_node(endpoint, 2, 'second api node'),
 		_make_node('http://peer.example.com:7902', 1, 'peer node'),
+		_make_node('not-a-url', 3, 'invalid URL'),
+		_make_node({}, 3, 'invalid type'),
 		{**_make_node('http://excluded.example.com:3000', 3, 'excluded node'), 'balance': 0}
 	])
 

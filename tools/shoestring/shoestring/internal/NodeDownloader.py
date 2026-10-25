@@ -1,9 +1,26 @@
 import asyncio
 import random
-import re
+from urllib.parse import urlsplit
 
 from aiohttp import ClientError, ClientSession, ClientTimeout, TCPConnector
 from zenlog import log
+
+
+def _parse_endpoint(endpoint):
+	if not isinstance(endpoint, str) or not endpoint.startswith(('http://', 'https://')):
+		return None
+	if any(char.isspace() or ord(char) < 32 or ord(char) == 127 for char in endpoint):
+		return None
+	try:
+		url = urlsplit(endpoint)
+		host, port = url.hostname, url.port
+		if not host or port is None or not 0 < port <= 65535:
+			return None
+		if url.username is not None or url.password is not None or url.path or any(char in endpoint for char in ('?', '#', '\\')):
+			return None
+		return host, port
+	except ValueError:
+		return None
 
 
 class NodeDownloader:
@@ -13,7 +30,6 @@ class NodeDownloader:
 		"""Creates a node downloader around an endpoint."""
 
 		self.endpoint = endpoint
-		self.host_regex = re.compile(r'^https?://(.*):(\d+)$')
 
 		self.nodes = []
 		self.peer_ports = {}
@@ -34,9 +50,13 @@ class NodeDownloader:
 
 	async def _download_nodes(self, url_path, required_role):
 		nodes_by_public_key = {node['mainPublicKey']: node for node in self.nodes}
-		nodes_by_public_key.update({
-			node['mainPublicKey']: node for node in await self._get(url_path) if node['roles'] & required_role
-		})
+		for node in await self._get(url_path):
+			if not node['roles'] & required_role:
+				continue
+			if _parse_endpoint(node.get('endpoint')) is None:
+				log.warning(f'skipping NodeWatch node {node["mainPublicKey"]}: invalid endpoint')
+				continue
+			nodes_by_public_key[node['mainPublicKey']] = node
 		self.nodes = list(nodes_by_public_key.values())
 
 	async def resolve_peer_ports(self):
@@ -92,12 +112,14 @@ class NodeDownloader:
 		return matching_nodes[:self.max_output_nodes]
 
 	def _is_node_eligible(self, node, required_role):
-		return node['endpoint'] and node['balance'] >= self.min_balance and 0 != node['roles'] & required_role
+		return _parse_endpoint(node.get('endpoint')) is not None and node['balance'] >= self.min_balance and 0 != node['roles'] & required_role
 
 	def _map_node_to_peers_format(self, node):
-		host_match = self.host_regex.match(node['endpoint'])
+		parsed_endpoint = _parse_endpoint(node.get('endpoint'))
+		if parsed_endpoint is None:
+			return None
+		host, endpoint_port = parsed_endpoint
 		has_api = 0 != node['roles'] & 0x02
-		endpoint_port = int(host_match.group(2))
 		peer_port = self.peer_ports.get(node['endpoint']) if has_api else endpoint_port
 		if peer_port is None:
 			return None
@@ -105,7 +127,7 @@ class NodeDownloader:
 		node_json = {
 			'publicKey': node['mainPublicKey'],
 			'endpoint': {
-				'host': host_match.group(1),
+				'host': host,
 				'port': peer_port
 			},
 			'metadata': {

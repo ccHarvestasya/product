@@ -164,6 +164,25 @@ def test_can_load_api_endpoint_with_explicit_port(tmp_path, peers_name, api_port
 	assert [f'{expected_scheme}://node.example.com:{api_port}'] == api_endpoints
 
 
+@pytest.mark.parametrize('host, expected_endpoint', [
+	('::1', 'https://[::1]:443'),
+	('[::1]', 'https://[::1]:443'),
+	('2001:db8::1', 'https://[2001:db8::1]:443')
+])
+def test_can_restore_ipv6_api_endpoints(tmp_path, host, expected_endpoint):
+	# Arrange:
+	(tmp_path / 'peers-p2p.json').write_text(json.dumps({'knownPeers': [{
+		'endpoint': {'host': host, 'api_port': 443},
+		'metadata': {'roles': 'Peer,Api'}
+	}]}), encoding='utf8')
+
+	# Act:
+	api_endpoints = load_api_endpoints(tmp_path)
+
+	# Assert:
+	assert [expected_endpoint] == api_endpoints
+
+
 async def test_can_load_api_endpoints_from_peer_file(nodewatch_server):  # pylint: disable=redefined-outer-name
 	# Arrange:
 	with tempfile.TemporaryDirectory() as output_directory_name:
