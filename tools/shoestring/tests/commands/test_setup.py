@@ -4,12 +4,14 @@ import os
 import tempfile
 from enum import Enum
 from pathlib import Path
+from unittest.mock import AsyncMock
 
 import pytest
 from symbolchain.CryptoTypes import PrivateKey
 from symbolchain.PrivateKeyStorage import PrivateKeyStorage
 
 from shoestring.__main__ import main
+from shoestring.internal.NodeDownloader import NodeDownloader
 from shoestring.internal.NodeFeatures import NodeFeatures
 
 from ..test.CertificateTestUtils import assert_certificate_properties
@@ -216,6 +218,15 @@ async def _assert_can_prepare_node(
 
 async def test_can_prepare_peer_node(server):  # pylint: disable=redefined-outer-name
 	await _assert_can_prepare_node(server, NodeFeatures.PEER, PEER_OUTPUT_FILES)
+
+
+async def test_cannot_prepare_node_when_all_peer_ports_are_unresolved(server, monkeypatch):  # pylint: disable=redefined-outer-name
+	# Arrange:
+	monkeypatch.setattr(NodeDownloader, '_resolve_peer_port', AsyncMock(return_value=None))
+
+	# Act + Assert: REST candidates alone cannot make setup succeed with an empty P2P peer file
+	with pytest.raises(RuntimeError, match='no usable P2P peer nodes'):
+		await _assert_can_prepare_node(server, NodeFeatures.PEER, PEER_OUTPUT_FILES)
 
 
 async def test_can_prepare_peer_node_after_rest_failure(server, aiohttp_client, monkeypatch):  # pylint: disable=redefined-outer-name

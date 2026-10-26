@@ -48,10 +48,19 @@ async def download_peers(nodewatch_endpoint, resources_directory, save_api_nodes
 	if save_api_nodes:
 		await downloader.download_api_nodes()
 
-	await downloader.resolve_peer_ports()
-	_save_peers_file(downloader.select_peer_nodes(), resources_directory, 'p2p')
+	await downloader.resolve_peer_ports(required_roles=(0x01, 0x02) if save_api_nodes else (0x01,), prefer_api=True)
+	peer_sets = {'p2p': downloader.select_peer_nodes()}
 	if save_api_nodes:
-		_save_peers_file(downloader.select_api_nodes(), resources_directory, 'api')
+		peer_sets['api'] = downloader.select_api_nodes()
+
+	# Validate every required set before writing either file.
+	for name, nodes in peer_sets.items():
+		if not nodes:
+			raise RuntimeError(f'no usable {name.upper()} peer nodes are available')
+	if not any(_is_api_node(node) for node in peer_sets['p2p']):
+		log.warning('no API-capable P2P peers are available; saving peer-only nodes')
+	for name, nodes in peer_sets.items():
+		_save_peers_file(nodes, resources_directory, name)
 
 	return downloader.select_api_endpoints()
 
