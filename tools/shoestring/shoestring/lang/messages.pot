@@ -31,6 +31,7 @@ msgstr ""
 #: shoestring/commands/renew_certificates.py:39
 #: shoestring/commands/renew_voting_keys.py:113
 #: shoestring/commands/reset_data.py:87 shoestring/commands/setup.py:149
+#: shoestring/commands/votingview.py:44
 msgid "argument-help-directory"
 msgstr ""
 
@@ -136,6 +137,10 @@ msgstr ""
 
 #: shoestring/commands/signer.py:94
 msgid "argument-help-signer-save"
+msgstr ""
+
+#: shoestring/commands/votingview.py:45
+msgid "argument-help-votingview-format"
 msgstr ""
 
 #: shoestring/internal/FileDownloader.py:40
@@ -355,6 +360,10 @@ msgstr ""
 msgid "main-upgrade-help"
 msgstr ""
 
+#: shoestring/__main__.py:34
+msgid "main-votingview-help"
+msgstr ""
+
 #: shoestring/commands/min_cosignatures_count.py:24
 msgid "min-cosignatures-count-cosignatures-detected"
 msgstr ""
@@ -477,6 +486,18 @@ msgstr ""
 
 #: shoestring/commands/upgrade.py:21
 msgid "upgrade-recreating-directory"
+msgstr ""
+
+#: shoestring/commands/votingview.py:13
+msgid "votingview-error-input-does-not-exist"
+msgstr ""
+
+#: shoestring/commands/votingview.py:15
+msgid "votingview-error-input-not-directory"
+msgstr ""
+
+#: shoestring/commands/votingview.py:32
+msgid "votingview-no-voting-keys"
 msgstr ""
 
 #: shoestring/wizard/screens/bootstrap.py:40

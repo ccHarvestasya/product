@@ -279,5 +279,21 @@ class VoterConfiguratorTest(unittest.TestCase):
 			self.assertEqual([public_key_1, public_key_2, public_key_3], [descriptor.public_key for descriptor in descriptors])
 			self.assertEqual([100, 200, 300], [descriptor.start_epoch for descriptor in descriptors])
 			self.assertEqual([199, 299, 399], [descriptor.end_epoch for descriptor in descriptors])
+			self.assertEqual(
+				[Path(temp_directory) / f'private_key_tree{i}.dat' for i in (3, 5, 7)],
+				[descriptor.filepath for descriptor in descriptors])
+
+	def test_inspect_voting_key_files_preserves_zero_padded_filenames(self):
+		with tempfile.TemporaryDirectory() as temp_directory:
+			expected_public_keys = {}
+			for filename in ('private_key_tree1.dat', 'private_key_tree01.dat'):
+				public_key = self._write_voting_key_file_header(temp_directory, filename, 100, 199)
+				expected_public_keys[Path(temp_directory) / filename] = public_key
+
+			descriptors = inspect_voting_key_files(temp_directory)
+
+			self.assertEqual([1, 1], [descriptor.ordinal for descriptor in descriptors])
+			self.assertEqual(2, len(descriptors))
+			self.assertEqual(expected_public_keys, {descriptor.filepath: descriptor.public_key for descriptor in descriptors})
 
 	# endregion

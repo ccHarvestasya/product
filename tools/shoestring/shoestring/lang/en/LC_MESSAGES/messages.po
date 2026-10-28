@@ -40,6 +40,7 @@ msgstr "path to shoestring configuration file"
 #: shoestring/commands/renew_certificates.py:39
 #: shoestring/commands/renew_voting_keys.py:113
 #: shoestring/commands/reset_data.py:87 shoestring/commands/setup.py:149
+#: shoestring/commands/votingview.py:44
 msgid "argument-help-directory"
 msgstr "installation directory (default: {default_path})"
 
@@ -148,6 +149,10 @@ msgstr "transaction binary payload"
 #: shoestring/commands/signer.py:94
 msgid "argument-help-signer-save"
 msgstr "save signed payload into same file as input"
+
+#: shoestring/commands/votingview.py:45
+msgid "argument-help-votingview-format"
+msgstr "output format (default: pretty)"
 
 #: shoestring/internal/FileDownloader.py:40
 msgid "file-downloader-already-downloaded"
@@ -372,6 +377,10 @@ msgstr "Shoestring Tool"
 msgid "main-upgrade-help"
 msgstr "upgrades a node to the latest client version"
 
+#: shoestring/__main__.py:34
+msgid "main-votingview-help"
+msgstr "display voting key epochs and public keys"
+
 #: shoestring/commands/min_cosignatures_count.py:24
 msgid "min-cosignatures-count-cosignatures-detected"
 msgstr ""
@@ -501,6 +510,18 @@ msgstr "purging DIRECTORY {directory}"
 #: shoestring/commands/upgrade.py:21
 msgid "upgrade-recreating-directory"
 msgstr "recreating DIRECTORY {directory}"
+
+#: shoestring/commands/votingview.py:13
+msgid "votingview-error-input-does-not-exist"
+msgstr "input directory {filepath} does not exist"
+
+#: shoestring/commands/votingview.py:15
+msgid "votingview-error-input-not-directory"
+msgstr "input path {filepath} is not a directory"
+
+#: shoestring/commands/votingview.py:32
+msgid "votingview-no-voting-keys"
+msgstr "no voting key files found in {directory}"
 
 #: shoestring/wizard/screens/bootstrap.py:40
 msgid "wizard-bootstrap-node-key"

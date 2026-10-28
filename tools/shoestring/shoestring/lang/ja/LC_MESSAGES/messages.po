@@ -38,6 +38,7 @@ msgstr "shoestring設定ファイルへのパス"
 #: shoestring/commands/renew_certificates.py:39
 #: shoestring/commands/renew_voting_keys.py:113
 #: shoestring/commands/reset_data.py:87 shoestring/commands/setup.py:149
+#: shoestring/commands/votingview.py:44
 msgid "argument-help-directory"
 msgstr "インストールディレクトリ（デフォルト: {default_path}）"
 
@@ -146,6 +147,10 @@ msgstr "トランザクションバイナリペイロード"
 #: shoestring/commands/signer.py:94
 msgid "argument-help-signer-save"
 msgstr "署名されたペイロードを入力と同じファイルに保存"
+
+#: shoestring/commands/votingview.py:45
+msgid "argument-help-votingview-format"
+msgstr "出力形式（デフォルト: pretty）"
 
 #: shoestring/internal/FileDownloader.py:40
 msgid "file-downloader-already-downloaded"
@@ -366,6 +371,10 @@ msgstr "Shoestring Tool"
 msgid "main-upgrade-help"
 msgstr "ノードを最新のクライアントバージョンにアップグレードします"
 
+#: shoestring/__main__.py:34
+msgid "main-votingview-help"
+msgstr "投票キーのエポックと公開鍵を表示します"
+
 #: shoestring/commands/min_cosignatures_count.py:24
 msgid "min-cosignatures-count-cosignatures-detected"
 msgstr "アドレス {address} からのトランザクションには少なくとも {min_cosignatures_count} の連署者が必要です"
@@ -489,6 +498,18 @@ msgstr "ディレクトリ {directory} を削除"
 #: shoestring/commands/upgrade.py:21
 msgid "upgrade-recreating-directory"
 msgstr "ディレクトリ {directory} を再作成"
+
+#: shoestring/commands/votingview.py:13
+msgid "votingview-error-input-does-not-exist"
+msgstr "入力ディレクトリ {filepath} が存在しません"
+
+#: shoestring/commands/votingview.py:15
+msgid "votingview-error-input-not-directory"
+msgstr "入力パス {filepath} はディレクトリではありません"
+
+#: shoestring/commands/votingview.py:32
+msgid "votingview-no-voting-keys"
+msgstr "{directory} に投票キーファイルが見つかりませんでした"
 
 #: shoestring/wizard/screens/bootstrap.py:40
 msgid "wizard-bootstrap-node-key"
@@ -917,3 +938,4 @@ msgstr "ようこそ"
 #: shoestring/wizard/screens/welcome.py:39
 msgid "wizard-welcome-upgrade"
 msgstr "アップグレード"
+

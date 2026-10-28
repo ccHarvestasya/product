@@ -9,7 +9,7 @@ from symbolchain.symbol.KeyPair import KeyPair
 from symbolchain.symbol.VotingKeysGenerator import VotingKeysGenerator
 from zenlog import log
 
-VotingFileDescriptor = namedtuple('VotingFileDescriptor', ['ordinal', 'public_key', 'start_epoch', 'end_epoch'])
+VotingFileDescriptor = namedtuple('VotingFileDescriptor', ['ordinal', 'public_key', 'start_epoch', 'end_epoch', 'filepath'])
 EpochRange = namedtuple('EpochRange', ['start_epoch', 'end_epoch'])
 
 
@@ -113,7 +113,7 @@ def inspect_voting_key_files(directory):
 			reader.read_int(8)  # skip
 			public_key = PublicKey(reader.read_bytes(32))
 
-			descriptors.append(VotingFileDescriptor(int(match.group(1)), public_key, start_epoch, end_epoch))
+			descriptors.append(VotingFileDescriptor(int(match.group(1)), public_key, start_epoch, end_epoch, filepath))
 
 	descriptors.sort(key=lambda descriptor: descriptor.ordinal)
 	return descriptors
