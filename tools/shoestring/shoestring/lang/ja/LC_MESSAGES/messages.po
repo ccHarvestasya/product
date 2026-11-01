@@ -302,67 +302,67 @@ msgstr "入力harvestersと出力harvestersは異なる必要があります"
 msgid "import-harvesters-list-header"
 msgstr "公開鍵 {public_key} を使用して {filepath} でハーベスターをリスト中"
 
-#: shoestring/__main__.py:20
+#: shoestring/__main__.py:23
 msgid "main-announce-transaction-help"
 msgstr "トランザクションをネットワークにアナウンスします"
 
-#: shoestring/__main__.py:21
+#: shoestring/__main__.py:24
 msgid "main-health-help"
 msgstr "ヘルスチェックを実行します"
 
-#: shoestring/__main__.py:22
+#: shoestring/__main__.py:25
 msgid "main-import-bootstrap-help"
 msgstr "bootstrapから設定をインポートします"
 
-#: shoestring/__main__.py:23
+#: shoestring/__main__.py:26
 msgid "main-import-harvesters-help"
 msgstr "既存のharvesters.datファイルからハーベスターをインポートします"
 
-#: shoestring/__main__.py:24
+#: shoestring/__main__.py:27
 msgid "main-init-help"
 msgstr "パッケージからshoestring設定ファイルのテンプレートを抽出します"
 
-#: shoestring/__main__.py:25
+#: shoestring/__main__.py:28
 msgid "main-min-cosignatures-count-help"
 msgstr "アカウントに必要な最小連署者数を検出します"
 
-#: shoestring/__main__.py:26
+#: shoestring/__main__.py:29
 msgid "main-pemtool-help"
 msgstr "PEMファイルを生成します"
 
-#: shoestring/__main__.py:27
+#: shoestring/__main__.py:30
 msgid "main-pemview-help"
 msgstr "PEMファイルの内容を表示します"
 
-#: shoestring/__main__.py:28
+#: shoestring/__main__.py:31
 msgid "main-renew-certificates-help"
 msgstr "証明書を更新します"
 
-#: shoestring/__main__.py:29
+#: shoestring/__main__.py:32
 msgid "main-renew-voting-keys-help"
 msgstr "投票キーを更新します"
 
-#: shoestring/__main__.py:30
+#: shoestring/__main__.py:33
 msgid "main-reset-data-help"
 msgstr "データをリセットして最初から再同期できるようにします"
 
-#: shoestring/__main__.py:31
+#: shoestring/__main__.py:34
 msgid "main-setup-help"
 msgstr "ノードをセットアップします"
 
-#: shoestring/__main__.py:32
+#: shoestring/__main__.py:35
 msgid "main-signer-help"
 msgstr "トランザクションに署名します"
 
-#: shoestring/__main__.py:18
+#: shoestring/__main__.py:21
 msgid "main-subcommands-help"
 msgstr "有効なサブコマンド"
 
-#: shoestring/__main__.py:17
+#: shoestring/__main__.py:20
 msgid "main-title"
 msgstr "Shoestring Tool"
 
-#: shoestring/__main__.py:33
+#: shoestring/__main__.py:36
 msgid "main-upgrade-help"
 msgstr "ノードを最新のクライアントバージョンにアップグレードします"
 
@@ -917,3 +917,4 @@ msgstr "ようこそ"
 #: shoestring/wizard/screens/welcome.py:39
 msgid "wizard-welcome-upgrade"
 msgstr "アップグレード"
+

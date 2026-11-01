@@ -308,67 +308,67 @@ msgstr "in-harvesters and out-harvesters must be different"
 msgid "import-harvesters-list-header"
 msgstr "listing harvesters in {filepath} using public key {public_key}"
 
-#: shoestring/__main__.py:20
+#: shoestring/__main__.py:23
 msgid "main-announce-transaction-help"
 msgstr "announces a transaction to the network"
 
-#: shoestring/__main__.py:21
+#: shoestring/__main__.py:24
 msgid "main-health-help"
 msgstr "does health check"
 
-#: shoestring/__main__.py:22
+#: shoestring/__main__.py:25
 msgid "main-import-bootstrap-help"
 msgstr "imports settings from a bootstrap installation"
 
-#: shoestring/__main__.py:23
+#: shoestring/__main__.py:26
 msgid "main-import-harvesters-help"
 msgstr "imports harvesters from an existing harvesters.dat file"
 
-#: shoestring/__main__.py:24
+#: shoestring/__main__.py:27
 msgid "main-init-help"
 msgstr "extracts a template shoestring configuration file from a package"
 
-#: shoestring/__main__.py:25
+#: shoestring/__main__.py:28
 msgid "main-min-cosignatures-count-help"
 msgstr "detects minimum cosignatures required for an account"
 
-#: shoestring/__main__.py:26
+#: shoestring/__main__.py:29
 msgid "main-pemtool-help"
 msgstr "generates PEM files"
 
-#: shoestring/__main__.py:27
+#: shoestring/__main__.py:30
 msgid "main-pemview-help"
 msgstr "view a PEM file"
 
-#: shoestring/__main__.py:28
+#: shoestring/__main__.py:31
 msgid "main-renew-certificates-help"
 msgstr "renews certificates"
 
-#: shoestring/__main__.py:29
+#: shoestring/__main__.py:32
 msgid "main-renew-voting-keys-help"
 msgstr "renews voting keys"
 
-#: shoestring/__main__.py:30
+#: shoestring/__main__.py:33
 msgid "main-reset-data-help"
 msgstr "resets data to allow a resync from scratch"
 
-#: shoestring/__main__.py:31
+#: shoestring/__main__.py:34
 msgid "main-setup-help"
 msgstr "sets up a node"
 
-#: shoestring/__main__.py:32
+#: shoestring/__main__.py:35
 msgid "main-signer-help"
 msgstr "signs a transaction"
 
-#: shoestring/__main__.py:18
+#: shoestring/__main__.py:21
 msgid "main-subcommands-help"
 msgstr "valid subcommands"
 
-#: shoestring/__main__.py:17
+#: shoestring/__main__.py:20
 msgid "main-title"
 msgstr "Shoestring Tool"
 
-#: shoestring/__main__.py:33
+#: shoestring/__main__.py:36
 msgid "main-upgrade-help"
 msgstr "upgrades a node to the latest client version"
 

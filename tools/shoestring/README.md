@@ -417,6 +417,28 @@ python3 -m pip install -r requirements.txt
 PYTHONPATH=. python3 -m shoestring --help
 ```
 
+## Shell completion (Bash / Zsh)
+
+Shoestring supports tab completion for subcommands, options, file paths and argument values defined with `choices`.
+
+In the Python environment used to run shoestring, enable completion for Bash or Zsh:
+
+```sh
+activate-global-python-argcomplete
+```
+
+Follow the prompts and start a new shell after activation. Bash requires version 4.2 or newer; Zsh requires its completion system (`compinit`) to be initialized.
+
+Completion works with the module invocation used above. Press Tab at `<TAB>`:
+
+```text
+python3 -m shoestring renew-<TAB>
+python3 -m shoestring setup --ca<TAB>
+python3 -m shoestring setup --security <TAB>
+```
+
+When running from a clone, run these commands from `tools/shoestring`, with `PYTHONPATH=.` if needed. Keep the Python environment containing shoestring and argcomplete active.
+
 # Troubleshooting
 
 ## Server or Broker failed to start due to lock files
